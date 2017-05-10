@@ -1,0 +1,21 @@
+{
+    "name": "foa/core-twig-extension",
+    "type": "library",
+    "description": "The core twig extension for fao component management",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Friends of Alps contributors",
+            "homepage": "https://github.com/friendsofalps/FOACoreTwigExtension/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": "~5.5 || ~7.0",
+        "twig/twig": "^1.11 || ^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FOA\\Component\\Twig\\": "src/"
+        }
+    }
+}
