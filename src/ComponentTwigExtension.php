@@ -77,15 +77,20 @@ class ComponentTwigExtension extends \Twig_Extension
     /**
      * Get all registered components.
      *
+     * @param bool $jsonEncode
+     * @param bool $clear
+     *
      * @return string
      */
-    public function getComponents()
+    public function getComponents($jsonEncode = true, $clear = true)
     {
         $components = $this->components;
 
-        $this->components = [];
+        if ($clear) {
+            $this->components = [];
+        }
 
-        return json_encode($components);
+        return $jsonEncode ? json_encode($components) : $components;
     }
 
     /**
@@ -107,14 +112,20 @@ class ComponentTwigExtension extends \Twig_Extension
     /**
      * Return all register service functions.
      *
+     * @param bool $jsonEncode
+     * @param bool $clear
+     *
      * @return array
      */
-    public function getServices()
+    public function getServices($jsonEncode = true, $clear = true)
     {
         $services = $this->services;
-        $this->services = [];
 
-        return json_encode($services);
+        if ($clear) {
+            $this->services = [];
+        }
+
+        return $jsonEncode ? json_encode($services) : $services;
     }
 
     /**
