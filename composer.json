@@ -1,12 +1,12 @@
 {
-    "name": "foa/core-twig-extension",
+    "name": "massive/web-twig-extension",
     "type": "library",
-    "description": "The core twig extension for fao component management",
+    "description": "The web twig extension for web-js component management",
     "license": "MIT",
     "authors": [
         {
-            "name": "Friends of Alps contributors",
-            "homepage": "https://github.com/friendsofalps/FOACoreTwigExtension/graphs/contributors"
+            "name": "Massive Web Twig contributors",
+            "homepage": "https://github.com/massiveart/web-twig/graphs/contributors"
         }
     ],
     "require": {
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "FOA\\Component\\Twig\\": "src/"
+            "Massive\\Component\\Web\\": "src/"
         }
     }
 }

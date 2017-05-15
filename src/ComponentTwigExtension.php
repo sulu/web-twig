@@ -1,11 +1,11 @@
 <?php
 
-namespace FOA\Component\Twig;
+namespace Massive\Component\Web;
 
 /**
  * This Twig Extension manages the JavaScript components.
  */
-class CoreTwigExtension extends \Twig_Extension
+class ComponentTwigExtension extends \Twig_Extension
 {
     /**
      * @var array
@@ -18,6 +18,11 @@ class CoreTwigExtension extends \Twig_Extension
     protected $instanceCounter = [];
 
     /**
+     * @var array
+     */
+    protected $services = [];
+
+    /**
      * {@inheritdoc}
      */
     public function getFunctions()
@@ -25,6 +30,8 @@ class CoreTwigExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('register_component', [$this, 'registerComponent']),
             new \Twig_SimpleFunction('get_components', [$this, 'getComponents'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('call_service', [$this, 'callService']),
+            new \Twig_SimpleFunction('get_services', [$this, 'getServices'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -58,7 +65,7 @@ class CoreTwigExtension extends \Twig_Extension
 
         $component = [
             'name' => $name,
-            'instanceId' => $id,
+            'id' => $id,
             'options' => $options,
         ];
 
@@ -74,7 +81,40 @@ class CoreTwigExtension extends \Twig_Extension
      */
     public function getComponents()
     {
-        return json_encode($this->components);
+        $components = $this->components;
+
+        $this->components = [];
+
+        return json_encode($components);
+    }
+
+    /**
+     * Call a service function.
+     *
+     * @param string $name
+     * @param string $function
+     * @param array $parameters
+     */
+    public function callService($name, $function, $parameters = [])
+    {
+        $this->services[] = [
+            'name' => $name,
+            'func' => $function,
+            'args' => $parameters,
+        ];
+    }
+
+    /**
+     * Return all register service functions.
+     *
+     * @return array
+     */
+    public function getServices()
+    {
+        $services = $this->services;
+        $this->services = [];
+
+        return json_encode($services);
     }
 
     /**
@@ -82,6 +122,6 @@ class CoreTwigExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'fao_core';
+        return 'massive_web';
     }
 }
