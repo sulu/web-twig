@@ -1,5 +1,5 @@
 {
-    "name": "massive/web-twig-extension",
+    "name": "massive/web-twig-extensions",
     "type": "library",
     "description": "The web twig extension for web-js component management",
     "license": "MIT",
