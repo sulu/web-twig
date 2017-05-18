@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-composer require massive/web-twig-extensions
+composer require massive/web-twig-extensions ^1.0
 ```
 
 ## Component
