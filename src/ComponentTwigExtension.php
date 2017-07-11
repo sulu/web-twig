@@ -30,8 +30,10 @@ class ComponentTwigExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('register_component', [$this, 'registerComponent']),
             new \Twig_SimpleFunction('get_components', [$this, 'getComponents'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_component_list', [$this, 'getComponentList'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('call_service', [$this, 'callService']),
             new \Twig_SimpleFunction('get_services', [$this, 'getServices'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_service_list', [$this, 'getServiceList'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -94,6 +96,27 @@ class ComponentTwigExtension extends \Twig_Extension
     }
 
     /**
+     * Get component list.
+     *
+     * @param bool $jsonEncode
+     *
+     * @return string.
+     */
+    public function getComponentList($jsonEncode = false)
+    {
+        $components = [];
+
+        foreach ($this->components as $component) {
+            $name = $component['name'];
+            $components[$name] = $name;
+        }
+
+        $components = array_values($components);
+
+        return $jsonEncode ? json_encode($components) : $components;
+    }
+
+    /**
      * Call a service function.
      *
      * @param string $name
@@ -124,6 +147,27 @@ class ComponentTwigExtension extends \Twig_Extension
         if ($clear) {
             $this->services = [];
         }
+
+        return $jsonEncode ? json_encode($services) : $services;
+    }
+
+    /**
+     * Get service list.
+     *
+     * @param bool $jsonEncode
+     *
+     * @return string.
+     */
+    public function getServiceList($jsonEncode = false)
+    {
+        $services = [];
+
+        foreach ($this->services as $service) {
+            $name = $service['name'];
+            $services[$name] = $name;
+        }
+
+        $services = array_values($services);
 
         return $jsonEncode ? json_encode($services) : $services;
     }
