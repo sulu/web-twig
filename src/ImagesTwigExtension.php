@@ -169,8 +169,98 @@ class ImagesTwigExtension extends \Twig_Extension
         return $imageHtml;
     }
 
+    /**
+     * Get a responsive picture html.
+     *
+     * Example in TWIG:
+     * {% set options4 = {
+     *     fallBackImageFormat: 'sulu-400x400',     --> Set the fallback format for image if srcset doesn't exist (type: string).
+     *     imageFormats: [                          --> Set the image formats for this image (type: array with string).
+     *         'sulu-400x400',
+     *         'sulu-170x170',
+     *         'sulu-100x100'
+     *     ],
+     *     medias: [                                --> Set the medias for source attribute (type: array).
+     *         '(max-width: 1024px)',
+     *         '(max-width: 800px)'
+     *     ],
+     *     retinaSizes: {                           --> Set the retina sizes you need for this image (type: array).
+     *         'sulu-400x400': '3x',
+     *         'sulu-170x170': '2x',
+     *         'sulu-100x100': '1x'
+     *     },
+     *     alt: 'Logo',                             --> Set alt name for image tag (type: string).
+     *     id: 'image-id',                          --> Set id for image tag (type: string).
+     *     classes: 'image-class',                  --> Set classes for image tag (type: string).
+     * } %}
+     *
+     * @param object $image
+     * @param array $options
+     *
+     * @return string
+     */
     public function getResponsivePicture($image, $options)
     {
+        // Return an empty string if no one of the needed parameters is set.
+        if (empty($image)) {
+            return '';
+        }
 
+        // Create the picture tag.
+        $pictureHtml = '<picture>';
+
+        // Generate the srcset for source attribute and add the source attribute to picture tag.
+        if (array_key_exists('medias', $options) && !empty($options['medias'])
+            && array_key_exists('retinaSizes', $options) && !empty($options['retinaSizes'])) {
+            foreach ($options['medias'] as $key => $value) {
+                $srcSet = [];
+
+                // Set a fallback image format if no retina size can be used.
+                $srcSet[] = $image->getThumbnails()[$options['imageFormats'][$key]];
+
+                // Add each retina sizes to the srcSet array.
+                foreach ($options['retinaSizes'] as $retinaKey => $retinaValue) {
+                    $srcSet[] = $image->getThumbnails()[$retinaKey] . ' ' . $retinaValue;
+                }
+
+                // Add source attribute to picture tag.
+                $pictureHtml .= '<source media="' . $value . '" srcset="' . implode(', ', $srcSet) . '">';
+            }
+        }
+
+        // Open the image tag.
+        $pictureHtml .= '<img';
+
+        // Add an id to the image if it was set in options.
+        if (array_key_exists('id', $options) && !empty($options['id'])) {
+            $pictureHtml .= ' id="' . $options['id'] . '"';
+        }
+
+        // Add classes to the image if it was set in options.
+        if (array_key_exists('classes', $options) && !empty($options['classes'])) {
+            $pictureHtml .= ' class="' . $options['classes'] . '"';
+        }
+
+        // Add the image source as a thumbnail to the image.
+        if (array_key_exists('fallBackImageFormat', $options) && !empty($options['fallBackImageFormat'])) {
+            $pictureHtml .= ' src="' . $image->getThumbnails()[$options['fallBackImageFormat']] . '"';
+        }
+
+        // Check if the alt attribute is set in the options, else take the default one.
+        $imageTitle = $image->getTitle();
+        if (array_key_exists('alt', $options) && !empty($options['alt'])) {
+            $imageTitle = $options['alt'];
+        }
+
+        // Add the alt attribute to the image.
+        $pictureHtml .= ' alt="' . $imageTitle . '"';
+
+        // Close the image tag.
+        $pictureHtml .= '/>';
+
+        // Close the picture tag.
+        $pictureHtml .= '</picture>';
+
+        return $pictureHtml;
     }
 }
