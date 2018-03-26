@@ -1,7 +1,7 @@
 # Web Component Twig Extension
 
 The web component twig extension in connection with [web-js](https://github.com/massiveart/web-js) 
-gives you simple and efficient way to handle your javascript components over twig.
+gives you a simple and efficient way to handle your javascript components over twig.
 
 ## Setup
 

@@ -3,7 +3,7 @@
 namespace Massive\Component\Web;
 
 /**
- * This Twig Extension manages the JavaScript components.
+ * This Twig Extension manages the images formats.
  */
 class ImagesTwigExtension extends \Twig_Extension
 {
