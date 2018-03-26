@@ -20,7 +20,7 @@ class ImagesTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Get a normal image html with srcset and all needed options.
+     * Get a normal image html.
      *
      * Example in TWIG:
      * {% set options = {
@@ -89,6 +89,26 @@ class ImagesTwigExtension extends \Twig_Extension
     }
 
     /**
+     * Get a responsive image html.
+     *
+     * Example in TWIG:
+     * {% set options2 = {
+     *     fallBackImageFormat: 'sulu-400x400',     --> Set the fallback format for image if srcset doesn't exist (type: string).
+     *     srcsetWidths: {                          --> Set the image format and the width for this image (type: array with string).
+     *         'sulu-400x400': '1024w',
+     *         'sulu-170x170': '800w',
+     *         'sulu-100x100': '460w'
+     *     },
+     *     sizes: [                                 --> Set responsive image widths for sizes attribute (type: array with string).
+     *         '(max-width: 1024px) 100vw',
+     *         '(max-width: 800px) 100vw',
+     *         '100vw'
+     *     ],
+     *     alt: 'Logo',                             --> Set alt name for image tag (type: string).
+     *     id: 'image-id',                          --> Set id for image tag (type: string).
+     *     classes: 'image-class',                  --> Set classes for image tag (type: string).
+     * } %}
+     *
      * @param object $image
      * @param array $options
      *
@@ -125,11 +145,10 @@ class ImagesTwigExtension extends \Twig_Extension
         }
 
         // Add the srcset to the image if it was set in the options.
-        // TODO: refactor this that only one option is needed instead of two.
         if (array_key_exists('srcsetWidths', $options) && !empty($options['srcsetWidths'])) {
             $srcSet = [];
             foreach ($options['srcsetWidths'] as $key => $value) {
-                $srcSet[$key] = $image->getThumbnails()[$options['imageFormats'][$key]] . ' ' . $value . 'w';
+                $srcSet[$key] = $image->getThumbnails()[$key] . ' ' . $value;
             }
 
             $imageHtml .= ' srcset="' . implode(', ', $srcSet) . '"';
