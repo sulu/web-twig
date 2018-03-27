@@ -2,6 +2,8 @@
 
 namespace Massive\Component\Web;
 
+use Symfony\Component\PropertyAccess\PropertyAccess;
+
 /**
  * This Twig Extension manages the images formats.
  */
@@ -34,18 +36,23 @@ class ImagesTwigExtension extends \Twig_Extension
      *     classes: 'image-class',          --> Set classes for image tag (type: string).
      * } %}
      *
-     * @param Media $image - Contains the image object from sulu.
+     * @param mixed $image - Contains the image object from sulu.
      * @param string $width - Contains the image format ('500x400').
      * @param array $options - Includes the attributes for the image element (id, classes, retinaSizes, alt).
      *
      * @return string
      */
-    public function getFixedImage(Media $image, $width, $options = array())
+    public function getFixedImage($image, string $width, $options = array())
     {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
         // Return an empty string if no one of the needed parameters is set.
-        if (empty($width) || empty($image->getThumbnails()[$width])) {
+        if (empty($width) || empty($image) || empty($propertyAccessor->getValue($image, 'thumbnails')[$width])) {
             return '';
         }
+
+        // Set thumbnails.
+        $thumbnails = $propertyAccessor->getValue($image, 'thumbnails');
 
         // Open the image tag.
         $imageHtml = '<img';
@@ -57,20 +64,20 @@ class ImagesTwigExtension extends \Twig_Extension
         $imageHtml .= $this->getClassHtml($options);
 
         // Add the image source as a thumbnail to the image.
-        $imageHtml .= ' src="' . $image->getThumbnails()[$width] . '"';
+        $imageHtml .= ' src="' . $thumbnails[$width] . '"';
 
         // Add the srcset to the image if it was set in the options.
         if (array_key_exists('retinaSizes', $options) && !empty($options['retinaSizes'])) {
             $srcSet = array();
             foreach ($options['retinaSizes'] as $key => $value) {
-                $srcSet[] = $image->getThumbnails()[$key] . ' ' . $value;
+                $srcSet[] = $thumbnails[$key] . ' ' . $value;
             }
 
             $imageHtml .= ' srcset="' . implode(', ', $srcSet) . '"';
         }
 
         // Add the alt attribute to the image.
-        $imageHtml .= $this->getAltHtml($image->getTitle(), $options);
+        $imageHtml .= $this->getAltHtml($propertyAccessor->getValue($image, 'title'), $options);
 
         // Close the image tag.
         $imageHtml .= '/>';
@@ -99,13 +106,23 @@ class ImagesTwigExtension extends \Twig_Extension
      *     classes: 'image-class',                  --> Set classes for image tag (type: string).
      * } %}
      *
-     * @param Media $image
+     * @param mixed $image
      * @param array $options
      *
      * @return string
      */
-    public function getResponsiveImage(Media $image, $options)
+    public function getResponsiveImage($image, array $options)
     {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        // Return an empty string if no one of the needed parameters is set.
+        if (empty($image) || empty($propertyAccessor->getValue($image, 'thumbnails')) || empty($options)) {
+            return '';
+        }
+
+        // Thumbnails exists all times - it only can be empty.
+        $thumbnails = $propertyAccessor->getValue($image, 'thumbnails');
+
         // Open the image tag.
         $imageHtml = '<img';
 
@@ -117,7 +134,7 @@ class ImagesTwigExtension extends \Twig_Extension
 
         // Add the image source as a thumbnail to the image.
         if (array_key_exists('fallBackImageFormat', $options) && !empty($options['fallBackImageFormat'])) {
-            $imageHtml .= ' src="' . $image->getThumbnails()[$options['fallBackImageFormat']] . '"';
+            $imageHtml .= ' src="' . $thumbnails[$options['fallBackImageFormat']] . '"';
         }
 
         // Add the sizes to the image if it was set in the options.
@@ -129,14 +146,14 @@ class ImagesTwigExtension extends \Twig_Extension
         if (array_key_exists('srcsetWidths', $options) && !empty($options['srcsetWidths'])) {
             $srcSet = array();
             foreach ($options['srcsetWidths'] as $key => $value) {
-                $srcSet[$key] = $image->getThumbnails()[$key] . ' ' . $value;
+                $srcSet[$key] = $thumbnails[$key] . ' ' . $value;
             }
 
             $imageHtml .= ' srcset="' . implode(', ', $srcSet) . '"';
         }
 
         // Add the alt attribute to the image.
-        $imageHtml .= $this->getAltHtml($image->getTitle(), $options);
+        $imageHtml .= $this->getAltHtml($propertyAccessor->getValue($image, 'title'), $options);
 
         // Close the image tag.
         $imageHtml .= '/>';
@@ -169,13 +186,23 @@ class ImagesTwigExtension extends \Twig_Extension
      *     classes: 'image-class',
      * } %}
      *
-     * @param Media $image
+     * @param mixed $image
      * @param array $options
      *
      * @return string
      */
-    public function getResponsivePicture(Media $image, $options)
+    public function getResponsivePicture($image, array $options)
     {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        // Return an empty string if no one of the needed parameters is set.
+        if (empty($image) || empty($propertyAccessor->getValue($image, 'thumbnails')) || empty($options)) {
+            return '';
+        }
+
+        // Thumbnails exists all times - it only can be empty.
+        $thumbnails = $propertyAccessor->getValue($image, 'thumbnails');
+
         // Create the picture tag.
         $pictureHtml = '<picture>';
 
@@ -186,11 +213,11 @@ class ImagesTwigExtension extends \Twig_Extension
                 $srcSet = array();
 
                 // Set a fallback image format if no retina size can be used.
-                $srcSet[] = $image->getThumbnails()[$options['imageFormats'][$key]];
+                $srcSet[] = $thumbnails[$options['imageFormats'][$key]];
 
                 // Add each retina sizes to the srcSet array.
                 foreach ($options['retinaSizes'] as $retinaKey => $retinaValue) {
-                    $srcSet[] = $image->getThumbnails()[$retinaKey] . ' ' . $retinaValue;
+                    $srcSet[] = $thumbnails[$retinaKey] . ' ' . $retinaValue;
                 }
 
                 // Add source attribute to picture tag.
@@ -209,11 +236,11 @@ class ImagesTwigExtension extends \Twig_Extension
 
         // Add the image source as a thumbnail to the image.
         if (array_key_exists('fallBackImageFormat', $options) && !empty($options['fallBackImageFormat'])) {
-            $pictureHtml .= ' src="' . $image->getThumbnails()[$options['fallBackImageFormat']] . '"';
+            $pictureHtml .= ' src="' . $thumbnails[$options['fallBackImageFormat']] . '"';
         }
 
         // Add the alt attribute to the image.
-        $pictureHtml .= $this->getAltHtml($image->getTitle(), $options);
+        $pictureHtml .= $this->getAltHtml($propertyAccessor->getValue($image, 'title'), $options);
 
         // Close the image tag.
         $pictureHtml .= '/>';
