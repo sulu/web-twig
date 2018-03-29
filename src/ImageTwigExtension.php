@@ -5,9 +5,9 @@ namespace Massive\Component\Web;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * This Twig Extension manages the images formats.
+ * This Twig Extension manages the image formats.
  */
-class ImagesTwigExtension extends \Twig_Extension
+class ImageTwigExtension extends \Twig_Extension
 {
     /**
      * {@inheritdoc}

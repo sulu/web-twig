@@ -15,6 +15,6 @@ gives you simple and efficient way to handle your javascript components over twi
 
 ## Image
 
-The [web images twig extension](docs/images.md) gives you a simple and efficient way to handle your image over twig.
+The [web image twig extension](docs/image.md) gives you a simple and efficient way to handle your image over twig.
 
-[More](docs/images.md)
+[More](docs/image.md)

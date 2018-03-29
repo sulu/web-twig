@@ -1,6 +1,6 @@
-# Web Images Twig Extension
+# Web Image Twig Extension
 
-The web images twig extension gives you a simple and efficient way to handle your image over twig.
+The web image twig extension gives you a simple and efficient way to handle your image over twig.
 
 ## Setup
 
@@ -18,7 +18,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
         http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="app.web_images" class="Massive\Component\Web\ImagesTwigExtension">
+        <service id="app.web_image" class="Massive\Component\Web\ImageTwigExtension">
             <tag name="twig.extension" />
         </service>
     </services>
@@ -29,8 +29,8 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yml
 services:
-    app.web_images:
-        class: Massive\Component\Web\ImagesTwigExtension
+    app.web_image:
+        class: Massive\Component\Web\ImageTwigExtension
         tags:
             - { name: twig.extension }
 ```
