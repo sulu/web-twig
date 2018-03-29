@@ -22,7 +22,7 @@ class ImagesTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Get a normal image html.
+     * Get an image html.
      *
      * Example in TWIG:
      * {% set options = {
@@ -42,11 +42,11 @@ class ImagesTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function getFixedImage($image, string $width, $options = array())
+    public function getFixedImage($image, $width, $options = array())
     {
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        // Return an empty string if no one of the needed parameters is set.
+        // Return an empty string if one of the needed parameters is not set.
         if (empty($width) || empty($image) || empty($propertyAccessor->getValue($image, 'thumbnails')[$width])) {
             return '';
         }
@@ -256,7 +256,7 @@ class ImagesTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    protected function getIdHtml($options)
+    private function getIdHtml($options)
     {
         if (array_key_exists('id', $options) && !empty($options['id'])) {
             return ' id="' . $options['id'] . '"';
@@ -270,7 +270,7 @@ class ImagesTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    protected function getClassHtml($options)
+    private function getClassHtml($options)
     {
         if (array_key_exists('classes', $options) && !empty($options['classes'])) {
             return ' class="' . $options['classes'] . '"';
@@ -285,7 +285,7 @@ class ImagesTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    protected function getAltHtml($imageTitle, $options)
+    private function getAltHtml($imageTitle, $options)
     {
         // Check if the alt attribute is set in the options, else take the default one.
         $title = $imageTitle;
