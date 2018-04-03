@@ -37,71 +37,42 @@ services:
 
 ## Usage
 
-#### Fixed image
+#### Get an image
 
-To get a image without responsive states, use this.
-
-```twig
-{% set options = {
-    retinaSizes: {
-        'sulu-400x400': '4x',
-        'sulu-170x170': '2x',
-        'sulu-100x100': '1x'
-    },
-    alt: 'Logo',
-    id: 'image-id',
-    classes: 'image-class',
-} %}
-
-{{ get_fixed_image(image, '460x590', options) }}
-```
-
-#### Responsive image
-
-To get an image with responsive states, use this.
+To get an image, use the following code.
 
 ```twig
-{% set options = {
-    fallBackImageFormat: 'sulu-400x400',
-    srcsetWidths: {
+{% set options1 = {
+    src: 'sulu-400x400',
+    srcset: {
         'sulu-400x400': '1024w',
         'sulu-170x170': '800w',
         'sulu-100x100': '460w'
     },
-    sizes: [
-        '(max-width: 1024px) 100vw',
-        '(max-width: 800px) 100vw',
-        '100vw'
-    ],
-    alt: 'Logo',
+    sizes: '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
     id: 'image-id',
     classes: 'image-class',
+    alt: 'Logo'
 } %}
 
-{{ get_responsive_image(image, options) }}
-```
-
-#### Responsive picture
-
-To get an picture with responsive states, use this.
-
-```twig
-{% set options = {
-    fallBackImageFormat: 'sulu-400x400',
-    imageFormats: ['sulu-400x400', 'sulu-170x170', 'sulu-100x100'],
-    medias: [
+{% set options2 = {
+    sourceMedias: [
         '(max-width: 1024px)',
         '(max-width: 800px)'
     ],
-    retinaSizes: {
+    sourceSrcset: {
         'sulu-400x400': '3x',
         'sulu-170x170': '2x',
         'sulu-100x100': '1x'
-    },
-    alt: 'Logo',
-    id: 'image-id',
-    classes: 'image-class',
+    }
 } %}
 
-{{ get_responsive_picture(image, options) }}
+{# To get a simple image only with src. #}
+{{ get_image(image, 'sulu-100x100') }}
+
+{# To get a responsive image. #}
+{{ get_image(image, options1) }}
+
+{# To get a responsive complex picture. #}
+{{ get_image(image, options1, options2) }}
 ```
