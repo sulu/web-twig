@@ -123,7 +123,7 @@ class ImageTwigExtension extends \Twig_Extension
 
         // Close the picture tag, if it was defined.
         if (!empty($sources)) {
-            $imageHtml .= '</pictures>';
+            $imageHtml .= '</picture>';
         }
 
         return $imageHtml;
