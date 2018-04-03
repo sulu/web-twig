@@ -84,8 +84,8 @@ class ImageTwigExtension extends \Twig_Extension
         }
 
         // Add classes to the image if it was set in options.
-        if (array_key_exists('classes', $attributes) && !empty($attributes['classes'])) {
-            $imageHtml .= ' class="' . $attributes['classes'] . '"';
+        if (array_key_exists('class', $attributes) && !empty($attributes['class'])) {
+            $imageHtml .= ' class="' . $attributes['class'] . '"';
         }
 
         // Add the image source as a thumbnail to the image.

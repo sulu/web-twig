@@ -51,7 +51,7 @@ To get an image, use the following code.
     },
     sizes: '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
     id: 'image-id',
-    classes: 'image-class',
+    class: 'image-class',
     alt: 'Logo'
 } %}
 
