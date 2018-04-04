@@ -49,10 +49,10 @@ class ImageTwigExtension extends \Twig_Extension
         // Thumbnails exists all times - it only can be empty.
         $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
 
-        // Check if the alt attribute is set in the options, else take the default one.
+        // Get title from object to use as alt attribute.
         $alt = $propertyAccessor->getValue($media, 'title');
 
-        // Set image title attribute.
+        // Get description from object to use as title attribute else fallback to alt attribute.
         $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
 
         // Get the image tag with all given attributes.
