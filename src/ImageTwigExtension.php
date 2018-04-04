@@ -49,83 +49,87 @@ class ImageTwigExtension extends \Twig_Extension
         // Thumbnails exists all times - it only can be empty.
         $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
 
-
-        // Open the image or picture tag.
-        $imageHtml = '<img';
-        if (!empty($sources)) {
-            $imageHtml = '<picture>';
-
-            // Generate the srcset for source attribute and add the source attribute to picture tag.
-            if (array_key_exists('sourceMedias', $sources) && !empty($sources['sourceMedias'])
-                && array_key_exists('sourceSrcset', $sources) && !empty($sources['sourceSrcset'])) {
-                foreach ($sources['sourceMedias'] as $key => $value) {
-                    $srcSet = [];
-
-                    // Set a fallback image format if no retina size can be used.
-                    $srcSet[] = $thumbnails[array_keys($sources['sourceSrcset'])[$key]];
-
-                    // Add each retina sizes to the srcSet array.
-                    foreach ($sources['sourceSrcset'] as $retinaKey => $retinaValue) {
-                        $srcSet[] = $thumbnails[$retinaKey] . ' ' . $retinaValue;
-                    }
-
-                    // Add source attribute to picture tag.
-                    $imageHtml .= '<source media="' . $value . '" srcset="' . implode(', ', $srcSet) . '">';
-                }
-            }
-
-            // Open the image tag inside the picture tag.
-            $imageHtml .= '<img';
-        }
-
-        // Add an id to the image if it was set in options.
-        if (array_key_exists('id', $attributes) && !empty($attributes['id'])) {
-            $imageHtml .= ' id="' . $attributes['id'] . '"';
-        }
-
-        // Add classes to the image if it was set in options.
-        if (array_key_exists('class', $attributes) && !empty($attributes['class'])) {
-            $imageHtml .= ' class="' . $attributes['class'] . '"';
-        }
-
-        // Add the image source as a thumbnail to the image.
-        if (array_key_exists('src', $attributes) && !empty($attributes['src'])) {
-            $imageHtml .= ' src="' . $thumbnails[$attributes['src']] . '"';
-        }
-
-        // Add the sizes to the image if it was set in the options.
-        if (array_key_exists('sizes', $attributes) && !empty($attributes['sizes'])) {
-            $imageHtml .= ' sizes="' . $attributes['sizes'] . '"';
-        }
-
-        // Add the srcset to the image if it was set in the options.
-        // The srcset needed to be as an array to render the thumbnail from image.
-        if (array_key_exists('srcset', $attributes) && !empty($attributes['srcset'])) {
-            $srcSet = [];
-            foreach ($attributes['srcset'] as $key => $value) {
-                $srcSet[$key] = $thumbnails[$key] . ' ' . $value;
-            }
-
-            $imageHtml .= ' srcset="' . implode(', ', $srcSet) . '"';
-        }
-
         // Check if the alt attribute is set in the options, else take the default one.
-        $title = $propertyAccessor->getValue($media, 'title');
+        $alt = $propertyAccessor->getValue($media, 'title');
         if (array_key_exists('alt', $attributes) && !empty($attributes['alt'])) {
-            $title = $attributes['alt'];
+            $alt = $attributes['alt'];
         }
 
-        // Add the alt attribute to the image.
-        $imageHtml .= ' alt="' . $title . '"';
+        // Set image title attribute.
+        $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
 
-        // Close the image tag.
-        $imageHtml .= '/>';
+        $imgTag = $this->createTag('img', array_merge(['alt' => $alt, 'title' => $title], $attributes), $thumbnails);
 
-        // Close the picture tag, if it was defined.
-        if (!empty($sources)) {
-            $imageHtml .= '</picture>';
+        if (empty($sources)) {
+            return $imgTag;
         }
 
-        return $imageHtml;
+        $sourceTags = '';
+        foreach ($sources as $media => $sourceAttributes) {
+            /*var_dump($media);
+            var_dump($sourceAttributes);die;*/
+
+            $sourceTags .= $this->createTag('source', array_merge(['media' => $media], $sourceAttributes),  $thumbnails);
+        }
+
+        return sprintf('<picture>%s%s</picture>', $sourceTags, $imgTag);
+    }
+
+    /**
+     * @param $tag
+     * @param $attributes
+     * @param $thumbnails
+     *
+     * @return string
+     */
+    private function createTag($tag, $attributes, $thumbnails)
+    {
+        $output = '';
+
+        foreach ($attributes as $key => $value) {
+            if ('src' === $key) {
+                // Set the thumbnail instead of image itself.
+                $value = $thumbnails[$value];
+            } elseif ('srcset' === $key) {
+                // Replace thumbnail format in srcset.
+                $value = $this->srcsetThumbnailReplace($value, $thumbnails);
+            }
+
+            $output .= sprintf(' %s="%s"', $key, $value);
+        }
+
+        return sprintf('<%s%s>', $tag, $output);
+    }
+
+    /**
+     * Replace the given image format with an thumbnail.
+     *
+     * @param string $value
+     * @param array $thumbnails
+     *
+     * @return string
+     */
+    private function srcsetThumbnailReplace($value, $thumbnails)
+    {
+        // Split string to an array (to get each srcset).
+        $srcSets = explode(', ', $value);
+
+        $newSrcSets = [];
+        foreach ($srcSets as $srcSet) {
+            // Split the values of an srcset to an array to get the thumbnail.
+            $values = explode(' ', trim($srcSet), 2);
+
+            // Set the thumbnail.
+            $newSrcSet = $thumbnails[$values[0]];
+
+            // Merge the thumbnail again with the width from srcset.
+            if (isset($values[1])) {
+                $newSrcSet .= ' ' . $values[1];
+            }
+
+            $newSrcSets[] = $newSrcSet;
+        }
+
+        return implode(', ', $newSrcSets);
     }
 }

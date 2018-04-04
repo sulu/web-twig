@@ -41,38 +41,64 @@ services:
 
 To get an image, use the following code.
 
+##### 1. Simple image tag
+
 ```twig
-{% set options1 = {
+<img alt="Test" title="Test" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">
+```
+
+This could be:
+
+```twig
+{{ get_image(image, 'sulu-100x100') }}
+```
+
+##### 1. Complex image tag
+
+```twig
+<img alt="Logo" title="Logo" src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0" srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w" sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw" id="image-id" class="image-class">
+```
+
+This could be:
+
+```twig
+{{ get_image(image, {
     src: 'sulu-400x400',
-    srcset: {
-        'sulu-400x400': '1024w',
-        'sulu-170x170': '800w',
-        'sulu-100x100': '460w'
-    },
+    srcset: 'sulu-400x400 1024w, sulu-170x170 800w, sulu-100x100 460w',
     sizes: '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
     id: 'image-id',
     class: 'image-class',
     alt: 'Logo'
-} %}
+}) }}
+```
 
-{% set options2 = {
-    sourceMedias: [
-        '(max-width: 1024px)',
-        '(max-width: 800px)'
-    ],
-    sourceSrcset: {
-        'sulu-400x400': '3x',
-        'sulu-170x170': '2x',
-        'sulu-100x100': '1x'
+##### 1. Picture tag
+
+```twig
+<picture>
+    <source media="(max-width: 1024px)" srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w" sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
+    <source media="(max-width: 650px)" srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w" sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
+    <img alt="cody_redwoodsa-X2" title="cody_redwoodsa-X2" src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0" class="image-class">
+</picture>
+```
+
+This could be:
+
+```twig
+{{ get_image(image,
+    {
+        src: 'sulu-400x400',
+        class: 'image-class',
+    },
+    {
+        '(max-width: 1024px)': {
+            srcset: 'sulu-400x400 1024w, sulu-170x170 800w, sulu-100x100 460w',
+            sizes: '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw'
+        },
+        '(max-width: 650px)': {
+            srcset: 'sulu-400x400 1024w, sulu-170x170 800w, sulu-100x100 460w',
+            sizes: '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw'
+        }
     }
-} %}
-
-{# To get a simple image only with src. #}
-{{ get_image(image, 'sulu-100x100') }}
-
-{# To get a responsive image. #}
-{{ get_image(image, options1) }}
-
-{# To get a responsive complex picture. #}
-{{ get_image(image, options1, options2) }}
+) }}
 ```
