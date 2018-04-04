@@ -30,7 +30,15 @@ class ImageTwigExtension extends \Twig_Extension
      */
     public function getImage($media, $attributes = [], $sources = [])
     {
+        // Return an empty string if no one of the needed parameters is set.
+        if (empty($media) || empty($attributes)) {
+            return '';
+        }
+
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        // Thumbnails exists all times - it only can be empty.
+        $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
 
         // If attributes is an string, convert it to an array (like '{{ get_image_tag(media, '650x') }}').
         if (is_string($attributes)) {
@@ -38,16 +46,6 @@ class ImageTwigExtension extends \Twig_Extension
                 'src' => $attributes,
             ];
         }
-
-        // Return an empty string if no one of the needed parameters is set.
-        if (empty($media)
-            || empty($attributes)
-            || empty($propertyAccessor->getValue($media, 'thumbnails'))) {
-            return '';
-        }
-
-        // Thumbnails exists all times - it only can be empty.
-        $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
 
         // Get title from object to use as alt attribute.
         $alt = $propertyAccessor->getValue($media, 'title');
