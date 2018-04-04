@@ -53,10 +53,16 @@ This could be:
 {{ get_image(image, 'sulu-100x100') }}
 ```
 
-##### 1. Complex image tag
+##### 2. Complex image tag
 
 ```twig
-<img alt="Logo" title="Logo" src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0" srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w" sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw" id="image-id" class="image-class">
+<img alt="Logo"
+     title="Logo"
+     src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"
+     srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
+     sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"
+     id="image-id"
+     class="image-class">
 ```
 
 This could be:
@@ -72,13 +78,20 @@ This could be:
 }) }}
 ```
 
-##### 1. Picture tag
+##### 3. Picture tag
 
 ```twig
 <picture>
-    <source media="(max-width: 1024px)" srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w" sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
-    <source media="(max-width: 650px)" srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w" sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
-    <img alt="cody_redwoodsa-X2" title="cody_redwoodsa-X2" src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0" class="image-class">
+    <source media="(max-width: 1024px)"
+            srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
+            sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
+    <source media="(max-width: 650px)"
+            srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
+            sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
+    <img alt="cody_redwoodsa-X2"
+         title="cody_redwoodsa-X2"
+         src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"
+         class="image-class">
 </picture>
 ```
 

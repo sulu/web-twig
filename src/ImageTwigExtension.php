@@ -23,7 +23,7 @@ class ImageTwigExtension extends \Twig_Extension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param array $attributes
+     * @param array|string $attributes
      * @param array $sources
      *
      * @return string
@@ -51,13 +51,11 @@ class ImageTwigExtension extends \Twig_Extension
 
         // Check if the alt attribute is set in the options, else take the default one.
         $alt = $propertyAccessor->getValue($media, 'title');
-        if (array_key_exists('alt', $attributes) && !empty($attributes['alt'])) {
-            $alt = $attributes['alt'];
-        }
 
         // Set image title attribute.
         $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
 
+        // Get the image tag with all given attributes.
         $imgTag = $this->createTag('img', array_merge(['alt' => $alt, 'title' => $title], $attributes), $thumbnails);
 
         if (empty($sources)) {
@@ -66,12 +64,11 @@ class ImageTwigExtension extends \Twig_Extension
 
         $sourceTags = '';
         foreach ($sources as $media => $sourceAttributes) {
-            /*var_dump($media);
-            var_dump($sourceAttributes);die;*/
-
+            // Get the source tag with all given attributes.
             $sourceTags .= $this->createTag('source', array_merge(['media' => $media], $sourceAttributes),  $thumbnails);
         }
 
+        // Returns the picture tag with all sources and the fallback image tag.
         return sprintf('<picture>%s%s</picture>', $sourceTags, $imgTag);
     }
 
@@ -95,7 +92,7 @@ class ImageTwigExtension extends \Twig_Extension
                 $value = $this->srcsetThumbnailReplace($value, $thumbnails);
             }
 
-            $output .= sprintf(' %s="%s"', $key, $value);
+            $output .= sprintf(' %s="%s"', $key, htmlentities($value));
         }
 
         return sprintf('<%s%s>', $tag, $output);
@@ -112,7 +109,7 @@ class ImageTwigExtension extends \Twig_Extension
     private function srcsetThumbnailReplace($value, $thumbnails)
     {
         // Split string to an array (to get each srcset).
-        $srcSets = explode(', ', $value);
+        $srcSets = explode(',', $value);
 
         $newSrcSets = [];
         foreach ($srcSets as $srcSet) {
