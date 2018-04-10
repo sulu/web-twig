@@ -35,6 +35,10 @@ class ImageTwigExtension extends \Twig_Extension
             return '';
         }
 
+        if (is_array($media)) {
+            $media = (object) $media;
+        }
+
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         // Thumbnails exists all times - it only can be empty.
@@ -63,7 +67,7 @@ class ImageTwigExtension extends \Twig_Extension
         $sourceTags = '';
         foreach ($sources as $media => $sourceAttributes) {
             // Get the source tag with all given attributes.
-            $sourceTags .= $this->createTag('source', array_merge(['media' => $media], $sourceAttributes),  $thumbnails);
+            $sourceTags .= $this->createTag('source', array_merge(['media' => $media], $sourceAttributes), $thumbnails);
         }
 
         // Returns the picture tag with all sources and the fallback image tag.
@@ -71,9 +75,11 @@ class ImageTwigExtension extends \Twig_Extension
     }
 
     /**
-     * @param $tag
-     * @param $attributes
-     * @param $thumbnails
+     * Create html tag.
+     *
+     * @param string $tag
+     * @param array $attributes
+     * @param array $thumbnails
      *
      * @return string
      */

@@ -3,6 +3,9 @@
 /composer.phar
 /vendor
 
+# Cache
+/.php_cs.cache
+
 # IDEs
 /.idea
 *.iml
@@ -10,3 +13,4 @@
 
 # System files
 .DS_Store
+*.swp

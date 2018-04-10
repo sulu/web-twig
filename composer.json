@@ -14,7 +14,9 @@
         "twig/twig": "^1.11 || ^2.0"
     },
     "require-dev": {
-        "symfony/property-access": "^2.8 || ^3.0 || ^4.0"
+        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0",
+        "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
+        "friendsofphp/php-cs-fixer": "^2.11"
     },
     "suggest": {
         "symfony/property-access": "The ImageTwigExtension requires the symfony/property-access service."

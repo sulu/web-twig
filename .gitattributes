@@ -1,0 +1,6 @@
+.github export-ignore
+.circleci export-ignore
+.gitignore export-ignore
+.php_cs export-ignore
+.gitattributes export-ignore
+/tests export-ignore
