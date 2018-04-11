@@ -100,7 +100,7 @@ class ComponentTwigExtension extends \Twig_Extension
      *
      * @param bool $jsonEncode
      *
-     * @return string.
+     * @return string
      */
     public function getComponentList($jsonEncode = false)
     {
@@ -156,7 +156,7 @@ class ComponentTwigExtension extends \Twig_Extension
      *
      * @param bool $jsonEncode
      *
-     * @return string.
+     * @return string
      */
     public function getServiceList($jsonEncode = false)
     {

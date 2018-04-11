@@ -57,7 +57,7 @@ This could be:
 
 ```twig
 <img alt="Logo"
-     title="Logo"
+     title="Description"
      src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"
      srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
      sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"
@@ -88,8 +88,8 @@ This could be:
     <source media="(max-width: 650px)"
             srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
             sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
-    <img alt="cody_redwoodsa-X2"
-         title="cody_redwoodsa-X2"
+    <img alt="Title"
+         title="Description"
          src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"
          class="image-class">
 </picture>
