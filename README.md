@@ -6,15 +6,23 @@
 composer require massive/web-twig-extensions ^1.0
 ```
 
-## Component
+## Extensions
+
+### 1. Component
 
 The [web component twig extension](docs/component.md) in connection with [web-js](https://github.com/massiveart/web-js)
 gives you simple and efficient way to handle your javascript components over twig.
 
 [More](docs/component.md)
 
-## Image
+### 2. Image
 
 The [web image twig extension](docs/image.md) gives you a simple and efficient way to handle your image over twig.
 
 [More](docs/image.md)
+
+### 3. Intl
+
+The [web intl twig extension](docs/intl.md) gives you a simple and efficient way to get country, languages and locales in a specific language.
+
+[More](docs/intl.md)

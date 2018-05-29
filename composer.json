@@ -16,10 +16,12 @@
     "require-dev": {
         "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0",
         "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
+        "symfony/intl": "^2.8 || ^3.0 || ^4.0",
         "friendsofphp/php-cs-fixer": "^2.11"
     },
     "suggest": {
-        "symfony/property-access": "The ImageTwigExtension requires the symfony/property-access service."
+        "symfony/property-access": "The ImageTwigExtension requires the symfony/property-access service.",
+        "symfony/intl": "The IntlTwigExtension requires the symfony/intl service."
     },
     "autoload": {
         "psr-4": {
