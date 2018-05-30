@@ -66,6 +66,11 @@ class ImageTwigExtension extends \Twig_Extension
 
         $sourceTags = '';
         foreach ($sources as $media => $sourceAttributes) {
+            if (is_string($sourceAttributes)) {
+                $sourceAttributes = [
+                    'srcset' => $sourceAttributes,
+                ];
+            }
             // Get the source tag with all given attributes.
             $sourceTags .= $this->createTag('source', array_merge(['media' => $media], $sourceAttributes), $thumbnails);
         }
