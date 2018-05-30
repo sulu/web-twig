@@ -78,7 +78,28 @@ This could be:
 }) }}
 ```
 
-##### 3. Picture tag
+##### 3. Simple Picture Tag
+
+```twig
+<picture>
+    <source media="(max-width: 1024px)"
+            srcset="/uploads/media/sulu-170x170/01/image.jpg?v=1-0">
+    <source media="(max-width: 650px)"
+            srcset="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">
+    <img alt="Title"
+         title="Description"
+         src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">
+</picture>
+```
+
+```twig
+{{ get_image(headerImage, 'sulu-400x400', {
+    '(max-width: 1024px)': 'sulu-170x170',
+    '(max-width: 650px)': 'sulu-100x100',
+}) }}
+```
+
+##### 4. Complex Picture tag
 
 ```twig
 <picture>

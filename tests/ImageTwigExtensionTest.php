@@ -74,6 +74,29 @@ class ImageTwigExtensionTest extends TestCase
         $this->assertEquals(
             '<picture>' .
             '<source media="(max-width: 1024px)"' .
+                ' srcset="/uploads/media/sulu-170x170/01/image.jpg?v=1-0">' .
+            '<source media="(max-width: 650px)"' .
+                ' srcset="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">' .
+            '<img alt="Title"' .
+                ' title="Description"' .
+                ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">' .
+            '</picture>',
+            $this->imageTwigExtension->getImage(
+                $this->image,
+                'sulu-400x400',
+                [
+                    '(max-width: 1024px)' => 'sulu-170x170',
+                    '(max-width: 650px)' => 'sulu-100x100',
+                ]
+            )
+        );
+    }
+
+    public function testComplexPictureTag()
+    {
+        $this->assertEquals(
+            '<picture>' .
+            '<source media="(max-width: 1024px)"' .
                 ' srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"' .
                 ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">' .
             '<source media="(max-width: 650px)"' .
