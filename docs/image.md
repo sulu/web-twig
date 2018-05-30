@@ -18,7 +18,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
         http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="app.web_image" class="Massive\Component\Web\ImageTwigExtension">
+        <service id="app.twig.web_image" class="Massive\Component\Web\ImageTwigExtension">
             <tag name="twig.extension" />
         </service>
     </services>
