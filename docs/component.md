@@ -53,10 +53,10 @@ You can get the registered components and service call and call the
 </button>
 
 {# Call a service function #}
-{{ call_service('service', 'function') }}
+{% do call_service('service', 'function') %}
 
 {# Call a service function with arguments #}
-{{ call_service('api', 'send', ['Hello']) }}
+{% do call_service('api', 'send', ['Hello']) %}
 
 {# Start components and run service functions #}
 <script>
