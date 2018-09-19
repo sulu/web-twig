@@ -26,3 +26,9 @@ The [web image twig extension](docs/image.md) gives you a simple and efficient w
 The [web intl twig extension](docs/intl.md) gives you a simple and efficient way to get country, languages and locales in a specific language.
 
 [More](docs/intl.md)
+
+### 4. count
+
+The [web count twig extension](docs/count.md) gives you a simple and efficient way to have a global counter in your twig template.
+
+[More](docs/count.md)
