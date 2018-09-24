@@ -63,5 +63,5 @@ Output:
 A more real use case would be to check for odd or even:
 
 ```twig
-<div class="section section--{% if counter('section') is odd %}black{% endif %}">
+<div class="section{% if counter('section') is odd %} section--black{% endif %}">
 ```
