@@ -19,6 +19,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
     <services>
         <service id="app.twig.web_image" class="Massive\Component\Web\ImageTwigExtension">
+            <argument>/images/placeholders</argument>
             <tag name="twig.extension" />
         </service>
     </services>
@@ -31,6 +32,8 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 services:
     app.web_image:
         class: Massive\Component\Web\ImageTwigExtension
+        arguments:
+            - '/images/placeholders'
         tags:
             - { name: twig.extension }
 ```
@@ -135,4 +138,29 @@ This could be:
         }
     }
 ) }}
+```
+
+##### 5. Lazy images
+
+The `get_lazy_image` twig function accepts the same parameters as the `get_image` function.
+It will render the img attributes `src` and `srcset` as `data-src` and `data-srcset`.
+Values of `src` and `srcset` are set to a placeholder svg image of the configured `placeholderPath`
+
+Use for example [lazysizes](https://github.com/aFarkas/lazysizes) JS Library to load the images when they are visible.
+
+```twig
+<img alt="Test" title="Test" data-src="/images/placeholders/sulu-100x100.svg" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">
+```
+
+This could be:
+
+```twig
+{{ get_lazy_image(image, 'sulu-100x100') }}
+```
+
+The placeholder svg should look like this:
+
+```svg
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"/>
 ```
