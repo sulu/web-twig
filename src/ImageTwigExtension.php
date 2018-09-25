@@ -10,13 +10,89 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class ImageTwigExtension extends \Twig_Extension
 {
     /**
+     * @var string|null
+     */
+    protected $placeholderPath;
+
+    /**
+     * @var bool
+     */
+    protected $hasLazyImage = false;
+
+    /**
+     * @var string[]
+     */
+    private $placeholders = null;
+
+    public function __construct($placeholderPath = null)
+    {
+        if (null !== $placeholderPath) {
+            $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getFunctions()
     {
         return [
             new \Twig_SimpleFunction('get_image', [$this, 'getImage'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_lazy_image', [$this, 'getLazyImage'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('has_lazy_image', [$this, 'hasLazyImage']),
         ];
+    }
+
+    /**
+     * Get an image or picture tag with given attributes for lazy loading.
+     *
+     * @param mixed $media
+     * @param string[]|string $attributes
+     * @param string[] $sources
+     *
+     * @return string
+     */
+    public function getLazyImage($media, $attributes = [], array $sources = [])
+    {
+        if (null === $this->placeholderPath) {
+            throw new \InvalidArgumentException(
+                'You need to define placeholderPaths constructor argument to use the get_lazy_image function'
+            );
+        }
+
+        if (is_array($media)) {
+            $media = (object) $media;
+        }
+
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
+        $this->hasLazyImage = true;
+
+        return $this->createImage($media, $attributes, $sources, $this->getLazyThumbnails($thumbnails));
+    }
+
+    /**
+     * Get lazy image was called once or more times.
+     *
+     * @return bool
+     */
+    public function hasLazyImage()
+    {
+        return $this->hasLazyImage;
+    }
+
+    /**
+     * Get an image or picture tag with given attributes.
+     *
+     * @param mixed $media
+     * @param string[]|string $attributes
+     * @param string[] $sources
+     *
+     * @return string
+     */
+    public function getImage($media, $attributes = [], array $sources = [])
+    {
+        return $this->createImage($media, $attributes, $sources);
     }
 
     /**
@@ -25,11 +101,16 @@ class ImageTwigExtension extends \Twig_Extension
      * @param mixed $media
      * @param array|string $attributes
      * @param array $sources
+     * @param null|string[] $lazyThumbnails
      *
      * @return string
      */
-    public function getImage($media, $attributes = [], $sources = [])
-    {
+    private function createImage(
+        $media,
+        $attributes = [],
+        array $sources = [],
+        $lazyThumbnails = null
+    ) {
         // Return an empty string if no one of the needed parameters is set.
         if (empty($media) || empty($attributes)) {
             return '';
@@ -51,6 +132,10 @@ class ImageTwigExtension extends \Twig_Extension
             ];
         }
 
+        if ($lazyThumbnails) {
+            $attributes['class'] = trim((isset($attributes['class']) ? $attributes['class'] : '') . ' lazyload');
+        }
+
         // Get title from object to use as alt attribute.
         $alt = $propertyAccessor->getValue($media, 'title');
 
@@ -58,7 +143,12 @@ class ImageTwigExtension extends \Twig_Extension
         $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
 
         // Get the image tag with all given attributes.
-        $imgTag = $this->createTag('img', array_merge(['alt' => $alt, 'title' => $title], $attributes), $thumbnails);
+        $imgTag = $this->createTag(
+            'img',
+            array_merge(['alt' => $alt, 'title' => $title], $attributes),
+            $thumbnails,
+            $lazyThumbnails
+        );
 
         if (empty($sources)) {
             return $imgTag;
@@ -72,7 +162,12 @@ class ImageTwigExtension extends \Twig_Extension
                 ];
             }
             // Get the source tag with all given attributes.
-            $sourceTags .= $this->createTag('source', array_merge(['media' => $media], $sourceAttributes), $thumbnails);
+            $sourceTags .= $this->createTag(
+                'source',
+                array_merge(['media' => $media], $sourceAttributes),
+                $thumbnails,
+                $lazyThumbnails
+            );
         }
 
         // Returns the picture tag with all sources and the fallback image tag.
@@ -83,20 +178,35 @@ class ImageTwigExtension extends \Twig_Extension
      * Create html tag.
      *
      * @param string $tag
-     * @param array $attributes
-     * @param array $thumbnails
+     * @param string[] $attributes
+     * @param string[] $thumbnails
+     * @param null|string[] $lazyThumbnails
      *
      * @return string
      */
-    private function createTag($tag, $attributes, $thumbnails)
+    private function createTag($tag, $attributes, $thumbnails, $lazyThumbnails = null)
     {
         $output = '';
 
         foreach ($attributes as $key => $value) {
             if ('src' === $key) {
+                if ($lazyThumbnails) {
+                    $output .= sprintf(' %s="%s"', $key, $lazyThumbnails[$value]);
+                    $key = 'data-src';
+                }
+
                 // Set the thumbnail instead of image itself.
                 $value = $thumbnails[$value];
             } elseif ('srcset' === $key) {
+                if ($lazyThumbnails) {
+                    $output .= sprintf(
+                        ' %s="%s"',
+                        $key,
+                        htmlentities($this->srcsetThumbnailReplace($value, $lazyThumbnails))
+                    );
+                    $key = 'data-srcset';
+                }
+
                 // Replace thumbnail format in srcset.
                 $value = $this->srcsetThumbnailReplace($value, $thumbnails);
             }
@@ -111,7 +221,7 @@ class ImageTwigExtension extends \Twig_Extension
      * Replace the given image format with an thumbnail.
      *
      * @param string $value
-     * @param array $thumbnails
+     * @param string[] $thumbnails
      *
      * @return string
      */
@@ -137,5 +247,30 @@ class ImageTwigExtension extends \Twig_Extension
         }
 
         return implode(', ', $newSrcSets);
+    }
+
+    /**
+     * Get lazy thumbnails.
+     *
+     * @param string[] $thumbnails
+     *
+     * @return string[]|null
+     */
+    private function getLazyThumbnails($thumbnails)
+    {
+        if (empty($thumbnails)) {
+            return null;
+        }
+
+        if (null === $this->placeholders) {
+            $placeholders = [];
+            foreach (array_keys($thumbnails) as $key) {
+                $placeholders[$key] = $this->placeholderPath . $key . '.svg';
+            }
+
+            $this->placeholders = $placeholders;
+        }
+
+        return $this->placeholders;
     }
 }
