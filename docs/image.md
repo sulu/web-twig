@@ -164,3 +164,11 @@ The placeholder svg should look like this:
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"/>
 ```
+
+With the `has_lazy_image()` twig function you could check if the current rendered code includes one ore more lazy images.
+
+```twig
+{% if has_lazy_image() %}
+    <script src="lazy.js"></script>
+{% endif %}
+```

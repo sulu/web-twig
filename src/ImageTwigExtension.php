@@ -17,10 +17,10 @@ class ImageTwigExtension extends \Twig_Extension
     /**
      * @var bool
      */
-    protected $hasLazyImages = false;
+    protected $hasLazyImage = false;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $placeholders = null;
 
@@ -39,7 +39,7 @@ class ImageTwigExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('get_image', [$this, 'getImage'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('get_lazy_image', [$this, 'getLazyImage'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('has_lazy_images', [$this, 'hasLazyImages']),
+            new \Twig_SimpleFunction('has_lazy_image', [$this, 'hasLazyImage']),
         ];
     }
 
@@ -66,7 +66,7 @@ class ImageTwigExtension extends \Twig_Extension
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
-        $this->hasLazyImages = true;
+        $this->hasLazyImage = true;
 
         return $this->createImage($media, $attributes, $sources, $this->getLazyThumbnails($thumbnails));
     }
@@ -76,9 +76,9 @@ class ImageTwigExtension extends \Twig_Extension
      *
      * @return bool
      */
-    public function hasLazyImages()
+    public function hasLazyImage()
     {
-        return $this->hasLazyImages;
+        return $this->hasLazyImage;
     }
 
     /**

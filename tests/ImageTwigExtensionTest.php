@@ -225,4 +225,16 @@ class ImageTwigExtensionTest extends TestCase
             )
         );
     }
+
+    public function testHasLazyImage()
+    {
+        $this->assertFalse($this->imageTwigExtension->hasLazyImage());
+        $this->imageTwigExtension->getImage($this->image, 'sulu-400x400');
+        $this->assertFalse($this->imageTwigExtension->hasLazyImage());
+        $this->imageTwigExtension->getLazyImage($this->image, 'sulu-400x400');
+        $this->assertTrue($this->imageTwigExtension->hasLazyImage());
+        $this->imageTwigExtension->getLazyImage($this->image, 'sulu-400x400');
+        $this->imageTwigExtension->getImage($this->image, 'sulu-400x400');
+        $this->assertTrue($this->imageTwigExtension->hasLazyImage());
+    }
 }
