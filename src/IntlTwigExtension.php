@@ -15,8 +15,11 @@ class IntlTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
+            new \Twig_SimpleFunction('intl_countries', [$this, 'getCountries']),
             new \Twig_SimpleFunction('intl_country', [$this, 'getCountry']),
+            new \Twig_SimpleFunction('intl_locales', [$this, 'getLocales']),
             new \Twig_SimpleFunction('intl_locale', [$this, 'getLocale']),
+            new \Twig_SimpleFunction('intl_languages', [$this, 'getLanguages']),
             new \Twig_SimpleFunction('intl_language', [$this, 'getLanguage']),
         ];
     }
@@ -49,6 +52,18 @@ class IntlTwigExtension extends \Twig_Extension
     }
 
     /**
+     * Get countries.
+     *
+     * @param string|null $displayLocale
+     *
+     * @return string
+     */
+    public function getCountries($displayLocale = null)
+    {
+        return Intl::getRegionBundle()->getCountryNames($displayLocale);
+    }
+
+    /**
      * Get country.
      *
      * @param string $country
@@ -59,6 +74,18 @@ class IntlTwigExtension extends \Twig_Extension
     public function getCountry($country, $displayLocale = null)
     {
         return Intl::getRegionBundle()->getCountryName(strtoupper($country), $displayLocale);
+    }
+
+    /**
+     * Get languages.
+     *
+     * @param string|null $displayLocale
+     *
+     * @return string
+     */
+    public function getLanguages($displayLocale = null)
+    {
+        return Intl::getLanguageBundle()->getLanguageNames($displayLocale);
     }
 
     /**
@@ -73,6 +100,18 @@ class IntlTwigExtension extends \Twig_Extension
     public function getLanguage($language, $region = null, $displayLocale = null)
     {
         return Intl::getLanguageBundle()->getLanguageName($language, $region, $displayLocale);
+    }
+
+    /**
+     * Get locales.
+     *
+     * @param string|null $displayLocale
+     *
+     * @return string
+     */
+    public function getLocales($displayLocale = null)
+    {
+        return Intl::getLocaleBundle()->getLocaleNames($displayLocale);
     }
 
     /**

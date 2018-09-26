@@ -53,6 +53,8 @@ Germany
 Deutschland
 ```
 
+You can also get a list of countries by using `intl_countries('de')`.
+
 ### Get language
 
 You can get a language in a specfic language:
@@ -73,6 +75,8 @@ Austrian German
 Österreichisches Deutsch
 ```
 
+You can also get a list of languages by using `intl_languages('de')`.
+
 ### Get locale
 
 You can get a locale in a specfic language:
@@ -92,6 +96,8 @@ Deutsch
 German (Austria)
 Deutsch (Österreich)
 ```
+
+You can also get a list of locales by using `intl_locales('de')`.
 
 ### Get icu locale
 

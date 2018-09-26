@@ -41,6 +41,19 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
+    public function testCountries()
+    {
+        $this->assertContains(
+            'Germany',
+            $this->intlTwigExtension->getCountries('en')
+        );
+
+        $this->assertContains(
+            'Deutschland',
+            $this->intlTwigExtension->getCountries('de')
+        );
+    }
+
     public function testLanguage()
     {
         $this->assertEquals(
@@ -64,6 +77,29 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
+    public function testLanguages()
+    {
+        $this->assertContains(
+            'German',
+            $this->intlTwigExtension->getLanguages('en')
+        );
+
+        $this->assertContains(
+            'Austrian German',
+            $this->intlTwigExtension->getLanguages('en')
+        );
+
+        $this->assertContains(
+            'Deutsch',
+            $this->intlTwigExtension->getLanguages('de')
+        );
+
+        $this->assertContains(
+            'Österreichisches Deutsch',
+            $this->intlTwigExtension->getLanguages('de')
+        );
+    }
+
     public function testLocale()
     {
         $this->assertEquals(
@@ -84,6 +120,29 @@ class IntlTwigExtensionTest extends TestCase
         $this->assertEquals(
             'German (Austria)',
             $this->intlTwigExtension->getLocale('de_AT', 'en')
+        );
+    }
+
+    public function testLocales()
+    {
+        $this->assertContains(
+            'Deutsch',
+            $this->intlTwigExtension->getLocales('de')
+        );
+
+        $this->assertContains(
+            'German',
+            $this->intlTwigExtension->getLocales('en')
+        );
+
+        $this->assertContains(
+            'Deutsch (Österreich)',
+            $this->intlTwigExtension->getLocales('de')
+        );
+
+        $this->assertContains(
+            'German (Austria)',
+            $this->intlTwigExtension->getLocales('en')
         );
     }
 }
