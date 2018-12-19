@@ -30,14 +30,16 @@ class UrlTwigExtension extends \Twig_Extension
      * Get all components of url.
      *
      * @param $url string
+     *
      * @return array
+     *
      * @throws \InvalidArgumentException
      */
     private static function parseUrl($url)
     {
         $parsedUrl = parse_url($url);
 
-        if ($parsedUrl === false) {
+        if (false === $parsedUrl) {
             throw new \InvalidArgumentException(sprintf('URL (%s) is malformed!', $url));
         }
 
@@ -45,10 +47,12 @@ class UrlTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Sanitizes url
+     * Sanitizes url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function sanitizeUrl($url)
@@ -98,7 +102,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get protocol of url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getProtocol($url)
@@ -112,7 +118,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get host of url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getHost($url)
@@ -126,7 +134,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get port of url.
      *
      * @param $url string
+     *
      * @return int|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getPort($url)
@@ -140,7 +150,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get domain of url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getDomain($url)
@@ -163,7 +175,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get path of url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getPath($url)
@@ -177,7 +191,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get query of url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getQuery($url)
@@ -191,7 +207,9 @@ class UrlTwigExtension extends \Twig_Extension
      * Get fragment of url.
      *
      * @param $url string
+     *
      * @return string|null
+     *
      * @throws \InvalidArgumentException
      */
     public function getFragment($url)
