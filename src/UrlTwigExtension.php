@@ -37,6 +37,8 @@ class UrlTwigExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('url_format', [$this, 'formatUrl']),
             new \Twig_SimpleFilter('url_scheme', [$this, 'getScheme']),
+            new \Twig_SimpleFilter('url_user', [$this, 'getUser']),
+            new \Twig_SimpleFilter('url_pass', [$this, 'getPass']),
             new \Twig_SimpleFilter('url_host', [$this, 'getHost']),
             new \Twig_SimpleFilter('url_port', [$this, 'getPort']),
             new \Twig_SimpleFilter('url_path', [$this, 'getPath']),
