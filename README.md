@@ -27,14 +27,14 @@ The [web intl twig extension](docs/intl.md) gives you a simple and efficient way
 
 [More](docs/intl.md)
 
-### 3. Url
-
-The [web url twig extension](docs/url.md) gives you a simple and efficient way to get specific parts of urls.
-
-[More](docs/url.md)
-
 ### 4. count
 
 The [web count twig extension](docs/count.md) gives you a simple and efficient way to have a global counter in your twig template.
 
 [More](docs/count.md)
+
+### 5. Url
+
+The [web url twig extension](docs/url.md) gives you a simple and efficient way to get specific parts of urls.
+
+[More](docs/url.md)

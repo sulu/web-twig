@@ -7,7 +7,27 @@ namespace Massive\Component\Web;
  */
 class UrlTwigExtension extends \Twig_Extension
 {
-    const DEFAULT_PROTOCOL = 'http';
+    const DEFAULT_SCHEME = 'http';
+
+    const SCHEME = 'scheme';
+    const USER = 'user';
+    const PASS = 'pass';
+    const HOST = 'host';
+    const PORT = 'port';
+    const PATH = 'path';
+    const QUERY = 'query';
+    const FRAGMENT = 'fragment';
+
+    const DEFAULT_FLAGS = [
+        self::SCHEME => true,
+        self::USER => true,
+        self::PASS => true,
+        self::HOST => true,
+        self::PORT => true,
+        self::PATH => true,
+        self::QUERY => true,
+        self::FRAGMENT => true,
+    ];
 
     /**
      * {@inheritdoc}
@@ -15,11 +35,10 @@ class UrlTwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('url_sanitize', [$this, 'sanitizeUrl']),
-            new \Twig_SimpleFilter('url_protocol', [$this, 'getProtocol']),
+            new \Twig_SimpleFilter('url_format', [$this, 'formatUrl']),
+            new \Twig_SimpleFilter('url_scheme', [$this, 'getScheme']),
             new \Twig_SimpleFilter('url_host', [$this, 'getHost']),
             new \Twig_SimpleFilter('url_port', [$this, 'getPort']),
-            new \Twig_SimpleFilter('url_domain', [$this, 'getDomain']),
             new \Twig_SimpleFilter('url_path', [$this, 'getPath']),
             new \Twig_SimpleFilter('url_query', [$this, 'getQuery']),
             new \Twig_SimpleFilter('url_fragment', [$this, 'getFragment']),
@@ -31,87 +50,185 @@ class UrlTwigExtension extends \Twig_Extension
      *
      * @param $url string
      *
-     * @return array
-     *
-     * @throws \InvalidArgumentException
+     * @return array|null
      */
     private static function parseUrl($url)
     {
         $parsedUrl = parse_url($url);
 
         if (false === $parsedUrl) {
-            throw new \InvalidArgumentException(sprintf('URL (%s) is malformed!', $url));
+            return null;
         }
 
         return $parsedUrl;
     }
 
     /**
-     * Sanitizes url.
+     * Returns true if all the required flags would return a valid value. Otherwise returns false.
      *
-     * @param $url string
+     * @param array|null $parsedUrl
+     * @param array $flags
+     * @param array ...$requiredFlags
      *
-     * @return string|null
-     *
-     * @throws \InvalidArgumentException
+     * @return bool
      */
-    public function sanitizeUrl($url)
+    private static function validFlag($parsedUrl, $flags, ...$requiredFlags)
     {
-        $sanitizedUrl = filter_var($url, FILTER_SANITIZE_URL);
-
-        $parsedUrl = self::parseUrl($sanitizedUrl);
-
-        $result = '';
-
-        if (isset($parsedUrl['scheme']) && $parsedUrl['scheme']) {
-            $result .= $parsedUrl['scheme'] . '://';
+        if (null === $parsedUrl) {
+            return false;
         }
 
-        if (isset($parsedUrl['user']) && $parsedUrl['user']) {
-            $result .= $parsedUrl['user'];
-
-            if (isset($parsedUrl['pass']) && $parsedUrl['pass']) {
-                $result .= ':' . $parsedUrl['pass'];
+        foreach ($flags as $flag => $active) {
+            if (in_array($flag, $requiredFlags) && (!$active || !isset($parsedUrl[$flag]) || !$parsedUrl[$flag])) {
+                return false;
             }
         }
 
-        if (isset($parsedUrl['host']) && $parsedUrl['host']) {
-            $result .= $parsedUrl['host'];
-
-            if (isset($parsedUrl['port']) && $parsedUrl['port']) {
-                $result .= ':' . $parsedUrl['port'];
-            }
-        }
-
-        if (isset($parsedUrl['path']) && $parsedUrl['path']) {
-            $result .= $parsedUrl['path'];
-        }
-
-        if (isset($parsedUrl['query']) && $parsedUrl['query']) {
-            $result .= '?' . $parsedUrl['query'];
-        }
-
-        if (isset($parsedUrl['fragment']) && $parsedUrl['fragment']) {
-            $result .= '#' . $parsedUrl['fragment'];
-        }
-
-        return $result;
+        return true;
     }
 
     /**
-     * Get protocol of url.
+     * Formats url based on flags. All flags are true by default.
+     *
+     * <code>
+     * $flags = array(
+     *     'scheme' => true,
+     *     'user' => true,
+     *     'pass' => true,
+     *     'host' => true,
+     *     'port' => true,
+     *     'path' => true,
+     *     'query' => true,
+     *     'fragment' => true,
+     * );
+     *
+     * </code>
+     *
+     * @param $url string
+     * @param $flags array|null
+     *
+     * @return string|null
+     */
+    public function formatUrl($url, $flags = [])
+    {
+        $parsedUrl = self::parseUrl($url);
+
+        if (null === $parsedUrl) {
+            return null;
+        }
+
+        $flags = array_merge(self::DEFAULT_FLAGS, $flags);
+
+        $result = '';
+
+        foreach ($flags as $flag => $active) {
+            if (!self::validFlag($parsedUrl, $flags, $flag)) {
+                continue;
+            }
+
+            $value = $parsedUrl[$flag];
+
+            switch ($flag) {
+                case self::SCHEME:
+                    /* Scheme requires host */
+                    if (self::validFlag($parsedUrl, $flags, self::HOST)) {
+                        $result .= $value . '://';
+                    }
+
+                    break;
+                case self::USER:
+                    /* User requires host */
+                    if (self::validFlag($parsedUrl, $flags, self::HOST)) {
+                        $result .= $value;
+                    }
+
+                    break;
+                case self::PASS:
+                    /* Pass requires host and user */
+                    if (self::validFlag($parsedUrl, $flags, self::HOST, self::USER)) {
+                        $result .= ':' . $value;
+                    }
+
+                    break;
+                case self::HOST:
+                    if (self::validFlag($parsedUrl, $flags, self::USER)) {
+                        $result .= '@';
+                    }
+
+                    $result .= $value;
+
+                    break;
+                case self::PORT:
+                    /* Port requires host */
+                    if (self::validFlag($parsedUrl, $flags, self::HOST)) {
+                        $result .= ':' . $value;
+                    }
+
+                    break;
+                case self::PATH:
+                    $result .= $parsedUrl[self::PATH];
+
+                    break;
+                case self::QUERY:
+                    /* Query requires path */
+                    if (self::validFlag($parsedUrl, $flags, self::PATH)) {
+                        $result .= '?' . $value;
+                    }
+
+                    break;
+                case self::FRAGMENT:
+                    /* Fragment requires path */
+                    if (self::validFlag($parsedUrl, $flags, self::PATH)) {
+                        $result .= '#' . $value;
+                    }
+
+                    break;
+            }
+        }
+
+        return $result ? $result : null;
+    }
+
+    /**
+     * Get scheme of url.
      *
      * @param $url string
      *
      * @return string|null
-     *
-     * @throws \InvalidArgumentException
      */
-    public function getProtocol($url)
+    public function getScheme($url)
     {
         $parsedUrl = self::parseUrl($url);
 
-        return isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::SCHEME]) ? $parsedUrl[self::SCHEME] : null;
+    }
+
+    /**
+     * Get user of url.
+     *
+     * @param $url string
+     *
+     * @return string|null
+     */
+    public function getUser($url)
+    {
+        $parsedUrl = self::parseUrl($url);
+
+        return null !== $parsedUrl && isset($parsedUrl[self::USER]) ? $parsedUrl[self::USER] : null;
+    }
+
+    /**
+     * Get password of url.
+     *
+     * @param $url string
+     *
+     * @return string|null
+     */
+    public function getPass($url)
+    {
+        $parsedUrl = self::parseUrl($url);
+
+        return null !== $parsedUrl && isset($parsedUrl[self::PASS]) ? $parsedUrl[self::PASS] : null;
     }
 
     /**
@@ -120,14 +237,12 @@ class UrlTwigExtension extends \Twig_Extension
      * @param $url string
      *
      * @return string|null
-     *
-     * @throws \InvalidArgumentException
      */
     public function getHost($url)
     {
         $parsedUrl = self::parseUrl($url);
 
-        return isset($parsedUrl['host']) ? $parsedUrl['host'] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::HOST]) ? $parsedUrl[self::HOST] : null;
     }
 
     /**
@@ -136,39 +251,12 @@ class UrlTwigExtension extends \Twig_Extension
      * @param $url string
      *
      * @return int|null
-     *
-     * @throws \InvalidArgumentException
      */
     public function getPort($url)
     {
         $parsedUrl = self::parseUrl($url);
 
-        return isset($parsedUrl['port']) ? $parsedUrl['port'] : null;
-    }
-
-    /**
-     * Get domain of url.
-     *
-     * @param $url string
-     *
-     * @return string|null
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function getDomain($url)
-    {
-        $parsedUrl = self::parseUrl($url);
-
-        if (!isset($parsedUrl['scheme']) && !isset($parsedUrl['host']) && !preg_match('/^[^\/\?#]/', $url)) {
-            $parsedUrl = self::parseUrl(self::DEFAULT_PROTOCOL . '://' . $url);
-        }
-
-        $result = implode(':', array_filter([
-            isset($parsedUrl['host']) ? $parsedUrl['host'] : '',
-            isset($parsedUrl['port']) ? $parsedUrl['port'] : '',
-        ]));
-
-        return $result ? $result : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::PORT]) ? $parsedUrl[self::PORT] : null;
     }
 
     /**
@@ -177,14 +265,12 @@ class UrlTwigExtension extends \Twig_Extension
      * @param $url string
      *
      * @return string|null
-     *
-     * @throws \InvalidArgumentException
      */
     public function getPath($url)
     {
         $parsedUrl = self::parseUrl($url);
 
-        return isset($parsedUrl['path']) ? $parsedUrl['path'] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::PATH]) ? $parsedUrl[self::PATH] : null;
     }
 
     /**
@@ -193,14 +279,12 @@ class UrlTwigExtension extends \Twig_Extension
      * @param $url string
      *
      * @return string|null
-     *
-     * @throws \InvalidArgumentException
      */
     public function getQuery($url)
     {
         $parsedUrl = self::parseUrl($url);
 
-        return isset($parsedUrl['query']) ? $parsedUrl['query'] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::QUERY]) ? $parsedUrl[self::QUERY] : null;
     }
 
     /**
@@ -209,13 +293,11 @@ class UrlTwigExtension extends \Twig_Extension
      * @param $url string
      *
      * @return string|null
-     *
-     * @throws \InvalidArgumentException
      */
     public function getFragment($url)
     {
         $parsedUrl = self::parseUrl($url);
 
-        return isset($parsedUrl['fragment']) ? $parsedUrl['fragment'] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::FRAGMENT]) ? $parsedUrl[self::FRAGMENT] : null;
     }
 }
