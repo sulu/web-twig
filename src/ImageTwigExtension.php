@@ -1,13 +1,26 @@
 <?php
 
-namespace Massive\Component\Web;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Web\Twig;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * This Twig Extension manages the image formats.
  */
-class ImageTwigExtension extends \Twig_Extension
+class ImageTwigExtension extends AbstractExtension
 {
     /**
      * @var string|null
@@ -37,9 +50,9 @@ class ImageTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('get_image', [$this, 'getImage'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('get_lazy_image', [$this, 'getLazyImage'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('has_lazy_image', [$this, 'hasLazyImage']),
+            new TwigFunction('get_image', [$this, 'getImage'], ['is_safe' => ['html']]),
+            new TwigFunction('get_lazy_image', [$this, 'getLazyImage'], ['is_safe' => ['html']]),
+            new TwigFunction('has_lazy_image', [$this, 'hasLazyImage']),
         ];
     }
 
@@ -47,12 +60,12 @@ class ImageTwigExtension extends \Twig_Extension
      * Get an image or picture tag with given attributes for lazy loading.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
-     * @param string[] $sources
+     * @param array|string $attributes
+     * @param array $sources
      *
      * @return string
      */
-    public function getLazyImage($media, $attributes = [], array $sources = [])
+    public function getLazyImage($media, $attributes = [], array $sources = []): string
     {
         if (null === $this->placeholderPath) {
             throw new \InvalidArgumentException(
@@ -60,7 +73,7 @@ class ImageTwigExtension extends \Twig_Extension
             );
         }
 
-        if (is_array($media)) {
+        if (\is_array($media)) {
             $media = (object) $media;
         }
 
@@ -76,7 +89,7 @@ class ImageTwigExtension extends \Twig_Extension
      *
      * @return bool
      */
-    public function hasLazyImage()
+    public function hasLazyImage(): bool
     {
         return $this->hasLazyImage;
     }
@@ -85,12 +98,12 @@ class ImageTwigExtension extends \Twig_Extension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
-     * @param string[] $sources
+     * @param array|string $attributes
+     * @param array $sources
      *
      * @return string
      */
-    public function getImage($media, $attributes = [], array $sources = [])
+    public function getImage($media, $attributes = [], array $sources = []): string
     {
         return $this->createImage($media, $attributes, $sources);
     }
@@ -110,13 +123,13 @@ class ImageTwigExtension extends \Twig_Extension
         $attributes = [],
         array $sources = [],
         $lazyThumbnails = null
-    ) {
+    ): string {
         // Return an empty string if no one of the needed parameters is set.
         if (empty($media) || empty($attributes)) {
             return '';
         }
 
-        if (is_array($media)) {
+        if (\is_array($media)) {
             $media = (object) $media;
         }
 
@@ -126,7 +139,7 @@ class ImageTwigExtension extends \Twig_Extension
         $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
 
         // If attributes is an string, convert it to an array (like '{{ get_image_tag(media, '650x') }}').
-        if (is_string($attributes)) {
+        if (\is_string($attributes)) {
             $attributes = [
                 'src' => $attributes,
             ];
@@ -156,7 +169,7 @@ class ImageTwigExtension extends \Twig_Extension
 
         $sourceTags = '';
         foreach ($sources as $media => $sourceAttributes) {
-            if (is_string($sourceAttributes)) {
+            if (\is_string($sourceAttributes)) {
                 $sourceAttributes = [
                     'srcset' => $sourceAttributes,
                 ];
@@ -184,7 +197,7 @@ class ImageTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    private function createTag($tag, $attributes, $thumbnails, $lazyThumbnails = null)
+    private function createTag($tag, $attributes, $thumbnails, $lazyThumbnails = null): string
     {
         $output = '';
 
@@ -225,7 +238,7 @@ class ImageTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    private function srcsetThumbnailReplace($value, $thumbnails)
+    private function srcsetThumbnailReplace($value, $thumbnails): string
     {
         // Split string to an array (to get each srcset).
         $srcSets = explode(',', $value);
@@ -256,7 +269,7 @@ class ImageTwigExtension extends \Twig_Extension
      *
      * @return string[]|null
      */
-    private function getLazyThumbnails($thumbnails)
+    private function getLazyThumbnails($thumbnails): ?array
     {
         if (empty($thumbnails)) {
             return null;

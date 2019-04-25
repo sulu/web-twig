@@ -1,11 +1,25 @@
 <?php
 
-namespace Massive\Component\Web;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Web\Twig;
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * This Twig Extension manages the JavaScript components.
  */
-class ComponentTwigExtension extends \Twig_Extension
+class ComponentTwigExtension extends AbstractExtension
 {
     /**
      * @var array
@@ -33,13 +47,13 @@ class ComponentTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('register_component', [$this, 'registerComponent']),
-            new \Twig_SimpleFunction('get_components', [$this, 'getComponents'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('get_component_list', [$this, 'getComponentList'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('call_service', [$this, 'callService']),
-            new \Twig_SimpleFunction('get_services', [$this, 'getServices'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('get_service_list', [$this, 'getServiceList'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('set_component_prefix', [$this, 'setComponentPrefix']),
+            new TwigFunction('register_component', [$this, 'registerComponent']),
+            new TwigFunction('get_components', [$this, 'getComponents'], ['is_safe' => ['html']]),
+            new TwigFunction('get_component_list', [$this, 'getComponentList'], ['is_safe' => ['html']]),
+            new TwigFunction('call_service', [$this, 'callService']),
+            new TwigFunction('get_services', [$this, 'getServices'], ['is_safe' => ['html']]),
+            new TwigFunction('get_service_list', [$this, 'getServiceList'], ['is_safe' => ['html']]),
+            new TwigFunction('set_component_prefix', [$this, 'setComponentPrefix']),
         ];
     }
 
@@ -52,7 +66,7 @@ class ComponentTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function registerComponent($name, $options = null, $prefix = '')
+    public function registerComponent($name, $options = null, $prefix = ''): string
     {
         if (!isset($this->instanceCounter[$name])) {
             $this->instanceCounter[$name] = 0;
@@ -62,7 +76,7 @@ class ComponentTwigExtension extends \Twig_Extension
 
         $id = $this->componentPrefix . $prefix . $name . '-' . $this->instanceCounter[$name];
 
-        if (is_array($options) && array_key_exists('id', $options)) {
+        if (\is_array($options) && \array_key_exists('id', $options)) {
             $id = $options['id'];
         }
 
@@ -88,7 +102,7 @@ class ComponentTwigExtension extends \Twig_Extension
      * @param bool $jsonEncode
      * @param bool $clear
      *
-     * @return string
+     * @return string|array|false
      */
     public function getComponents($jsonEncode = true, $clear = true)
     {
@@ -106,7 +120,7 @@ class ComponentTwigExtension extends \Twig_Extension
      *
      * @param bool $jsonEncode
      *
-     * @return string
+     * @return string|array|false
      */
     public function getComponentList($jsonEncode = false)
     {
@@ -129,7 +143,7 @@ class ComponentTwigExtension extends \Twig_Extension
      * @param string $function
      * @param array $parameters
      */
-    public function callService($name, $function, $parameters = [])
+    public function callService($name, $function, $parameters = []): void
     {
         $this->services[] = [
             'name' => $name,
@@ -144,7 +158,7 @@ class ComponentTwigExtension extends \Twig_Extension
      * @param bool $jsonEncode
      * @param bool $clear
      *
-     * @return array
+     * @return array|string|false
      */
     public function getServices($jsonEncode = true, $clear = true)
     {
@@ -162,7 +176,7 @@ class ComponentTwigExtension extends \Twig_Extension
      *
      * @param bool $jsonEncode
      *
-     * @return string
+     * @return string|array|false
      */
     public function getServiceList($jsonEncode = false)
     {
@@ -178,18 +192,13 @@ class ComponentTwigExtension extends \Twig_Extension
         return $jsonEncode ? json_encode($services) : $services;
     }
 
-    public function setComponentPrefix($componentPrefix)
+    /**
+     * Set component prefix.
+     *
+     * @param string $componentPrefix
+     */
+    public function setComponentPrefix($componentPrefix): void
     {
         $this->componentPrefix = $componentPrefix;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'massive_web';
     }
 }

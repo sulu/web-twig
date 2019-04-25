@@ -1,13 +1,27 @@
 <?php
 
-namespace Massive\Component\Web;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Web\Twig;
 
 use Symfony\Component\Intl\Intl;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * This Twig Extension manages the image formats.
  */
-class IntlTwigExtension extends \Twig_Extension
+class IntlTwigExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -15,12 +29,12 @@ class IntlTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('intl_countries', [$this, 'getCountries']),
-            new \Twig_SimpleFunction('intl_country', [$this, 'getCountry']),
-            new \Twig_SimpleFunction('intl_locales', [$this, 'getLocales']),
-            new \Twig_SimpleFunction('intl_locale', [$this, 'getLocale']),
-            new \Twig_SimpleFunction('intl_languages', [$this, 'getLanguages']),
-            new \Twig_SimpleFunction('intl_language', [$this, 'getLanguage']),
+            new TwigFunction('intl_countries', [$this, 'getCountries']),
+            new TwigFunction('intl_country', [$this, 'getCountry']),
+            new TwigFunction('intl_locales', [$this, 'getLocales']),
+            new TwigFunction('intl_locale', [$this, 'getLocale']),
+            new TwigFunction('intl_languages', [$this, 'getLanguages']),
+            new TwigFunction('intl_language', [$this, 'getLanguage']),
         ];
     }
 
@@ -30,7 +44,7 @@ class IntlTwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('intl_icu_locale', [$this, 'getIcuLocale']),
+            new TwigFilter('intl_icu_locale', [$this, 'getIcuLocale']),
         ];
     }
 
@@ -41,11 +55,11 @@ class IntlTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function getIcuLocale($locale)
+    public function getIcuLocale($locale): string
     {
         $parts = explode('-', $locale);
         if (isset($parts[1])) {
-            $parts[1] = strtoupper($parts[1]);
+            $parts[1] = mb_strtoupper($parts[1]);
         }
 
         return implode('_', $parts);
@@ -56,9 +70,9 @@ class IntlTwigExtension extends \Twig_Extension
      *
      * @param string|null $displayLocale
      *
-     * @return string
+     * @return string[]
      */
-    public function getCountries($displayLocale = null)
+    public function getCountries($displayLocale = null): array
     {
         return Intl::getRegionBundle()->getCountryNames($displayLocale);
     }
@@ -69,11 +83,11 @@ class IntlTwigExtension extends \Twig_Extension
      * @param string $country
      * @param string|null $displayLocale
      *
-     * @return string
+     * @return string|null
      */
-    public function getCountry($country, $displayLocale = null)
+    public function getCountry($country, $displayLocale = null): ?string
     {
-        return Intl::getRegionBundle()->getCountryName(strtoupper($country), $displayLocale);
+        return Intl::getRegionBundle()->getCountryName(mb_strtoupper($country), $displayLocale);
     }
 
     /**
@@ -81,9 +95,9 @@ class IntlTwigExtension extends \Twig_Extension
      *
      * @param string|null $displayLocale
      *
-     * @return string
+     * @return string[]
      */
-    public function getLanguages($displayLocale = null)
+    public function getLanguages($displayLocale = null): array
     {
         return Intl::getLanguageBundle()->getLanguageNames($displayLocale);
     }
@@ -95,9 +109,9 @@ class IntlTwigExtension extends \Twig_Extension
      * @param string|null $region
      * @param string|null $displayLocale
      *
-     * @return string
+     * @return string|null
      */
-    public function getLanguage($language, $region = null, $displayLocale = null)
+    public function getLanguage($language, $region = null, $displayLocale = null): ?string
     {
         return Intl::getLanguageBundle()->getLanguageName($language, $region, $displayLocale);
     }
@@ -107,9 +121,9 @@ class IntlTwigExtension extends \Twig_Extension
      *
      * @param string|null $displayLocale
      *
-     * @return string
+     * @return string[]
      */
-    public function getLocales($displayLocale = null)
+    public function getLocales($displayLocale = null): array
     {
         return Intl::getLocaleBundle()->getLocaleNames($displayLocale);
     }
@@ -120,9 +134,9 @@ class IntlTwigExtension extends \Twig_Extension
      * @param string $locale
      * @param string|null $displayLocale
      *
-     * @return string
+     * @return string|null
      */
-    public function getLocale($locale, $displayLocale = null)
+    public function getLocale($locale, $displayLocale = null): ?string
     {
         return Intl::getLocaleBundle()->getLocaleName($locale, $displayLocale);
     }

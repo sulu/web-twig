@@ -1,7 +1,20 @@
 <?php
 
-use Massive\Component\Web\CountTwigExtension;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Web\Twig\Tests;
+
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\Web\Twig\CountTwigExtension;
 
 class CountTwigExtensionTest extends TestCase
 {
