@@ -101,7 +101,7 @@ class ImageTwigExtension extends \Twig_Extension
      * @param mixed $media
      * @param array|string $attributes
      * @param array $sources
-     * @param null|string[] $lazyThumbnails
+     * @param string[]|null $lazyThumbnails
      *
      * @return string
      */
@@ -180,7 +180,7 @@ class ImageTwigExtension extends \Twig_Extension
      * @param string $tag
      * @param string[] $attributes
      * @param string[] $thumbnails
-     * @param null|string[] $lazyThumbnails
+     * @param string[]|null $lazyThumbnails
      *
      * @return string
      */

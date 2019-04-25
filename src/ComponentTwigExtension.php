@@ -23,6 +23,11 @@ class ComponentTwigExtension extends \Twig_Extension
     protected $services = [];
 
     /**
+     * @var string
+     */
+    protected $componentPrefix = '';
+
+    /**
      * {@inheritdoc}
      */
     public function getFunctions()
@@ -34,6 +39,7 @@ class ComponentTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('call_service', [$this, 'callService']),
             new \Twig_SimpleFunction('get_services', [$this, 'getServices'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('get_service_list', [$this, 'getServiceList'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('set_component_prefix', [$this, 'setComponentPrefix']),
         ];
     }
 
@@ -54,7 +60,7 @@ class ComponentTwigExtension extends \Twig_Extension
 
         ++$this->instanceCounter[$name];
 
-        $id = $prefix . $name . '-' . $this->instanceCounter[$name];
+        $id = $this->componentPrefix . $prefix . $name . '-' . $this->instanceCounter[$name];
 
         if (is_array($options) && array_key_exists('id', $options)) {
             $id = $options['id'];
@@ -170,6 +176,13 @@ class ComponentTwigExtension extends \Twig_Extension
         $services = array_values($services);
 
         return $jsonEncode ? json_encode($services) : $services;
+    }
+
+    public function setComponentPrefix($componentPrefix)
+    {
+        $this->componentPrefix = $componentPrefix;
+
+        return $this;
     }
 
     /**
