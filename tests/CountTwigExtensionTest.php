@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig\Tests;
+namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\Web\Twig\CountTwigExtension;
+use Sulu\Twig\Extensions\CountTwigExtension;
 
 class CountTwigExtensionTest extends TestCase
 {
@@ -28,7 +28,7 @@ class CountTwigExtensionTest extends TestCase
         $this->countTwigExtension = new CountTwigExtension();
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertSame(1, $this->countTwigExtension->increaseCounter('test'));
         $this->assertSame(2, $this->countTwigExtension->increaseCounter('test'));

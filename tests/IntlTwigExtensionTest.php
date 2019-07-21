@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig\Tests;
+namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\Web\Twig\IntlTwigExtension;
+use Sulu\Twig\Extensions\IntlTwigExtension;
 
 class IntlTwigExtensionTest extends TestCase
 {
@@ -28,7 +28,7 @@ class IntlTwigExtensionTest extends TestCase
         $this->intlTwigExtension = new IntlTwigExtension();
     }
 
-    public function testLocalize()
+    public function testLocalize(): void
     {
         $this->assertSame(
             'de_AT',
@@ -41,7 +41,7 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testCountry()
+    public function testCountry(): void
     {
         $this->assertSame(
             'Germany',
@@ -54,7 +54,7 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testCountries()
+    public function testCountries(): void
     {
         $this->assertContains(
             'Germany',
@@ -67,7 +67,7 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLanguage()
+    public function testLanguage(): void
     {
         $this->assertSame(
             'German',
@@ -90,7 +90,7 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLanguages()
+    public function testLanguages(): void
     {
         $this->assertContains(
             'German',
@@ -113,7 +113,7 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLocale()
+    public function testLocale(): void
     {
         $this->assertSame(
             'Deutsch',
@@ -136,7 +136,7 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLocales()
+    public function testLocales(): void
     {
         $this->assertContains(
             'Deutsch',

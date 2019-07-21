@@ -14,13 +14,14 @@
         "twig/twig": "^1.34 || ^2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0",
-        "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
-        "symfony/intl": "^2.8 || ^3.0 || ^4.0",
         "friendsofphp/php-cs-fixer": "^2.11",
-        "phpstan/phpstan": "^0.11.5",
-        "phpstan/phpstan-phpunit": "^0.11.0",
-        "jangregor/phpstan-prophecy": "^0.4.0"
+        "jangregor/phpstan-prophecy": "^0.4.1",
+        "phpstan/phpstan": "^0.11.12",
+        "phpstan/phpstan-phpunit": "^0.11.2",
+        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0 || ^7.1",
+        "symfony/intl": "^2.8 || ^3.0 || ^4.0",
+        "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
+        "thecodingmachine/phpstan-strict-rules": "^0.11.2"
     },
     "suggest": {
         "symfony/property-access": "The ImageTwigExtension requires the symfony/property-access service.",
@@ -28,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Sulu\\Component\\Web\\Twig\\": "src/"
+            "Sulu\\Twig\\Extensions\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Sulu\\Component\\Web\\Twig\\Tests\\": "tests/"
+            "Sulu\\Twig\\Extensions\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -48,5 +49,8 @@
         "phpstan": "@php vendor/bin/phpstan analyze -c ./phpstan.neon",
         "php-cs": "@php vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
         "php-cs-fix": "@php vendor/bin/php-cs-fixer fix"
+    },
+    "config": {
+        "sort-packages": true
     }
 }

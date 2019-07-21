@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig\Tests;
+namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\Web\Twig\ComponentTwigExtension;
+use Sulu\Twig\Extensions\ComponentTwigExtension;
 
 class ComponentTwigExtensionTest extends TestCase
 {
@@ -28,7 +28,7 @@ class ComponentTwigExtensionTest extends TestCase
         $this->componentTwigExtension = new ComponentTwigExtension();
     }
 
-    public function testRegisterComponent()
+    public function testRegisterComponent(): void
     {
         $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
 
@@ -46,7 +46,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterMultipleComponent()
+    public function testRegisterMultipleComponent(): void
     {
         $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
         $this->assertSame('test-2', $this->componentTwigExtension->registerComponent('test'));
@@ -70,7 +70,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterPrefix()
+    public function testRegisterPrefix(): void
     {
         $this->componentTwigExtension->setComponentPrefix('partial-');
         $this->assertSame('partial-test-1', $this->componentTwigExtension->registerComponent('test'));
@@ -95,7 +95,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterCustomIdComponent()
+    public function testRegisterCustomIdComponent(): void
     {
         $this->assertSame('custom', $this->componentTwigExtension->registerComponent('test', ['id' => 'custom']));
         $components = $this->componentTwigExtension->getComponents();
@@ -112,7 +112,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterOptionComponent()
+    public function testRegisterOptionComponent(): void
     {
         $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test', ['option1' => 'value1', 'option2' => 'value2']));
 
@@ -133,7 +133,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterComponentArray()
+    public function testRegisterComponentArray(): void
     {
         $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
 
@@ -153,7 +153,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterComponentClear()
+    public function testRegisterComponentClear(): void
     {
         $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
 
@@ -189,7 +189,7 @@ class ComponentTwigExtensionTest extends TestCase
         $this->assertSame([], $this->componentTwigExtension->getComponents(false));
     }
 
-    public function testComponentList()
+    public function testComponentList(): void
     {
         $this->componentTwigExtension->registerComponent('test');
         $this->componentTwigExtension->registerComponent('test');
@@ -203,7 +203,7 @@ class ComponentTwigExtensionTest extends TestCase
         $this->assertSame(['test', 'test2', 'test3'], $componentList);
     }
 
-    public function testCallService()
+    public function testCallService(): void
     {
         $this->componentTwigExtension->callService('service', 'function', ['key' => 'value']);
 
@@ -221,7 +221,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetServices()
+    public function testGetServices(): void
     {
         $this->componentTwigExtension->callService('service', 'function', ['key' => 'value']);
         $this->componentTwigExtension->callService('service2', 'function', ['key' => 'value']);

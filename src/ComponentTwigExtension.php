@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig;
+namespace Sulu\Twig\Extensions;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -61,12 +61,12 @@ class ComponentTwigExtension extends AbstractExtension
      * Register a new component and get a unique id.
      *
      * @param string $name
-     * @param array $options
+     * @param mixed[]|null $options
      * @param string $prefix
      *
      * @return string
      */
-    public function registerComponent($name, $options = null, $prefix = ''): string
+    public function registerComponent(string $name, ?array $options = null, ?string $prefix = ''): string
     {
         if (!isset($this->instanceCounter[$name])) {
             $this->instanceCounter[$name] = 0;
@@ -104,7 +104,7 @@ class ComponentTwigExtension extends AbstractExtension
      *
      * @return string|array|false
      */
-    public function getComponents($jsonEncode = true, $clear = true)
+    public function getComponents(bool $jsonEncode = true, bool $clear = true)
     {
         $components = $this->components;
 
@@ -122,7 +122,7 @@ class ComponentTwigExtension extends AbstractExtension
      *
      * @return string|array|false
      */
-    public function getComponentList($jsonEncode = false)
+    public function getComponentList(bool $jsonEncode = false)
     {
         $components = [];
 
@@ -141,9 +141,9 @@ class ComponentTwigExtension extends AbstractExtension
      *
      * @param string $name
      * @param string $function
-     * @param array $parameters
+     * @param mixed[] $parameters
      */
-    public function callService($name, $function, $parameters = []): void
+    public function callService(string $name, string $function, array $parameters = []): void
     {
         $this->services[] = [
             'name' => $name,
@@ -160,7 +160,7 @@ class ComponentTwigExtension extends AbstractExtension
      *
      * @return array|string|false
      */
-    public function getServices($jsonEncode = true, $clear = true)
+    public function getServices(bool $jsonEncode = true, bool $clear = true)
     {
         $services = $this->services;
 
@@ -178,7 +178,7 @@ class ComponentTwigExtension extends AbstractExtension
      *
      * @return string|array|false
      */
-    public function getServiceList($jsonEncode = false)
+    public function getServiceList(bool $jsonEncode = false)
     {
         $services = [];
 
@@ -197,7 +197,7 @@ class ComponentTwigExtension extends AbstractExtension
      *
      * @param string $componentPrefix
      */
-    public function setComponentPrefix($componentPrefix): void
+    public function setComponentPrefix(string $componentPrefix): void
     {
         $this->componentPrefix = $componentPrefix;
     }

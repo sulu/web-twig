@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig;
+namespace Sulu\Twig\Extensions;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -32,7 +32,7 @@ class CountTwigExtension extends AbstractExtension
         ];
     }
 
-    public function increaseCounter($group): int
+    public function increaseCounter(string $group): int
     {
         if (!isset($this->counters[$group])) {
             $this->counters[$group] = 0;
@@ -41,12 +41,12 @@ class CountTwigExtension extends AbstractExtension
         return ++$this->counters[$group];
     }
 
-    public function resetCounter($group): void
+    public function resetCounter(string $group): void
     {
         $this->counters[$group] = 0;
     }
 
-    public function getCounter($group): int
+    public function getCounter(string $group): int
     {
         return isset($this->counters[$group]) ? $this->counters[$group] : 0;
     }

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig;
+namespace Sulu\Twig\Extensions;
 
 use Symfony\Component\Intl\Intl;
 use Twig\Extension\AbstractExtension;
@@ -55,7 +55,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string
      */
-    public function getIcuLocale($locale): string
+    public function getIcuLocale(string $locale): string
     {
         $parts = explode('-', $locale);
         if (isset($parts[1])) {
@@ -72,7 +72,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string[]
      */
-    public function getCountries($displayLocale = null): array
+    public function getCountries(?string $displayLocale = null): array
     {
         return Intl::getRegionBundle()->getCountryNames($displayLocale);
     }
@@ -85,7 +85,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string|null
      */
-    public function getCountry($country, $displayLocale = null): ?string
+    public function getCountry(string $country, ?string $displayLocale = null): ?string
     {
         return Intl::getRegionBundle()->getCountryName(mb_strtoupper($country), $displayLocale);
     }
@@ -97,7 +97,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string[]
      */
-    public function getLanguages($displayLocale = null): array
+    public function getLanguages(?string $displayLocale = null): array
     {
         return Intl::getLanguageBundle()->getLanguageNames($displayLocale);
     }
@@ -111,7 +111,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string|null
      */
-    public function getLanguage($language, $region = null, $displayLocale = null): ?string
+    public function getLanguage(string $language, ?string $region = null, ?string $displayLocale = null): ?string
     {
         return Intl::getLanguageBundle()->getLanguageName($language, $region, $displayLocale);
     }
@@ -123,7 +123,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string[]
      */
-    public function getLocales($displayLocale = null): array
+    public function getLocales(?string $displayLocale = null): array
     {
         return Intl::getLocaleBundle()->getLocaleNames($displayLocale);
     }
@@ -136,7 +136,7 @@ class IntlTwigExtension extends AbstractExtension
      *
      * @return string|null
      */
-    public function getLocale($locale, $displayLocale = null): ?string
+    public function getLocale(string $locale, ?string $displayLocale = null): ?string
     {
         return Intl::getLocaleBundle()->getLocaleName($locale, $displayLocale);
     }

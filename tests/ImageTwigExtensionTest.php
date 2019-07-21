@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig\Tests;
+namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\Web\Twig\ImageTwigExtension;
+use Sulu\Twig\Extensions\ImageTwigExtension;
 
 class ImageTwigExtensionTest extends TestCase
 {
@@ -42,7 +42,7 @@ class ImageTwigExtensionTest extends TestCase
         ];
     }
 
-    public function testImageTag()
+    public function testImageTag(): void
     {
         $this->assertSame(
             '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
@@ -50,7 +50,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testImageTagObject()
+    public function testImageTagObject(): void
     {
         $this->assertSame(
             '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
@@ -58,7 +58,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testComplexImageTag()
+    public function testComplexImageTag(): void
     {
         $this->assertSame(
             '<img alt="Logo"' .
@@ -82,7 +82,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testPictureTag()
+    public function testPictureTag(): void
     {
         $this->assertSame(
             '<picture>' .
@@ -105,7 +105,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testComplexPictureTag()
+    public function testComplexPictureTag(): void
     {
         $this->assertSame(
             '<picture>' .
@@ -140,7 +140,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLazyImageTag()
+    public function testLazyImageTag(): void
     {
         $this->assertSame(
             '<img alt="Title" title="Description" src="/lazy/sulu-100x100.svg" data-src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0" class="lazyload">',
@@ -148,7 +148,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLazyComplexImageTag()
+    public function testLazyComplexImageTag(): void
     {
         $this->assertSame(
             '<img alt="Logo"' .
@@ -174,7 +174,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLazyPictureTag()
+    public function testLazyPictureTag(): void
     {
         $this->assertSame(
             '<picture>' .
@@ -201,7 +201,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLazyComplexPictureTag()
+    public function testLazyComplexPictureTag(): void
     {
         $this->assertSame(
             '<picture>' .
@@ -239,7 +239,7 @@ class ImageTwigExtensionTest extends TestCase
         );
     }
 
-    public function testHasLazyImage()
+    public function testHasLazyImage(): void
     {
         $this->assertFalse($this->imageTwigExtension->hasLazyImage());
         $this->imageTwigExtension->getImage($this->image, 'sulu-400x400');

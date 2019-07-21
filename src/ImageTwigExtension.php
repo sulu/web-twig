@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Web\Twig;
+namespace Sulu\Twig\Extensions;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig\Extension\AbstractExtension;
@@ -37,7 +37,7 @@ class ImageTwigExtension extends AbstractExtension
      */
     private $placeholders = null;
 
-    public function __construct($placeholderPath = null)
+    public function __construct(?string $placeholderPath = null)
     {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
@@ -60,8 +60,8 @@ class ImageTwigExtension extends AbstractExtension
      * Get an image or picture tag with given attributes for lazy loading.
      *
      * @param mixed $media
-     * @param array|string $attributes
-     * @param array $sources
+     * @param string[]|string $attributes
+     * @param mixed[] $sources
      *
      * @return string
      */
@@ -98,8 +98,8 @@ class ImageTwigExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param array|string $attributes
-     * @param array $sources
+     * @param string[]|string $attributes
+     * @param mixed[] $sources
      *
      * @return string
      */
@@ -112,8 +112,8 @@ class ImageTwigExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param array|string $attributes
-     * @param array $sources
+     * @param string[]|string $attributes
+     * @param mixed[] $sources
      * @param string[]|null $lazyThumbnails
      *
      * @return string
@@ -122,7 +122,7 @@ class ImageTwigExtension extends AbstractExtension
         $media,
         $attributes = [],
         array $sources = [],
-        $lazyThumbnails = null
+        ?array $lazyThumbnails = null
     ): string {
         // Return an empty string if no one of the needed parameters is set.
         if (empty($media) || empty($attributes)) {
@@ -197,7 +197,7 @@ class ImageTwigExtension extends AbstractExtension
      *
      * @return string
      */
-    private function createTag($tag, $attributes, $thumbnails, $lazyThumbnails = null): string
+    private function createTag(string $tag, array $attributes, array $thumbnails, ?array $lazyThumbnails = null): string
     {
         $output = '';
 
@@ -238,7 +238,7 @@ class ImageTwigExtension extends AbstractExtension
      *
      * @return string
      */
-    private function srcsetThumbnailReplace($value, $thumbnails): string
+    private function srcsetThumbnailReplace(string $value, array $thumbnails): string
     {
         // Split string to an array (to get each srcset).
         $srcSets = explode(',', $value);
@@ -269,7 +269,7 @@ class ImageTwigExtension extends AbstractExtension
      *
      * @return string[]|null
      */
-    private function getLazyThumbnails($thumbnails): ?array
+    private function getLazyThumbnails(array $thumbnails): ?array
     {
         if (empty($thumbnails)) {
             return null;

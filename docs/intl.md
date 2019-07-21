@@ -10,7 +10,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yml
 services:
-    Sulu\Component\Web\Twig\IntlTwigExtension: ~
+    Sulu\Twig\Extensions\IntlTwigExtension: ~
 ```
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
