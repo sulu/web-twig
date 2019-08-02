@@ -1,6 +1,6 @@
 # Web Component Twig Extension
 
-The web component twig extension in connection with [web-js](https://github.com/massiveart/web-js) 
+The web component twig extension in connection with [web-js](https://github.com/sulu/web-js) 
 gives you a simple and efficient way to handle your javascript components over twig.
 
 ## Setup
@@ -9,37 +9,17 @@ gives you a simple and efficient way to handle your javascript components over t
 
 The twig extension need to be registered as [symfony service](http://symfony.com/doc/current/service_container.html).
 
-**xml**
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services
-        http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <services>
-        <service id="app.web_components" class="Massive\Component\Web\ComponentTwigExtension">
-            <tag name="twig.extension" />
-        </service>
-    </services>
-</container>
-```
-
-**yml**
-
 ```yml
 services:
-    app.web_components:
-        class: Massive\Component\Web\ComponentTwigExtension
-        tags:
-            - { name: twig.extension }
+    Sulu\Twig\Extensions\ComponentTwigExtension: ~
 ```
+
+If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
 
 ## Usage
 
 You can get the registered components and service call and call the
-[web-js](https://github.com/massiveart/web-js) function which is recommended to be used with it.
+[web-js](https://github.com/sulu/web-js) function which is recommended to be used with it.
 
 ```twig
 {# Registering a component #}
@@ -57,6 +37,13 @@ You can get the registered components and service call and call the
 
 {# Call a service function with arguments #}
 {% do call_service('api', 'send', ['Hello']) %}
+
+{# Output Html which is needed once by a specific component #}
+{% if 'component' in get_component_list() %}
+    <script id="component-template" type="text/html">
+        <div>Template</div>
+    </script>
+{% endif %}
 
 {# Start components and run service functions #}
 <script>

@@ -1,7 +1,20 @@
 <?php
 
-use Massive\Component\Web\CountTwigExtension;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Twig\Extensions\Tests;
+
 use PHPUnit\Framework\TestCase;
+use Sulu\Twig\Extensions\CountTwigExtension;
 
 class CountTwigExtensionTest extends TestCase
 {
@@ -15,7 +28,7 @@ class CountTwigExtensionTest extends TestCase
         $this->countTwigExtension = new CountTwigExtension();
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertSame(1, $this->countTwigExtension->increaseCounter('test'));
         $this->assertSame(2, $this->countTwigExtension->increaseCounter('test'));

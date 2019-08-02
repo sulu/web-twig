@@ -3,10 +3,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:5.6-node-browsers
+      - image: circleci/php:7.1-node-browsers
 
     steps:
       - checkout
+      - run: echo 'memory_limit = -1' | sudo tee -a /usr/local/etc/php/php.ini
       - run: sudo composer self-update
       - restore_cache:
           keys:
@@ -18,5 +19,5 @@ jobs:
           paths:
             - vendor
             - ~/.composer/cache
-      - run: php -d memory_limit=2G ./vendor/bin/phpunit
-      - run: php -n -d memory_limit=2G ./vendor/bin/php-cs-fixer fix --verbose --diff --diff-format=udiff --dry-run
+      - run: composer lint
+      - run: composer test

@@ -1,23 +1,27 @@
 {
-    "name": "massive/web-twig-extensions",
+    "name": "sulu/web-twig",
     "type": "library",
     "description": "The web twig extension for web-js component management",
     "license": "MIT",
     "authors": [
         {
-            "name": "Massive Web Twig contributors",
-            "homepage": "https://github.com/massiveart/web-twig/graphs/contributors"
+            "name": "Sulu Web Twig contributors",
+            "homepage": "https://github.com/sulu/web-twig/graphs/contributors"
         }
     ],
     "require": {
-        "php": "~5.5 || ~7.0",
-        "twig/twig": "^1.11 || ^2.0"
+        "php": "^7.1",
+        "twig/twig": "^1.34 || ^2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0",
-        "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
+        "friendsofphp/php-cs-fixer": "^2.11",
+        "jangregor/phpstan-prophecy": "^0.4.1",
+        "phpstan/phpstan": "^0.11.12",
+        "phpstan/phpstan-phpunit": "^0.11.2",
+        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0 || ^7.1",
         "symfony/intl": "^2.8 || ^3.0 || ^4.0",
-        "friendsofphp/php-cs-fixer": "^2.11"
+        "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
+        "thecodingmachine/phpstan-strict-rules": "^0.11.2"
     },
     "suggest": {
         "symfony/property-access": "The ImageTwigExtension requires the symfony/property-access service.",
@@ -25,7 +29,28 @@
     },
     "autoload": {
         "psr-4": {
-            "Massive\\Component\\Web\\": "src/"
+            "Sulu\\Twig\\Extensions\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sulu\\Twig\\Extensions\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@phpunit"
+        ],
+        "lint": [
+            "@phpstan",
+            "@php-cs"
+        ],
+        "phpunit": "@php vendor/bin/phpunit",
+        "phpstan": "@php vendor/bin/phpstan analyze -c ./phpstan.neon",
+        "php-cs": "@php vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
+        "php-cs-fix": "@php vendor/bin/php-cs-fixer fix"
+    },
+    "config": {
+        "sort-packages": true
     }
 }

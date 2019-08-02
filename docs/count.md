@@ -8,32 +8,12 @@ The count twig extension gives you a simple and efficient way to have a global c
 
 The twig extension need to be registered as [symfony service](http://symfony.com/doc/current/service_container.html).
 
-**xml**
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services
-        http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <services>
-        <service id="app.twig.web_count" class="Massive\Component\Web\CountTwigExtension">
-            <tag name="twig.extension" />
-        </service>
-    </services>
-</container>
-```
-
-**yml**
-
 ```yml
 services:
-    app.twig.web_count:
-        class: Massive\Component\Web\CountTwigExtension
-        tags:
-            - { name: twig.extension }
+    Sulu\Twig\Extensions\CountTwigExtension: ~
 ```
+
+If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
 
 ## Usage
 

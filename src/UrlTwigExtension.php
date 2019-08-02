@@ -1,11 +1,25 @@
 <?php
 
-namespace Massive\Component\Web;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Twig\Extensions;
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * This Twig Extension manages url transformation.
  */
-class UrlTwigExtension extends \Twig_Extension
+class UrlTwigExtension extends AbstractExtension
 {
     const DEFAULT_SCHEME = 'http';
 
@@ -35,26 +49,26 @@ class UrlTwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('url_format', [$this, 'formatUrl']),
-            new \Twig_SimpleFilter('url_scheme', [$this, 'getScheme']),
-            new \Twig_SimpleFilter('url_user', [$this, 'getUser']),
-            new \Twig_SimpleFilter('url_pass', [$this, 'getPass']),
-            new \Twig_SimpleFilter('url_host', [$this, 'getHost']),
-            new \Twig_SimpleFilter('url_port', [$this, 'getPort']),
-            new \Twig_SimpleFilter('url_path', [$this, 'getPath']),
-            new \Twig_SimpleFilter('url_query', [$this, 'getQuery']),
-            new \Twig_SimpleFilter('url_fragment', [$this, 'getFragment']),
+            new TwigFilter('url_format', [$this, 'formatUrl']),
+            new TwigFilter('url_scheme', [$this, 'getScheme']),
+            new TwigFilter('url_user', [$this, 'getUser']),
+            new TwigFilter('url_pass', [$this, 'getPass']),
+            new TwigFilter('url_host', [$this, 'getHost']),
+            new TwigFilter('url_port', [$this, 'getPort']),
+            new TwigFilter('url_path', [$this, 'getPath']),
+            new TwigFilter('url_query', [$this, 'getQuery']),
+            new TwigFilter('url_fragment', [$this, 'getFragment']),
         ];
     }
 
     /**
      * Get all components of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return array|null
      */
-    private static function parseUrl($url)
+    private static function parseUrl(string $url): ?array
     {
         $parsedUrl = parse_url($url);
 
@@ -69,19 +83,19 @@ class UrlTwigExtension extends \Twig_Extension
      * Returns true if all the required flags would return a valid value. Otherwise returns false.
      *
      * @param array|null $parsedUrl
-     * @param array $flags
-     * @param array ...$requiredFlags
+     * @param bool[] $flags
+     * @param string[] $requiredFlags
      *
      * @return bool
      */
-    private static function validFlag($parsedUrl, $flags, ...$requiredFlags)
+    private static function validFlag(?array $parsedUrl, array $flags, array $requiredFlags): bool
     {
         if (null === $parsedUrl) {
             return false;
         }
 
         foreach ($flags as $flag => $active) {
-            if (in_array($flag, $requiredFlags) && (!$active || !isset($parsedUrl[$flag]) || !$parsedUrl[$flag])) {
+            if (\in_array($flag, $requiredFlags, true) && (!$active || !isset($parsedUrl[$flag]) || !$parsedUrl[$flag])) {
                 return false;
             }
         }
@@ -106,12 +120,12 @@ class UrlTwigExtension extends \Twig_Extension
      *
      * </code>
      *
-     * @param $url string
-     * @param $flags array|null
+     * @param string $url
+     * @param bool[] $flags
      *
      * @return string|null
      */
-    public function formatUrl($url, $flags = [])
+    public function formatUrl(string $url, array $flags = []): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -123,8 +137,9 @@ class UrlTwigExtension extends \Twig_Extension
 
         $result = '';
 
+        /** @var string $flag */
         foreach ($flags as $flag => $active) {
-            if (!self::validFlag($parsedUrl, $flags, $flag)) {
+            if (!self::validFlag($parsedUrl, $flags, [$flag])) {
                 continue;
             }
 
@@ -133,27 +148,27 @@ class UrlTwigExtension extends \Twig_Extension
             switch ($flag) {
                 case self::SCHEME:
                     /* Scheme requires host */
-                    if (self::validFlag($parsedUrl, $flags, self::HOST)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::HOST])) {
                         $result .= $value . '://';
                     }
 
                     break;
                 case self::USER:
                     /* User requires host */
-                    if (self::validFlag($parsedUrl, $flags, self::HOST)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::HOST])) {
                         $result .= $value;
                     }
 
                     break;
                 case self::PASS:
                     /* Pass requires host and user */
-                    if (self::validFlag($parsedUrl, $flags, self::HOST, self::USER)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::HOST, self::USER])) {
                         $result .= ':' . $value;
                     }
 
                     break;
                 case self::HOST:
-                    if (self::validFlag($parsedUrl, $flags, self::USER)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::USER])) {
                         $result .= '@';
                     }
 
@@ -162,7 +177,7 @@ class UrlTwigExtension extends \Twig_Extension
                     break;
                 case self::PORT:
                     /* Port requires host */
-                    if (self::validFlag($parsedUrl, $flags, self::HOST)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::HOST])) {
                         $result .= ':' . $value;
                     }
 
@@ -173,14 +188,14 @@ class UrlTwigExtension extends \Twig_Extension
                     break;
                 case self::QUERY:
                     /* Query requires path */
-                    if (self::validFlag($parsedUrl, $flags, self::PATH)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::PATH])) {
                         $result .= '?' . $value;
                     }
 
                     break;
                 case self::FRAGMENT:
                     /* Fragment requires path */
-                    if (self::validFlag($parsedUrl, $flags, self::PATH)) {
+                    if (self::validFlag($parsedUrl, $flags, [self::PATH])) {
                         $result .= '#' . $value;
                     }
 
@@ -194,11 +209,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get scheme of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getScheme($url)
+    public function getScheme(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -208,11 +223,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get user of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getUser($url)
+    public function getUser(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -222,11 +237,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get password of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getPass($url)
+    public function getPass(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -236,11 +251,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get host of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getHost($url)
+    public function getHost(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -250,11 +265,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get port of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return int|null
      */
-    public function getPort($url)
+    public function getPort(string $url): ?int
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -264,11 +279,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get path of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getPath($url)
+    public function getPath(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -278,11 +293,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get query of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getQuery($url)
+    public function getQuery(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 
@@ -292,11 +307,11 @@ class UrlTwigExtension extends \Twig_Extension
     /**
      * Get fragment of url.
      *
-     * @param $url string
+     * @param string $url
      *
      * @return string|null
      */
-    public function getFragment($url)
+    public function getFragment(string $url): ?string
     {
         $parsedUrl = self::parseUrl($url);
 

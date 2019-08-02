@@ -1,7 +1,20 @@
 <?php
 
-use Massive\Component\Web\IntlTwigExtension;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Twig\Extensions\Tests;
+
 use PHPUnit\Framework\TestCase;
+use Sulu\Twig\Extensions\IntlTwigExtension;
 
 class IntlTwigExtensionTest extends TestCase
 {
@@ -15,33 +28,33 @@ class IntlTwigExtensionTest extends TestCase
         $this->intlTwigExtension = new IntlTwigExtension();
     }
 
-    public function testLocalize()
+    public function testLocalize(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'de_AT',
             $this->intlTwigExtension->getIcuLocale('de-at')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'de',
             $this->intlTwigExtension->getIcuLocale('de')
         );
     }
 
-    public function testCountry()
+    public function testCountry(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'Germany',
             $this->intlTwigExtension->getCountry('de', 'en')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Deutschland',
             $this->intlTwigExtension->getCountry('de', 'de')
         );
     }
 
-    public function testCountries()
+    public function testCountries(): void
     {
         $this->assertContains(
             'Germany',
@@ -54,30 +67,30 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLanguage()
+    public function testLanguage(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'German',
             $this->intlTwigExtension->getLanguage('de', null, 'en')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Deutsch',
             $this->intlTwigExtension->getLanguage('de', null, 'de')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Austrian German',
             $this->intlTwigExtension->getLanguage('de', 'AT', 'en')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Österreichisches Deutsch',
             $this->intlTwigExtension->getLanguage('de', 'AT', 'de')
         );
     }
 
-    public function testLanguages()
+    public function testLanguages(): void
     {
         $this->assertContains(
             'German',
@@ -100,30 +113,30 @@ class IntlTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLocale()
+    public function testLocale(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'Deutsch',
             $this->intlTwigExtension->getLocale('de', 'de')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'German',
             $this->intlTwigExtension->getLocale('de', 'en')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Deutsch (Österreich)',
             $this->intlTwigExtension->getLocale('de_AT', 'de')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'German (Austria)',
             $this->intlTwigExtension->getLocale('de_AT', 'en')
         );
     }
 
-    public function testLocales()
+    public function testLocales(): void
     {
         $this->assertContains(
             'Deutsch',

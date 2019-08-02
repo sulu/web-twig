@@ -1,7 +1,20 @@
 <?php
 
-use Massive\Component\Web\UrlTwigExtension;
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Twig\Extensions\Tests;
+
 use PHPUnit\Framework\TestCase;
+use Sulu\Twig\Extensions\UrlTwigExtension;
 
 class UrlTwigExtensionTest extends TestCase
 {
@@ -17,7 +30,7 @@ class UrlTwigExtensionTest extends TestCase
         $this->urlTwigExtension = new UrlTwigExtension();
     }
 
-    public function testUrlFormat()
+    public function testUrlFormat(): void
     {
         $this->assertSame(self::URL, $this->urlTwigExtension->formatUrl(self::URL));
 
@@ -45,42 +58,42 @@ class UrlTwigExtensionTest extends TestCase
         ]));
     }
 
-    public function testScheme()
+    public function testScheme(): void
     {
         $this->assertSame('https', $this->urlTwigExtension->getScheme(self::URL));
     }
 
-    public function testUser()
+    public function testUser(): void
     {
         $this->assertSame('john.doe', $this->urlTwigExtension->getUser(self::URL));
     }
 
-    public function testPass()
+    public function testPass(): void
     {
         $this->assertSame('hidden', $this->urlTwigExtension->getPass(self::URL));
     }
 
-    public function testHost()
+    public function testHost(): void
     {
         $this->assertSame('example.org', $this->urlTwigExtension->getHost(self::URL));
     }
 
-    public function testPort()
+    public function testPort(): void
     {
         $this->assertSame(8080, $this->urlTwigExtension->getPort(self::URL));
     }
 
-    public function testPath()
+    public function testPath(): void
     {
         $this->assertSame('/admin', $this->urlTwigExtension->getPath(self::URL));
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $this->assertSame('resource=pages&limit=20', $this->urlTwigExtension->getQuery(self::URL));
     }
 
-    public function testFragment()
+    public function testFragment(): void
     {
         $this->assertSame('1234', $this->urlTwigExtension->getFragment(self::URL));
     }
