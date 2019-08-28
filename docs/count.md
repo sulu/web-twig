@@ -1,4 +1,4 @@
-# Count Twig Extension
+# Count Extension
 
 The count twig extension gives you a simple and efficient way to have a global counter in your twig template.
 
@@ -10,7 +10,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yml
 services:
-    Sulu\Twig\Extensions\CountTwigExtension: ~
+    Sulu\Twig\Extensions\CountExtension: ~
 ```
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).

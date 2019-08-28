@@ -14,25 +14,25 @@ declare(strict_types=1);
 namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Twig\Extensions\ComponentTwigExtension;
+use Sulu\Twig\Extensions\ComponentExtension;
 
-class ComponentTwigExtensionTest extends TestCase
+class ComponentExtensionTest extends TestCase
 {
     /**
-     * @var ComponentTwigExtension
+     * @var ComponentExtension
      */
-    private $componentTwigExtension;
+    private $componentExtension;
 
     public function setup()
     {
-        $this->componentTwigExtension = new ComponentTwigExtension();
+        $this->componentExtension = new ComponentExtension();
     }
 
     public function testRegisterComponent(): void
     {
-        $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
 
-        $components = $this->componentTwigExtension->getComponents();
+        $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -48,10 +48,10 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testRegisterMultipleComponent(): void
     {
-        $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
-        $this->assertSame('test-2', $this->componentTwigExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('test-2', $this->componentExtension->registerComponent('test'));
 
-        $components = $this->componentTwigExtension->getComponents();
+        $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -72,11 +72,11 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testRegisterPrefix(): void
     {
-        $this->componentTwigExtension->setComponentPrefix('partial-');
-        $this->assertSame('partial-test-1', $this->componentTwigExtension->registerComponent('test'));
-        $this->assertSame('partial-test-2', $this->componentTwigExtension->registerComponent('test'));
+        $this->componentExtension->setComponentPrefix('partial-');
+        $this->assertSame('partial-test-1', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('partial-test-2', $this->componentExtension->registerComponent('test'));
 
-        $components = $this->componentTwigExtension->getComponents();
+        $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -97,8 +97,8 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testRegisterCustomIdComponent(): void
     {
-        $this->assertSame('custom', $this->componentTwigExtension->registerComponent('test', ['id' => 'custom']));
-        $components = $this->componentTwigExtension->getComponents();
+        $this->assertSame('custom', $this->componentExtension->registerComponent('test', ['id' => 'custom']));
+        $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -114,9 +114,9 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testRegisterOptionComponent(): void
     {
-        $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test', ['option1' => 'value1', 'option2' => 'value2']));
+        $this->assertSame('test-1', $this->componentExtension->registerComponent('test', ['option1' => 'value1', 'option2' => 'value2']));
 
-        $components = $this->componentTwigExtension->getComponents();
+        $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -135,9 +135,9 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testRegisterComponentArray(): void
     {
-        $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
 
-        $components = $this->componentTwigExtension->getComponents(false);
+        $components = $this->componentExtension->getComponents(false);
         $this->assertNotFalse($components);
         $this->assertIsObject($components[0]['options']);
         unset($components[0]['options']);
@@ -155,10 +155,10 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testRegisterComponentClear(): void
     {
-        $this->assertSame('test-1', $this->componentTwigExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
 
         // Get components without clearing them.
-        $components = $this->componentTwigExtension->getComponents(true, false);
+        $components = $this->componentExtension->getComponents(true, false);
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -172,7 +172,7 @@ class ComponentTwigExtensionTest extends TestCase
         );
 
         // Get components with clearing.
-        $components = $this->componentTwigExtension->getComponents();
+        $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
             json_encode([
@@ -186,17 +186,17 @@ class ComponentTwigExtensionTest extends TestCase
         );
 
         // Check if cleared correctly.
-        $this->assertSame([], $this->componentTwigExtension->getComponents(false));
+        $this->assertSame([], $this->componentExtension->getComponents(false));
     }
 
     public function testComponentList(): void
     {
-        $this->componentTwigExtension->registerComponent('test');
-        $this->componentTwigExtension->registerComponent('test');
-        $this->componentTwigExtension->registerComponent('test2');
-        $this->componentTwigExtension->registerComponent('test3');
+        $this->componentExtension->registerComponent('test');
+        $this->componentExtension->registerComponent('test');
+        $this->componentExtension->registerComponent('test2');
+        $this->componentExtension->registerComponent('test3');
 
-        $componentList = $this->componentTwigExtension->getComponentList();
+        $componentList = $this->componentExtension->getComponentList();
 
         $this->assertIsArray($componentList);
         $this->assertCount(3, $componentList);
@@ -205,7 +205,7 @@ class ComponentTwigExtensionTest extends TestCase
 
     public function testCallService(): void
     {
-        $this->componentTwigExtension->callService('service', 'function', ['key' => 'value']);
+        $this->componentExtension->callService('service', 'function', ['key' => 'value']);
 
         $this->assertSame(
             json_encode([
@@ -217,18 +217,18 @@ class ComponentTwigExtensionTest extends TestCase
                     ],
                 ],
             ]),
-            $this->componentTwigExtension->getServices()
+            $this->componentExtension->getServices()
         );
     }
 
     public function testGetServices(): void
     {
-        $this->componentTwigExtension->callService('service', 'function', ['key' => 'value']);
-        $this->componentTwigExtension->callService('service2', 'function', ['key' => 'value']);
-        $this->componentTwigExtension->callService('service2', 'function', ['key' => 'value']);
-        $this->componentTwigExtension->callService('service3', 'function', ['key' => 'value']);
+        $this->componentExtension->callService('service', 'function', ['key' => 'value']);
+        $this->componentExtension->callService('service2', 'function', ['key' => 'value']);
+        $this->componentExtension->callService('service2', 'function', ['key' => 'value']);
+        $this->componentExtension->callService('service3', 'function', ['key' => 'value']);
 
-        $servicesList = $this->componentTwigExtension->getServiceList();
+        $servicesList = $this->componentExtension->getServiceList();
 
         $this->assertIsArray($servicesList);
         $this->assertCount(3, $servicesList);

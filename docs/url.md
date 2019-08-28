@@ -1,4 +1,4 @@
-# Url Twig Extension
+# Url Extension
 
 The url twig extension gives you a simple and efficient way to get specific parts of urls.
 
@@ -10,7 +10,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yml
 services:
-    Sulu\Twig\Extensions\UrlTwigExtension: ~
+    Sulu\Twig\Extensions\UrlExtension: ~
 ```
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
@@ -141,7 +141,7 @@ arg=test&x=y
 You can get the fragment of a valid url
 
 ```twig
-{{ 'http://example.org/hello#test'|url_query }}
+{{ 'http://example.org/hello#test'|url_fragment }}
 ```
 
 Output:

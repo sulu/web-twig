@@ -20,7 +20,7 @@ use Twig\TwigFunction;
 /**
  * This Twig Extension manages the image formats.
  */
-class ImageTwigExtension extends AbstractExtension
+class ImageExtension extends AbstractExtension
 {
     /**
      * @var string|null

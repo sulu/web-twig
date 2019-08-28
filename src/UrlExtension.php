@@ -19,7 +19,7 @@ use Twig\TwigFilter;
 /**
  * This Twig Extension manages url transformation.
  */
-class UrlTwigExtension extends AbstractExtension
+class UrlExtension extends AbstractExtension
 {
     const DEFAULT_SCHEME = 'http';
 
