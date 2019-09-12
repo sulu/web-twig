@@ -1,4 +1,4 @@
-# Web Component Twig Extension
+# Web Component Extension
 
 The web component twig extension in connection with [web-js](https://github.com/sulu/web-js) 
 gives you a simple and efficient way to handle your javascript components over twig.
@@ -11,7 +11,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yml
 services:
-    Sulu\Twig\Extensions\ComponentTwigExtension: ~
+    Sulu\Twig\Extensions\ComponentExtension: ~
 ```
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).

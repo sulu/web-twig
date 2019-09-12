@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Twig\Extensions\ImageTwigExtension;
+use Sulu\Twig\Extensions\ImageExtension;
 
-class ImageTwigExtensionTest extends TestCase
+class ImageExtensionTest extends TestCase
 {
     /**
-     * @var ImageTwigExtension
+     * @var ImageExtension
      */
-    private $imageTwigExtension;
+    private $imageExtension;
 
     /**
      * @var array
@@ -30,7 +30,7 @@ class ImageTwigExtensionTest extends TestCase
 
     public function setup()
     {
-        $this->imageTwigExtension = new ImageTwigExtension('/lazy');
+        $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [
             'title' => 'Title',
             'description' => 'Description',
@@ -46,7 +46,7 @@ class ImageTwigExtensionTest extends TestCase
     {
         $this->assertSame(
             '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
-            $this->imageTwigExtension->getImage($this->image, 'sulu-100x100')
+            $this->imageExtension->getImage($this->image, 'sulu-100x100')
         );
     }
 
@@ -54,7 +54,7 @@ class ImageTwigExtensionTest extends TestCase
     {
         $this->assertSame(
             '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
-            $this->imageTwigExtension->getImage((object) $this->image, 'sulu-100x100')
+            $this->imageExtension->getImage((object) $this->image, 'sulu-100x100')
         );
     }
 
@@ -68,7 +68,7 @@ class ImageTwigExtensionTest extends TestCase
             ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
             ' id="image-id"' .
             ' class="image-class">',
-            $this->imageTwigExtension->getImage(
+            $this->imageExtension->getImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -94,7 +94,7 @@ class ImageTwigExtensionTest extends TestCase
                 ' title="Description"' .
                 ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">' .
             '</picture>',
-            $this->imageTwigExtension->getImage(
+            $this->imageExtension->getImage(
                 $this->image,
                 'sulu-400x400',
                 [
@@ -120,7 +120,7 @@ class ImageTwigExtensionTest extends TestCase
                 ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
                 ' class="image-class">' .
             '</picture>',
-            $this->imageTwigExtension->getImage(
+            $this->imageExtension->getImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -144,7 +144,7 @@ class ImageTwigExtensionTest extends TestCase
     {
         $this->assertSame(
             '<img alt="Title" title="Description" src="/lazy/sulu-100x100.svg" data-src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0" class="lazyload">',
-            $this->imageTwigExtension->getLazyImage($this->image, 'sulu-100x100')
+            $this->imageExtension->getLazyImage($this->image, 'sulu-100x100')
         );
     }
 
@@ -160,7 +160,7 @@ class ImageTwigExtensionTest extends TestCase
             ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
             ' id="image-id"' .
             ' class="image-class lazyload">',
-            $this->imageTwigExtension->getLazyImage(
+            $this->imageExtension->getLazyImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -190,7 +190,7 @@ class ImageTwigExtensionTest extends TestCase
             ' data-src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
             ' class="lazyload">' .
             '</picture>',
-            $this->imageTwigExtension->getLazyImage(
+            $this->imageExtension->getLazyImage(
                 $this->image,
                 'sulu-400x400',
                 [
@@ -219,7 +219,7 @@ class ImageTwigExtensionTest extends TestCase
             ' data-src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
             ' class="image-class lazyload">' .
             '</picture>',
-            $this->imageTwigExtension->getLazyImage(
+            $this->imageExtension->getLazyImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -241,13 +241,13 @@ class ImageTwigExtensionTest extends TestCase
 
     public function testHasLazyImage(): void
     {
-        $this->assertFalse($this->imageTwigExtension->hasLazyImage());
-        $this->imageTwigExtension->getImage($this->image, 'sulu-400x400');
-        $this->assertFalse($this->imageTwigExtension->hasLazyImage());
-        $this->imageTwigExtension->getLazyImage($this->image, 'sulu-400x400');
-        $this->assertTrue($this->imageTwigExtension->hasLazyImage());
-        $this->imageTwigExtension->getLazyImage($this->image, 'sulu-400x400');
-        $this->imageTwigExtension->getImage($this->image, 'sulu-400x400');
-        $this->assertTrue($this->imageTwigExtension->hasLazyImage());
+        $this->assertFalse($this->imageExtension->hasLazyImage());
+        $this->imageExtension->getImage($this->image, 'sulu-400x400');
+        $this->assertFalse($this->imageExtension->hasLazyImage());
+        $this->imageExtension->getLazyImage($this->image, 'sulu-400x400');
+        $this->assertTrue($this->imageExtension->hasLazyImage());
+        $this->imageExtension->getLazyImage($this->image, 'sulu-400x400');
+        $this->imageExtension->getImage($this->image, 'sulu-400x400');
+        $this->assertTrue($this->imageExtension->hasLazyImage());
     }
 }

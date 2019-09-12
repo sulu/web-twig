@@ -21,7 +21,7 @@ use Twig\TwigFunction;
 /**
  * This Twig Extension manages the image formats.
  */
-class IntlTwigExtension extends AbstractExtension
+class IntlExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}

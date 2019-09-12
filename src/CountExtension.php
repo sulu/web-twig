@@ -16,7 +16,7 @@ namespace Sulu\Twig\Extensions;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class CountTwigExtension extends AbstractExtension
+class CountExtension extends AbstractExtension
 {
     /**
      * @var int[]

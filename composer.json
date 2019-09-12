@@ -24,8 +24,8 @@
         "thecodingmachine/phpstan-strict-rules": "^0.11.2"
     },
     "suggest": {
-        "symfony/property-access": "The ImageTwigExtension requires the symfony/property-access service.",
-        "symfony/intl": "The IntlTwigExtension requires the symfony/intl service."
+        "symfony/property-access": "The ImageExtension requires the symfony/property-access service.",
+        "symfony/intl": "The IntlExtension requires the symfony/intl service."
     },
     "autoload": {
         "psr-4": {

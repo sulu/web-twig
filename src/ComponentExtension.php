@@ -19,7 +19,7 @@ use Twig\TwigFunction;
 /**
  * This Twig Extension manages the JavaScript components.
  */
-class ComponentTwigExtension extends AbstractExtension
+class ComponentExtension extends AbstractExtension
 {
     /**
      * @var array

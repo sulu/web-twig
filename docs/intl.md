@@ -1,4 +1,4 @@
-# Intl Twig Extension
+# Intl Extension
 
 The intl twig extension gives you a simple and efficient way to get country, language or a locale in a specific locale.
 
@@ -10,7 +10,7 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yml
 services:
-    Sulu\Twig\Extensions\IntlTwigExtension: ~
+    Sulu\Twig\Extensions\IntlExtension: ~
 ```
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
