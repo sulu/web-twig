@@ -38,3 +38,9 @@ The [web count extension](docs/count.md) gives you a simple and efficient way to
 The [web url extension](docs/url.md) gives you a simple and efficient way to get specific parts of urls.
 
 [More](docs/url.md)
+
+### 6. Editor
+
+The [web editor extension](docs/editor.md) gives you a simple way to add classes on html provided by a text editor.
+
+[More](docs/editor.md)
