@@ -24,6 +24,8 @@ You can get a country in a specific language:
 ```twig
 {{ intl_country('de') }}
 {{ intl_country('de', 'de') }}
+{{ intl_alpha3_country('de') }}
+{{ intl_alpha3_country('deu', 'de') }}
 ```
 
 Output:
@@ -31,9 +33,11 @@ Output:
 ```html
 Germany
 Deutschland
+Germany
+Deutschland
 ```
 
-You can also get a list of countries by using `intl_countries('de')`.
+You can also get a list of countries by using `intl_countries('de')` or `intl_alpha3_countries`.
 
 ### Get language
 
@@ -44,6 +48,8 @@ You can get a language in a specfic language:
 {{ intl_language('de', null, 'de') }}
 {{ intl_language('de', 'AT') }}
 {{ intl_language('de', 'AT', 'de') }}
+{{ intl_alpha3_language('de') }}
+{{ intl_alpha3_language('de', 'de') }}
 ```
 
 Output:
@@ -53,9 +59,11 @@ German
 Deutsch
 Austrian German
 Österreichisches Deutsch
+German
+Deutsch
 ```
 
-You can also get a list of languages by using `intl_languages('de')`.
+You can also get a list of languages by using `intl_languages('de')` or `intl_alpha3_languages('de')`.
 
 ### Get locale
 

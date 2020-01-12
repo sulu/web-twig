@@ -15,6 +15,7 @@ namespace Sulu\Twig\Extensions\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Twig\Extensions\IntlExtension;
+use Symfony\Component\Intl\Languages;
 
 class IntlExtensionTest extends TestCase
 {
@@ -54,6 +55,19 @@ class IntlExtensionTest extends TestCase
         );
     }
 
+    public function testAlpha3Country(): void
+    {
+        $this->assertSame(
+            'Germany',
+            $this->intlExtension->getAlpha3Country('deu', 'en')
+        );
+
+        $this->assertSame(
+            'Deutschland',
+            $this->intlExtension->getAlpha3Country('deu', 'de')
+        );
+    }
+
     public function testCountries(): void
     {
         $this->assertContains(
@@ -64,6 +78,19 @@ class IntlExtensionTest extends TestCase
         $this->assertContains(
             'Deutschland',
             $this->intlExtension->getCountries('de')
+        );
+    }
+
+    public function testAlpha3Countries(): void
+    {
+        $this->assertContains(
+            'Germany',
+            $this->intlExtension->getAlpha3Countries('en')
+        );
+
+        $this->assertContains(
+            'Deutschland',
+            $this->intlExtension->getAlpha3Countries('de')
         );
     }
 
@@ -78,15 +105,36 @@ class IntlExtensionTest extends TestCase
             'Deutsch',
             $this->intlExtension->getLanguage('de', null, 'de')
         );
+    }
+
+    public function testLanguageWithRegion(): void
+    {
+        if (class_exists(Languages::class)) {
+            // See https://github.com/symfony/symfony/issues/35309
+            $this->markTestSkipped('Languages with region is since symfony 4.4 not longer possible');
+        }
 
         $this->assertSame(
             'Austrian German',
-            $this->intlExtension->getLanguage('de', 'AT', 'en')
+            $this->intlExtension->getLanguage('en', 'GB', 'en')
         );
 
         $this->assertSame(
             'Österreichisches Deutsch',
             $this->intlExtension->getLanguage('de', 'AT', 'de')
+        );
+    }
+
+    public function testAlpha3Language(): void
+    {
+        $this->assertSame(
+            'German',
+            $this->intlExtension->getAlpha3Language('deu', 'en')
+        );
+
+        $this->assertSame(
+            'Deutsch',
+            $this->intlExtension->getAlpha3Language('deu', 'de')
         );
     }
 
@@ -98,18 +146,39 @@ class IntlExtensionTest extends TestCase
         );
 
         $this->assertContains(
+            'Deutsch',
+            $this->intlExtension->getLanguages('de')
+        );
+    }
+
+    public function testLanguagesWithRegions(): void
+    {
+        if (class_exists(Languages::class)) {
+            // See https://github.com/symfony/symfony/issues/35309
+            $this->markTestSkipped('Languages with region is since symfony 4.4 not longer possible');
+        }
+
+        $this->assertContains(
             'Austrian German',
             $this->intlExtension->getLanguages('en')
         );
 
         $this->assertContains(
-            'Deutsch',
+            'Österreichisches Deutsch',
             $this->intlExtension->getLanguages('de')
+        );
+    }
+
+    public function testAlpha3Languages(): void
+    {
+        $this->assertContains(
+            'German',
+            $this->intlExtension->getAlpha3Languages('en')
         );
 
         $this->assertContains(
-            'Österreichisches Deutsch',
-            $this->intlExtension->getLanguages('de')
+            'Deutsch',
+            $this->intlExtension->getAlpha3Languages('de')
         );
     }
 
