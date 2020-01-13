@@ -12,3 +12,5 @@ parameters:
     inferPrivatePropertyTypeFromConstructor: true
     excludes_analyse:
         - %currentWorkingDirectory%/vendor/*
+    ignoreErrors:
+        - '#Call to an undefined static method Symfony\\Component\\Intl\\Intl#'

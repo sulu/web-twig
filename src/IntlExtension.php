@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Twig\Extensions;
 
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Languages;
+use Symfony\Component\Intl\Locales;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -30,11 +33,15 @@ class IntlExtension extends AbstractExtension
     {
         return [
             new TwigFunction('intl_countries', [$this, 'getCountries']),
+            new TwigFunction('intl_alpha3_countries', [$this, 'getAlpha3Countries']),
             new TwigFunction('intl_country', [$this, 'getCountry']),
+            new TwigFunction('intl_alpha3_country', [$this, 'getAlpha3Country']),
             new TwigFunction('intl_locales', [$this, 'getLocales']),
             new TwigFunction('intl_locale', [$this, 'getLocale']),
             new TwigFunction('intl_languages', [$this, 'getLanguages']),
             new TwigFunction('intl_language', [$this, 'getLanguage']),
+            new TwigFunction('intl_alpha3_languages', [$this, 'getAlpha3Languages']),
+            new TwigFunction('intl_alpha3_language', [$this, 'getAlpha3Language']),
         ];
     }
 
@@ -74,7 +81,23 @@ class IntlExtension extends AbstractExtension
      */
     public function getCountries(?string $displayLocale = null): array
     {
+        if (class_exists(Countries::class)) {
+            return Countries::getNames($displayLocale);
+        }
+
         return Intl::getRegionBundle()->getCountryNames($displayLocale);
+    }
+
+    /**
+     * Get alpha3 countries.
+     *
+     * @param string|null $displayLocale
+     *
+     * @return string[]
+     */
+    public function getAlpha3Countries(?string $displayLocale = null): array
+    {
+        return Countries::getAlpha3Names($displayLocale);
     }
 
     /**
@@ -87,7 +110,24 @@ class IntlExtension extends AbstractExtension
      */
     public function getCountry(string $country, ?string $displayLocale = null): ?string
     {
+        if (class_exists(Countries::class)) {
+            return Countries::getName(mb_strtoupper($country), $displayLocale);
+        }
+
         return Intl::getRegionBundle()->getCountryName(mb_strtoupper($country), $displayLocale);
+    }
+
+    /**
+     * Get alpha3 country.
+     *
+     * @param string $alpha3Code
+     * @param string|null $displayLocale
+     *
+     * @return string|null
+     */
+    public function getAlpha3Country(string $alpha3Code, ?string $displayLocale = null): ?string
+    {
+        return Countries::getAlpha3Name(mb_strtoupper($alpha3Code), $displayLocale);
     }
 
     /**
@@ -99,7 +139,23 @@ class IntlExtension extends AbstractExtension
      */
     public function getLanguages(?string $displayLocale = null): array
     {
+        if (class_exists(Languages::class)) {
+            return Languages::getNames($displayLocale);
+        }
+
         return Intl::getLanguageBundle()->getLanguageNames($displayLocale);
+    }
+
+    /**
+     * Get alpha3 languages.
+     *
+     * @param string|null $displayLocale
+     *
+     * @return string[]
+     */
+    public function getAlpha3Languages(?string $displayLocale = null): array
+    {
+        return Languages::getAlpha3Names($displayLocale);
     }
 
     /**
@@ -113,7 +169,24 @@ class IntlExtension extends AbstractExtension
      */
     public function getLanguage(string $language, ?string $region = null, ?string $displayLocale = null): ?string
     {
+        if (class_exists(Languages::class)) {
+            return Languages::getName($language, $displayLocale);
+        }
+
         return Intl::getLanguageBundle()->getLanguageName($language, $region, $displayLocale);
+    }
+
+    /**
+     * Get alpha3 language.
+     *
+     * @param string $language
+     * @param string|null $displayLocale
+     *
+     * @return string|null
+     */
+    public function getAlpha3Language(string $language, ?string $displayLocale = null): ?string
+    {
+        return Languages::getAlpha3Name($language, $displayLocale);
     }
 
     /**
@@ -125,6 +198,10 @@ class IntlExtension extends AbstractExtension
      */
     public function getLocales(?string $displayLocale = null): array
     {
+        if (class_exists(Locales::class)) {
+            return Locales::getNames($displayLocale);
+        }
+
         return Intl::getLocaleBundle()->getLocaleNames($displayLocale);
     }
 
@@ -138,6 +215,10 @@ class IntlExtension extends AbstractExtension
      */
     public function getLocale(string $locale, ?string $displayLocale = null): ?string
     {
+        if (class_exists(Locales::class)) {
+            return Locales::getName($locale, $displayLocale);
+        }
+
         return Intl::getLocaleBundle()->getLocaleName($locale, $displayLocale);
     }
 }
