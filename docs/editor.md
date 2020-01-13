@@ -80,19 +80,6 @@ This will output:
 <section class="editor"><p>Test</p></section>
 ```
 
-### Custom Tag
-
-```twig
-{% set yourHtml = '<p>Test</p>' %}
-{{ yourHtml|editor('section') }}
-```
-
-This will output:
-
-```html
-<section class="editor"><p>Test</p></section>
-```
-
 ### Custom Class
 
 ```twig
@@ -103,5 +90,5 @@ This will output:
 This will output:
 
 ```html
-<section class="custom"><p>Test</p></section>
+<div class="custom"><p>Test</p></div>
 ```

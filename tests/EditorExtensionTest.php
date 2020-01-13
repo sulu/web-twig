@@ -47,8 +47,8 @@ class EditorExtensionTest extends TestCase
     public function testEditorCustomTag(): void
     {
         $this->assertSame(
-            '<div class="custom"><p>Test</p></div>',
-            $this->editorExtension->editor('<p>Test</p>', null, 'custom')
+            '<section class="editor"><p>Test</p></section>',
+            $this->editorExtension->editor('<p>Test</p>', 'section')
         );
     }
 
