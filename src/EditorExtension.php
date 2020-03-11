@@ -81,7 +81,7 @@ class EditorExtension extends AbstractExtension
      */
     public function editorClasses(?string $html, array $addClasses = []): string
     {
-        if (!$html) {
+        if (null === $html) {
             return '';
         }
 

@@ -75,4 +75,12 @@ class EditorExtensionTest extends TestCase
             $this->editorExtension->editorClasses(null)
         );
     }
+
+    public function testEditorAddClassesWithFalsy(): void
+    {
+        $this->assertSame(
+            '0',
+            $this->editorExtension->editorClasses('0')
+        );
+    }
 }
