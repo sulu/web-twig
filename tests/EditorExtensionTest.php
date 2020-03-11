@@ -36,6 +36,14 @@ class EditorExtensionTest extends TestCase
         );
     }
 
+    public function testEditorWithNull(): void
+    {
+        $this->assertSame(
+            '<div class="editor"></div>',
+            $this->editorExtension->editor(null)
+        );
+    }
+
     public function testEditorCustomClass(): void
     {
         $this->assertSame(
@@ -57,6 +65,14 @@ class EditorExtensionTest extends TestCase
         $this->assertSame(
             '<ul class="list"><li>List</li></ul>',
             $this->editorExtension->editorClasses('<ul><li>List</li></ul>', ['ul' => 'list'])
+        );
+    }
+
+    public function testEditorAddClassesWithNull(): void
+    {
+        $this->assertSame(
+            '',
+            $this->editorExtension->editorClasses(null)
         );
     }
 }
