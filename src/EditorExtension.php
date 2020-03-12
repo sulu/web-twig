@@ -65,10 +65,14 @@ class EditorExtension extends AbstractExtension
      */
     public function editor(?string $html, ?string $tag = null, ?string $className = null): string
     {
+        if (null === $html) {
+            return '';
+        }
+
         $className = $className ?: $this->className;
         $tag = $tag ?: $this->tag;
 
-        return '<' . $tag . ' class="' . $className . '">' . ($html ?? '') . '</' . $tag . '>';
+        return '<' . $tag . ' class="' . $className . '">' . $html . '</' . $tag . '>';
     }
 
     /**

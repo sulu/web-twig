@@ -39,7 +39,7 @@ class EditorExtensionTest extends TestCase
     public function testEditorWithNull(): void
     {
         $this->assertSame(
-            '<div class="editor"></div>',
+            '',
             $this->editorExtension->editor(null)
         );
     }
