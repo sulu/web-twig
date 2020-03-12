@@ -57,12 +57,18 @@ class EditorExtension extends AbstractExtension
     /**
      * Returns a given html with a wrapped tag and class.
      *
-     * @param string $html
+     * @param string|null $html
+     * @param string|null $tag
+     * @param string|null $className
      *
      * @return string
      */
-    public function editor(string $html, string $tag = null, string $className = null): string
+    public function editor(?string $html, ?string $tag = null, ?string $className = null): string
     {
+        if (null === $html) {
+            return '';
+        }
+
         $className = $className ?: $this->className;
         $tag = $tag ?: $this->tag;
 
@@ -72,13 +78,17 @@ class EditorExtension extends AbstractExtension
     /**
      * Add specified classes to tags.
      *
-     * @param string $html
+     * @param string|null $html
      * @param string[] $addClasses
      *
      * @return string
      */
-    public function editorClasses(string $html, array $addClasses = []): string
+    public function editorClasses(?string $html, array $addClasses = []): string
     {
+        if (null === $html) {
+            return '';
+        }
+
         $addClasses = array_merge($this->addClasses, $addClasses);
 
         $tags = [];
