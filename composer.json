@@ -15,13 +15,13 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.11",
-        "jangregor/phpstan-prophecy": "^0.4.1",
-        "phpstan/phpstan": "^0.11.12",
-        "phpstan/phpstan-phpunit": "^0.11.2",
+        "jangregor/phpstan-prophecy": "^0.6",
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-phpunit": "^0.12",
         "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0 || ^7.1",
         "symfony/intl": "^2.8 || ^3.0 || ^4.0 || ^5.0",
         "symfony/property-access": "^2.8 || ^3.0 || ^4.0 || ^5.0",
-        "thecodingmachine/phpstan-strict-rules": "^0.11.2"
+        "thecodingmachine/phpstan-strict-rules": "^0.12"
     },
     "suggest": {
         "symfony/property-access": "The ImageExtension requires the symfony/property-access service.",

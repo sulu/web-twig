@@ -66,7 +66,7 @@ class UrlExtension extends AbstractExtension
      *
      * @param string $url
      *
-     * @return array|null
+     * @return array<string, int|string>
      */
     private static function parseUrl(string $url): ?array
     {
@@ -82,7 +82,7 @@ class UrlExtension extends AbstractExtension
     /**
      * Returns true if all the required flags would return a valid value. Otherwise returns false.
      *
-     * @param array|null $parsedUrl
+     * @param array<string, int|string>|null $parsedUrl
      * @param bool[] $flags
      * @param string[] $requiredFlags
      *
@@ -217,7 +217,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::SCHEME]) ? $parsedUrl[self::SCHEME] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::SCHEME]) ? (string) $parsedUrl[self::SCHEME] : null;
     }
 
     /**
@@ -231,7 +231,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::USER]) ? $parsedUrl[self::USER] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::USER]) ? (string) $parsedUrl[self::USER] : null;
     }
 
     /**
@@ -245,7 +245,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::PASS]) ? $parsedUrl[self::PASS] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::PASS]) ? (string) $parsedUrl[self::PASS] : null;
     }
 
     /**
@@ -259,7 +259,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::HOST]) ? $parsedUrl[self::HOST] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::HOST]) ? (string) $parsedUrl[self::HOST] : null;
     }
 
     /**
@@ -273,7 +273,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::PORT]) ? $parsedUrl[self::PORT] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::PORT]) ? (int) $parsedUrl[self::PORT] : null;
     }
 
     /**
@@ -287,7 +287,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::PATH]) ? $parsedUrl[self::PATH] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::PATH]) ? (string) $parsedUrl[self::PATH] : null;
     }
 
     /**
@@ -301,7 +301,7 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::QUERY]) ? $parsedUrl[self::QUERY] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::QUERY]) ? (string) $parsedUrl[self::QUERY] : null;
     }
 
     /**
@@ -315,6 +315,6 @@ class UrlExtension extends AbstractExtension
     {
         $parsedUrl = self::parseUrl($url);
 
-        return null !== $parsedUrl && isset($parsedUrl[self::FRAGMENT]) ? $parsedUrl[self::FRAGMENT] : null;
+        return null !== $parsedUrl && isset($parsedUrl[self::FRAGMENT]) ? (string) $parsedUrl[self::FRAGMENT] : null;
     }
 }

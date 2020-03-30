@@ -24,11 +24,11 @@ class ImageExtensionTest extends TestCase
     private $imageExtension;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $image;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [

@@ -70,7 +70,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes for lazy loading.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
+     * @param mixed[]|string $attributes
      * @param mixed[] $sources
      *
      * @return string
@@ -108,7 +108,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
+     * @param mixed[]|string $attributes
      * @param mixed[] $sources
      *
      * @return string
@@ -122,7 +122,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
+     * @param mixed[]|string $attributes
      * @param mixed[] $sources
      * @param string[]|null $lazyThumbnails
      *
@@ -206,7 +206,7 @@ class ImageExtension extends AbstractExtension
      * Create html tag.
      *
      * @param string $tag
-     * @param string[] $attributes
+     * @param mixed[] $attributes
      * @param string[] $thumbnails
      * @param string[]|null $lazyThumbnails
      *

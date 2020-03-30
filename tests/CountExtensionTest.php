@@ -23,7 +23,7 @@ class CountExtensionTest extends TestCase
      */
     private $countExtension;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->countExtension = new CountExtension();
     }

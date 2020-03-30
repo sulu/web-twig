@@ -23,7 +23,7 @@ class ComponentExtensionTest extends TestCase
      */
     private $componentExtension;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->componentExtension = new ComponentExtension();
     }
@@ -137,16 +137,17 @@ class ComponentExtensionTest extends TestCase
     {
         $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
 
+        /** @var array<int, array{name: string, id: string, options: mixed}> $components */
         $components = $this->componentExtension->getComponents(false);
         $this->assertNotFalse($components);
         $this->assertIsObject($components[0]['options']);
-        unset($components[0]['options']);
 
         $this->assertSame(
             [
                 [
                     'name' => 'test',
                     'id' => 'test-1',
+                    'options' => $components[0]['options'],
                 ],
             ],
             $components
