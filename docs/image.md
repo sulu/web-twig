@@ -119,6 +119,8 @@ This could be:
 
 ##### 5. Lazy images
 
+> See also 6. Native lazy loading for a modern implementation.
+
 The `get_lazy_image` twig function accepts the same parameters as the `get_image` function.
 It will render the img attributes `src` and `srcset` as `data-src` and `data-srcset`.
 Values of `src` and `srcset` are set to a placeholder svg image of the configured `placeholderPath`
@@ -126,7 +128,7 @@ Values of `src` and `srcset` are set to a placeholder svg image of the configure
 Use for example [lazysizes](https://github.com/aFarkas/lazysizes) JS Library to load the images when they are visible.
 
 ```twig
-<img alt="Test" title="Test" data-src="/images/placeholders/sulu-100x100.svg" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">
+<img alt="Test" title="Test" src="/images/placeholders/sulu-100x100.svg" data-src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">
 ```
 
 This could be:
@@ -142,10 +144,42 @@ The placeholder svg should look like this:
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"/>
 ```
 
+For this you need configure the placeholder path in the service definition:
+
+```yaml
+services:
+    Sulu\Twig\Extensions\ImageExtension:
+        arguments:
+            - '/images/placeholders'
+```
+
 With the `has_lazy_image()` twig function you could check if the current rendered code includes one ore more lazy images.
 
 ```twig
 {% if has_lazy_image() %}
     <script src="lazy.js"></script>
 {% endif %}
+```
+
+##### 6. Native lazy loading
+
+Browsers today have native support for [lazy-loading](https://caniuse.com/#feat=loading-lazy-attr).
+
+You can do the following:
+
+```twig
+{{ get_image(image, {
+    src: '800x',
+    loading: 'lazy',
+}) }}
+```
+
+or when you want by default load all images lazy use the following service definition:
+
+```yml
+services:
+    Sulu\Twig\Extensions\ImageExtension:
+        arguments:
+            - null
+            - { loading: 'lazy' }
 ```

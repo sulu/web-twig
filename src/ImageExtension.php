@@ -37,11 +37,21 @@ class ImageExtension extends AbstractExtension
      */
     private $placeholders = null;
 
-    public function __construct(?string $placeholderPath = null)
+    /**
+     * @var string[]
+     */
+    private $defaultAttributes = null;
+
+    /**
+     * @param string[] $defaultAttributes
+     */
+    public function __construct(?string $placeholderPath = null, array $defaultAttributes = [])
     {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
         }
+
+        $this->defaultAttributes = $defaultAttributes;
     }
 
     /**
@@ -145,6 +155,11 @@ class ImageExtension extends AbstractExtension
             ];
         }
 
+        $attributes = array_merge(
+            $this->defaultAttributes,
+            $attributes
+        );
+
         if ($lazyThumbnails) {
             $attributes['class'] = trim((isset($attributes['class']) ? $attributes['class'] : '') . ' lazyload');
         }
@@ -202,6 +217,12 @@ class ImageExtension extends AbstractExtension
         $output = '';
 
         foreach ($attributes as $key => $value) {
+            // Ignore properties which are set to null e.g.: { loading: null }
+            // This is used to remove default attributes from
+            if (null === $value) {
+                continue;
+            }
+
             if ('src' === $key) {
                 if ($lazyThumbnails) {
                     $output .= sprintf(' %s="%s"', $key, $lazyThumbnails[$value]);
