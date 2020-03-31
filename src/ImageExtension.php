@@ -70,7 +70,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes for lazy loading.
      *
      * @param mixed $media
-     * @param mixed[]|string $attributes
+     * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      *
      * @return string
@@ -108,7 +108,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param mixed[]|string $attributes
+     * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      *
      * @return string
@@ -122,7 +122,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param mixed[]|string $attributes
+     * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      * @param string[]|null $lazyThumbnails
      *
@@ -170,10 +170,13 @@ class ImageExtension extends AbstractExtension
         // Get description from object to use as title attribute else fallback to alt attribute.
         $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
 
+        /** @var array<string, string|null> $attributes */
+        $attributes = array_merge(['alt' => $alt, 'title' => $title], $attributes);
+
         // Get the image tag with all given attributes.
         $imgTag = $this->createTag(
             'img',
-            array_merge(['alt' => $alt, 'title' => $title], $attributes),
+            $attributes,
             $thumbnails,
             $lazyThumbnails
         );
@@ -206,7 +209,7 @@ class ImageExtension extends AbstractExtension
      * Create html tag.
      *
      * @param string $tag
-     * @param mixed[] $attributes
+     * @param array<string, string|null> $attributes
      * @param string[] $thumbnails
      * @param string[]|null $lazyThumbnails
      *
