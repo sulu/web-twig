@@ -150,7 +150,7 @@ For this you need configure the placeholder path in the service definition:
 services:
     Sulu\Twig\Extensions\ImageExtension:
         arguments:
-            - '/images/placeholders'
+            $placeholderPath: '/images/placeholders'
 ```
 
 With the `has_lazy_image()` twig function you could check if the current rendered code includes one ore more lazy images.
@@ -180,6 +180,6 @@ or when you want by default load all images lazy use the following service defin
 services:
     Sulu\Twig\Extensions\ImageExtension:
         arguments:
-            - null
-            - { loading: 'lazy' }
+            $defaultAttributes:
+                loading: 'lazy'
 ```
