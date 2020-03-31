@@ -25,7 +25,7 @@ class UrlExtensionTest extends TestCase
      */
     private $urlExtension;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->urlExtension = new UrlExtension();
     }

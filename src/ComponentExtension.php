@@ -22,17 +22,17 @@ use Twig\TwigFunction;
 class ComponentExtension extends AbstractExtension
 {
     /**
-     * @var array
+     * @var array<int, array{name: string, id: string, options: mixed}>
      */
     protected $components = [];
 
     /**
-     * @var array
+     * @var array<string, int>
      */
     protected $instanceCounter = [];
 
     /**
-     * @var array
+     * @var array<int, array{name: string, func: string, args: mixed}>
      */
     protected $services = [];
 
@@ -102,7 +102,7 @@ class ComponentExtension extends AbstractExtension
      * @param bool $jsonEncode
      * @param bool $clear
      *
-     * @return string|array|false
+     * @return array<int, array{name: string, id: string, options: mixed}>|string|false
      */
     public function getComponents(bool $jsonEncode = true, bool $clear = true)
     {
@@ -120,7 +120,7 @@ class ComponentExtension extends AbstractExtension
      *
      * @param bool $jsonEncode
      *
-     * @return string|array|false
+     * @return string|string[]|false
      */
     public function getComponentList(bool $jsonEncode = false)
     {
@@ -158,7 +158,7 @@ class ComponentExtension extends AbstractExtension
      * @param bool $jsonEncode
      * @param bool $clear
      *
-     * @return array|string|false
+     * @return array<int, array{name: string, func: string, args: mixed}>|string|false
      */
     public function getServices(bool $jsonEncode = true, bool $clear = true)
     {
@@ -176,7 +176,7 @@ class ComponentExtension extends AbstractExtension
      *
      * @param bool $jsonEncode
      *
-     * @return string|array|false
+     * @return string|string[]|false
      */
     public function getServiceList(bool $jsonEncode = false)
     {

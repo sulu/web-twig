@@ -24,7 +24,7 @@ class IntlExtensionTest extends TestCase
      */
     private $intlExtension;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->intlExtension = new IntlExtension();
     }

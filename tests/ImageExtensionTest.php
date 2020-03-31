@@ -24,11 +24,11 @@ class ImageExtensionTest extends TestCase
     private $imageExtension;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $image;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [
@@ -249,5 +249,28 @@ class ImageExtensionTest extends TestCase
         $this->imageExtension->getLazyImage($this->image, 'sulu-400x400');
         $this->imageExtension->getImage($this->image, 'sulu-400x400');
         $this->assertTrue($this->imageExtension->hasLazyImage());
+    }
+
+    public function testDefaultAttributes(): void
+    {
+        $imageExtension = new ImageExtension(null, ['loading' => 'lazy']);
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" loading="lazy" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
+            $imageExtension->getImage($this->image, 'sulu-100x100')
+        );
+    }
+
+    public function testDefaultAttributesUnset(): void
+    {
+        $imageExtension = new ImageExtension(null, ['loading' => 'lazy']);
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
+            $imageExtension->getImage($this->image, [
+                'src' => 'sulu-100x100',
+                'loading' => null,
+            ])
+        );
     }
 }

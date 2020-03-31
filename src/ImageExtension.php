@@ -37,11 +37,21 @@ class ImageExtension extends AbstractExtension
      */
     private $placeholders = null;
 
-    public function __construct(?string $placeholderPath = null)
+    /**
+     * @var string[]
+     */
+    private $defaultAttributes = null;
+
+    /**
+     * @param string[] $defaultAttributes
+     */
+    public function __construct(?string $placeholderPath = null, array $defaultAttributes = [])
     {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
         }
+
+        $this->defaultAttributes = $defaultAttributes;
     }
 
     /**
@@ -60,7 +70,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes for lazy loading.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
+     * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      *
      * @return string
@@ -98,7 +108,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
+     * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      *
      * @return string
@@ -112,7 +122,7 @@ class ImageExtension extends AbstractExtension
      * Get an image or picture tag with given attributes.
      *
      * @param mixed $media
-     * @param string[]|string $attributes
+     * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      * @param string[]|null $lazyThumbnails
      *
@@ -145,6 +155,11 @@ class ImageExtension extends AbstractExtension
             ];
         }
 
+        $attributes = array_merge(
+            $this->defaultAttributes,
+            $attributes
+        );
+
         if ($lazyThumbnails) {
             $attributes['class'] = trim((isset($attributes['class']) ? $attributes['class'] : '') . ' lazyload');
         }
@@ -155,10 +170,13 @@ class ImageExtension extends AbstractExtension
         // Get description from object to use as title attribute else fallback to alt attribute.
         $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
 
+        /** @var array<string, string|null> $attributes */
+        $attributes = array_merge(['alt' => $alt, 'title' => $title], $attributes);
+
         // Get the image tag with all given attributes.
         $imgTag = $this->createTag(
             'img',
-            array_merge(['alt' => $alt, 'title' => $title], $attributes),
+            $attributes,
             $thumbnails,
             $lazyThumbnails
         );
@@ -191,7 +209,7 @@ class ImageExtension extends AbstractExtension
      * Create html tag.
      *
      * @param string $tag
-     * @param string[] $attributes
+     * @param array<string, string|null> $attributes
      * @param string[] $thumbnails
      * @param string[]|null $lazyThumbnails
      *
@@ -202,6 +220,12 @@ class ImageExtension extends AbstractExtension
         $output = '';
 
         foreach ($attributes as $key => $value) {
+            // Ignore properties which are set to null e.g.: { loading: null }
+            // This is used to remove default attributes from
+            if (null === $value) {
+                continue;
+            }
+
             if ('src' === $key) {
                 if ($lazyThumbnails) {
                     $output .= sprintf(' %s="%s"', $key, $lazyThumbnails[$value]);
