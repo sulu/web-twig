@@ -183,3 +183,47 @@ services:
             $defaultAttributes:
                 loading: 'lazy'
 ```
+
+##### 7. Webp Support
+
+If your server supports converting image to webp you can automatically enable the webp output for all images
+the following way:
+
+```yaml
+services:
+    Sulu\Twig\Extensions\ImageExtension:
+        arguments:
+            $additionalTypes:
+                webp: 'image/webp'
+```
+
+This will render a picture tag which look like the following:
+
+```twig
+<picture>
+    <source media="(max-width: 1024px)"
+            srcset="/uploads/media/sulu-170x170/01/image.webp?v=1-0"
+            type="image/webp">
+    <source media="(max-width: 1024px)"
+            srcset="/uploads/media/sulu-170x170/01/image.jpg?v=1-0">
+    <source media="(max-width: 650px)"
+            srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0"
+            type="image/webp">
+    <source media="(max-width: 650px)"
+            srcset="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">
+    <source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0"
+            type="image/webp">
+    <img alt="Title"
+         title="Description"
+         src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">
+</picture>
+```
+
+You can also only activate it for a specific call:
+
+```twig
+{{ get_image(headerImage, 'sulu-400x400', {
+    '(max-width: 1024px)': 'sulu-170x170',
+    '(max-width: 650px)': 'sulu-100x100',
+}, { webp: 'image/webp' }) }}
+```

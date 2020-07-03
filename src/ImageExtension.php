@@ -43,15 +43,22 @@ class ImageExtension extends AbstractExtension
     private $defaultAttributes = null;
 
     /**
-     * @param string[] $defaultAttributes
+     * @var string[]
      */
-    public function __construct(?string $placeholderPath = null, array $defaultAttributes = [])
+    private $defaultAdditionalTypes = [];
+
+    /**
+     * @param string[] $defaultAttributes
+     * @param string[] $additionalTypes
+     */
+    public function __construct(?string $placeholderPath = null, array $defaultAttributes = [], array $additionalTypes = [])
     {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
         }
 
         $this->defaultAttributes = $defaultAttributes;
+        $this->defaultAdditionalTypes = $additionalTypes;
     }
 
     /**
@@ -72,10 +79,11 @@ class ImageExtension extends AbstractExtension
      * @param mixed $media
      * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
+     * @param mixed[] $additionalTypes
      *
      * @return string
      */
-    public function getLazyImage($media, $attributes = [], array $sources = []): string
+    public function getLazyImage($media, $attributes = [], array $sources = [], array $additionalTypes = []): string
     {
         if (null === $this->placeholderPath) {
             throw new \InvalidArgumentException(
@@ -91,7 +99,7 @@ class ImageExtension extends AbstractExtension
         $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
         $this->hasLazyImage = true;
 
-        return $this->createImage($media, $attributes, $sources, $this->getLazyThumbnails($thumbnails));
+        return $this->createImage($media, $attributes, $sources, $this->getLazyThumbnails($thumbnails), $additionalTypes);
     }
 
     /**
@@ -110,12 +118,13 @@ class ImageExtension extends AbstractExtension
      * @param mixed $media
      * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
+     * @param mixed[] $additionalTypes
      *
      * @return string
      */
-    public function getImage($media, $attributes = [], array $sources = []): string
+    public function getImage($media, $attributes = [], array $sources = [], array $additionalTypes = []): string
     {
-        return $this->createImage($media, $attributes, $sources);
+        return $this->createImage($media, $attributes, $sources, null, $additionalTypes);
     }
 
     /**
@@ -125,6 +134,7 @@ class ImageExtension extends AbstractExtension
      * @param array<string, string|null>|string $attributes
      * @param mixed[] $sources
      * @param string[]|null $lazyThumbnails
+     * @param string[] $additionalTypes
      *
      * @return string
      */
@@ -132,7 +142,8 @@ class ImageExtension extends AbstractExtension
         $media,
         $attributes = [],
         array $sources = [],
-        ?array $lazyThumbnails = null
+        ?array $lazyThumbnails = null,
+        array $additionalTypes = []
     ): string {
         // Return an empty string if no one of the needed parameters is set.
         if (empty($media) || empty($attributes)) {
@@ -155,10 +166,39 @@ class ImageExtension extends AbstractExtension
             ];
         }
 
+        // The default attributes and attributes are merged together and not replaced
+        /** @var array<string, string|null> $attributes */
         $attributes = array_merge(
             $this->defaultAttributes,
             $attributes
         );
+
+        // The default additional types and additional types are merged together and not replaced
+        /** @var string[] $additionalTypes */
+        $additionalTypes = array_merge(
+            $this->defaultAdditionalTypes,
+            $additionalTypes
+        );
+
+        // Add src and srcset configuration as additional types at end of source tags
+        foreach ($additionalTypes as $extension => $type) {
+            $srcset = null;
+
+            if (isset($attributes['src'])) {
+                $srcset = $this->addExtension($attributes['src'], $extension);
+            }
+
+            if (isset($attributes['srcset'])) {
+                $srcset .= ', ' . $this->addExtension($attributes['srcset'], $extension);
+            }
+
+            if ($srcset) {
+                $sources[] = [
+                    'srcset' => $srcset,
+                    'type' => $type,
+                ];
+            }
+        }
 
         if ($lazyThumbnails) {
             $attributes['class'] = trim((isset($attributes['class']) ? $attributes['class'] : '') . ' lazyload');
@@ -192,10 +232,31 @@ class ImageExtension extends AbstractExtension
                     'srcset' => $sourceAttributes,
                 ];
             }
+
+            if (!isset($sourceAttributes['media']) && \is_string($media)) {
+                $sourceAttributes = array_merge(['media' => $media], $sourceAttributes);
+            }
+
+            // Type specific source tag should be rendered before untyped
+            foreach ($additionalTypes as $extension => $type) {
+                // avoid duplicated output of the same type
+                if (!isset($sourceAttributes['type']) || $sourceAttributes['type'] !== $type) {
+                    $sourceTags .= $this->createTag(
+                        'source',
+                        array_merge($sourceAttributes, [
+                            'srcset' => $this->addExtension($sourceAttributes['srcset'], $extension),
+                            'type' => $type,
+                        ]),
+                        $thumbnails,
+                        $lazyThumbnails
+                    );
+                }
+            }
+
             // Get the source tag with all given attributes.
             $sourceTags .= $this->createTag(
                 'source',
-                array_merge(['media' => $media], $sourceAttributes),
+                $sourceAttributes,
                 $thumbnails,
                 $lazyThumbnails
             );
@@ -289,7 +350,7 @@ class ImageExtension extends AbstractExtension
     /**
      * Get lazy thumbnails.
      *
-     * @param string[] $thumbnails
+     * @param array<string, string> $thumbnails
      *
      * @return string[]|null
      */
@@ -302,12 +363,36 @@ class ImageExtension extends AbstractExtension
         if (null === $this->placeholders) {
             $placeholders = [];
             foreach (array_keys($thumbnails) as $key) {
-                $placeholders[$key] = $this->placeholderPath . $key . '.svg';
+                $placeholders[$key] = $this->placeholderPath . $this->removeExtensionFromFormat($key) . '.svg';
             }
 
             $this->placeholders = $placeholders;
         }
 
         return $this->placeholders;
+    }
+
+    /**
+     * Return a given src with with a new extension.
+     */
+    private function addExtension(string $srcsets, string $extension): string
+    {
+        $newSrcsets = [];
+        foreach (explode(',', $srcsets) as $srcset) {
+            $srcset = trim($srcset);
+            // when a specific format is given e.g.: "50x50.inverted.jpg" we trim away it here:
+            $srcset = $this->removeExtensionFromFormat($srcset);
+            $srcParts = explode(' ', $srcset, 2);
+            $srcParts[0] .= '.' . $extension;
+
+            $newSrcsets[] = implode(' ', $srcParts);
+        }
+
+        return implode(', ', $newSrcsets);
+    }
+
+    private function removeExtensionFromFormat(string $format): string
+    {
+        return str_replace(['.svg', '.jpg', '.gif', '.png', '.webp'], '', $format);
     }
 }
