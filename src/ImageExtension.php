@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Twig\Extensions;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -22,6 +23,11 @@ use Twig\TwigFunction;
  */
 class ImageExtension extends AbstractExtension
 {
+    /**
+     * @var PropertyAccessor
+     */
+    private $propertyAccessor;
+
     /**
      * @var string|null
      */
@@ -48,11 +54,26 @@ class ImageExtension extends AbstractExtension
     private $defaultAdditionalTypes = [];
 
     /**
+     * @var string[]
+     */
+    private $ignoreTypesMimeTypes = [
+        // the official svg mimetype when the <?xml header exist
+        'image/svg+xml',
+        // if the <?xml header does not exist this is the mimetype returned by php:
+        // https://bugs.php.net/bug.php?id=79045
+        // https://3v4l.org/0h5jI
+        'image/svg',
+    ];
+
+    /**
      * @param string[] $defaultAttributes
      * @param string[] $additionalTypes
      */
-    public function __construct(?string $placeholderPath = null, array $defaultAttributes = [], array $additionalTypes = [])
-    {
+    public function __construct(
+        ?string $placeholderPath = null,
+        array $defaultAttributes = [],
+        array $additionalTypes = []
+    ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
         }
@@ -95,8 +116,7 @@ class ImageExtension extends AbstractExtension
             $media = (object) $media;
         }
 
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-        $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
+        $thumbnails = $this->getPropertyAccessor()->getValue($media, 'thumbnails');
         $this->hasLazyImage = true;
 
         return $this->createImage($media, $attributes, $sources, $this->getLazyThumbnails($thumbnails), $additionalTypes);
@@ -154,7 +174,7 @@ class ImageExtension extends AbstractExtension
             $media = (object) $media;
         }
 
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $propertyAccessor = $this->getPropertyAccessor();
 
         // Thumbnails exists all times - it only can be empty.
         $thumbnails = $propertyAccessor->getValue($media, 'thumbnails');
@@ -180,23 +200,28 @@ class ImageExtension extends AbstractExtension
             $additionalTypes
         );
 
+        // Get MimeType from Media
+        $mimeType = $this->getMimeType($media);
+
         // Add src and srcset configuration as additional types at end of source tags
-        foreach ($additionalTypes as $extension => $type) {
-            $srcset = null;
+        if (!\in_array($mimeType, $this->ignoreTypesMimeTypes, true)) {
+            foreach ($additionalTypes as $extension => $type) {
+                $srcset = null;
 
-            if (isset($attributes['src'])) {
-                $srcset = $this->addExtension($attributes['src'], $extension);
-            }
+                if (isset($attributes['src'])) {
+                    $srcset = $this->addExtension($attributes['src'], $extension);
+                }
 
-            if (isset($attributes['srcset'])) {
-                $srcset .= ', ' . $this->addExtension($attributes['srcset'], $extension);
-            }
+                if (isset($attributes['srcset'])) {
+                    $srcset .= ', ' . $this->addExtension($attributes['srcset'], $extension);
+                }
 
-            if ($srcset) {
-                $sources[] = [
-                    'srcset' => $srcset,
-                    'type' => $type,
-                ];
+                if ($srcset) {
+                    $sources[] = [
+                        'srcset' => $srcset,
+                        'type' => $type,
+                    ];
+                }
             }
         }
 
@@ -237,19 +262,21 @@ class ImageExtension extends AbstractExtension
                 $sourceAttributes = array_merge(['media' => $media], $sourceAttributes);
             }
 
-            // Type specific source tag should be rendered before untyped
-            foreach ($additionalTypes as $extension => $type) {
-                // avoid duplicated output of the same type
-                if (!isset($sourceAttributes['type']) || $sourceAttributes['type'] !== $type) {
-                    $sourceTags .= $this->createTag(
-                        'source',
-                        array_merge($sourceAttributes, [
-                            'srcset' => $this->addExtension($sourceAttributes['srcset'], $extension),
-                            'type' => $type,
-                        ]),
-                        $thumbnails,
-                        $lazyThumbnails
-                    );
+            if (!\in_array($mimeType, $this->ignoreTypesMimeTypes, true)) {
+                // Type specific source tag should be rendered before untyped
+                foreach ($additionalTypes as $extension => $type) {
+                    // avoid duplicated output of the same type
+                    if (!isset($sourceAttributes['type']) || $sourceAttributes['type'] !== $type) {
+                        $sourceTags .= $this->createTag(
+                            'source',
+                            array_merge($sourceAttributes, [
+                                'srcset' => $this->addExtension($sourceAttributes['srcset'], $extension),
+                                'type' => $type,
+                            ]),
+                            $thumbnails,
+                            $lazyThumbnails
+                        );
+                    }
                 }
             }
 
@@ -391,8 +418,35 @@ class ImageExtension extends AbstractExtension
         return implode(', ', $newSrcsets);
     }
 
+    /**
+     * Will return the sulu image format without the extension if given.
+     */
     private function removeExtensionFromFormat(string $format): string
     {
         return str_replace(['.svg', '.jpg', '.gif', '.png', '.webp'], '', $format);
+    }
+
+    /**
+     * @param mixed $media
+     */
+    private function getMimeType($media): string
+    {
+        $propertyAccessor = $this->getPropertyAccessor();
+
+        if ($propertyAccessor->isReadable($media, 'mimeType')) {
+            return $propertyAccessor->getValue($media, 'mimeType');
+        }
+
+        return 'image/jpeg';
+    }
+
+    private function getPropertyAccessor(): PropertyAccessor
+    {
+        // lazy initializing of the property accessor
+        if (null === $this->propertyAccessor) {
+            $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+        }
+
+        return $this->propertyAccessor;
     }
 }

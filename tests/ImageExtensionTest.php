@@ -28,12 +28,18 @@ class ImageExtensionTest extends TestCase
      */
     private $image;
 
+    /**
+     * @var mixed[]
+     */
+    private $svgImage;
+
     public function setUp(): void
     {
         $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [
             'title' => 'Title',
             'description' => 'Description',
+            'mimeType' => 'image/jpeg',
             'thumbnails' => [
                 'sulu-100x100' => '/uploads/media/sulu-100x100/01/image.jpg?v=1-0',
                 'sulu-100x100.webp' => '/uploads/media/sulu-100x100/01/image.webp?v=1-0',
@@ -42,6 +48,22 @@ class ImageExtensionTest extends TestCase
                 'sulu-170x170' => '/uploads/media/sulu-170x170/01/image.jpg?v=1-0',
                 'sulu-170x170.webp' => '/uploads/media/sulu-170x170/01/image.webp?v=1-0',
                 'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.jpg?v=1-0',
+                'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
+            ],
+        ];
+
+        $this->svgImage = [
+            'title' => 'Title',
+            'description' => 'Description',
+            'mimeType' => 'image/svg',
+            'thumbnails' => [
+                'sulu-100x100' => '/uploads/media/sulu-100x100/01/image.svg?v=1-0',
+                'sulu-100x100.webp' => '/uploads/media/sulu-100x100/01/image.webp?v=1-0',
+                'sulu-100x100@2x' => '/uploads/media/sulu-100x100@2x/01/image.svg?v=1-0',
+                'sulu-100x100@2x.webp' => '/uploads/media/sulu-100x100@2x/01/image.webp?v=1-0',
+                'sulu-170x170' => '/uploads/media/sulu-170x170/01/image.svg?v=1-0',
+                'sulu-170x170.webp' => '/uploads/media/sulu-170x170/01/image.webp?v=1-0',
+                'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.svg?v=1-0',
                 'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
             ],
         ];
@@ -292,6 +314,20 @@ class ImageExtensionTest extends TestCase
                 ' src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">' .
             '</picture>',
             $imageExtension->getImage($this->image, [
+                'src' => 'sulu-100x100',
+            ])
+        );
+    }
+
+    public function testIgnoreAdditionalTypesForSvg(): void
+    {
+        $imageExtension = new ImageExtension(null, [], ['webp' => 'image/webp']);
+
+        $this->assertSame(
+        '<img alt="Title"' .
+            ' title="Description"' .
+            ' src="/uploads/media/sulu-100x100/01/image.svg?v=1-0">',
+            $imageExtension->getImage($this->svgImage, [
                 'src' => 'sulu-100x100',
             ])
         );
