@@ -27,7 +27,7 @@ The [web intl extension](docs/intl.md) gives you a simple and efficient way to g
 
 [More](docs/intl.md)
 
-### 4. count
+### 4. Count
 
 The [web count extension](docs/count.md) gives you a simple and efficient way to have a global counter in your twig template.
 

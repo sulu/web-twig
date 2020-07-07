@@ -28,16 +28,43 @@ class ImageExtensionTest extends TestCase
      */
     private $image;
 
+    /**
+     * @var mixed[]
+     */
+    private $svgImage;
+
     public function setUp(): void
     {
         $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [
             'title' => 'Title',
             'description' => 'Description',
+            'mimeType' => 'image/jpeg',
             'thumbnails' => [
                 'sulu-100x100' => '/uploads/media/sulu-100x100/01/image.jpg?v=1-0',
+                'sulu-100x100.webp' => '/uploads/media/sulu-100x100/01/image.webp?v=1-0',
+                'sulu-100x100@2x' => '/uploads/media/sulu-100x100@2x/01/image.jpg?v=1-0',
+                'sulu-100x100@2x.webp' => '/uploads/media/sulu-100x100@2x/01/image.webp?v=1-0',
                 'sulu-170x170' => '/uploads/media/sulu-170x170/01/image.jpg?v=1-0',
+                'sulu-170x170.webp' => '/uploads/media/sulu-170x170/01/image.webp?v=1-0',
                 'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.jpg?v=1-0',
+                'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
+            ],
+        ];
+
+        $this->svgImage = [
+            'title' => 'Title',
+            'description' => 'Description',
+            'mimeType' => 'image/svg',
+            'thumbnails' => [
+                'sulu-100x100' => '/uploads/media/sulu-100x100/01/image.svg?v=1-0',
+                'sulu-100x100.webp' => '/uploads/media/sulu-100x100/01/image.webp?v=1-0',
+                'sulu-100x100@2x' => '/uploads/media/sulu-100x100@2x/01/image.svg?v=1-0',
+                'sulu-100x100@2x.webp' => '/uploads/media/sulu-100x100@2x/01/image.webp?v=1-0',
+                'sulu-170x170' => '/uploads/media/sulu-170x170/01/image.svg?v=1-0',
+                'sulu-170x170.webp' => '/uploads/media/sulu-170x170/01/image.webp?v=1-0',
+                'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.svg?v=1-0',
+                'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
             ],
         ];
     }
@@ -271,6 +298,129 @@ class ImageExtensionTest extends TestCase
                 'src' => 'sulu-100x100',
                 'loading' => null,
             ])
+        );
+    }
+
+    public function testDefaultAdditionalTypes(): void
+    {
+        $imageExtension = new ImageExtension(null, [], ['webp' => 'image/webp']);
+
+        $this->assertSame(
+            '<picture>' .
+            '<source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0"' .
+                ' type="image/webp">' .
+            '<img alt="Title"' .
+                ' title="Description"' .
+                ' src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">' .
+            '</picture>',
+            $imageExtension->getImage($this->image, [
+                'src' => 'sulu-100x100',
+            ])
+        );
+    }
+
+    public function testIgnoreAdditionalTypesForSvg(): void
+    {
+        $imageExtension = new ImageExtension(null, [], ['webp' => 'image/webp']);
+
+        $this->assertSame(
+        '<img alt="Title"' .
+            ' title="Description"' .
+            ' src="/uploads/media/sulu-100x100/01/image.svg?v=1-0">',
+            $imageExtension->getImage($this->svgImage, [
+                'src' => 'sulu-100x100',
+            ])
+        );
+    }
+
+    public function testAdditionalTypes(): void
+    {
+        $imageExtension = new ImageExtension(null, [], []);
+
+        $this->assertSame(
+            '<picture>' .
+            '<source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0"' .
+                ' type="image/webp">' .
+            '<img alt="Title"' .
+                ' title="Description"' .
+                ' src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">' .
+            '</picture>',
+            $imageExtension->getImage($this->image, [
+                'src' => 'sulu-100x100',
+            ], [], ['webp' => 'image/webp'])
+        );
+    }
+
+    public function testAdditionalTypesWithSrcSet(): void
+    {
+        $imageExtension = new ImageExtension(null, [], []);
+
+        $this->assertSame(
+            '<picture>' .
+            '<source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0, /uploads/media/sulu-100x100@2x/01/image.webp?v=1-0 2x"' .
+            ' type="image/webp">' .
+            '<img alt="Title"' .
+            ' title="Description"' .
+            ' src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0"' .
+            ' srcset="/uploads/media/sulu-100x100@2x/01/image.jpg?v=1-0 2x">' .
+            '</picture>',
+            $imageExtension->getImage($this->image, [
+                'src' => 'sulu-100x100',
+                'srcset' => 'sulu-100x100@2x 2x',
+            ], [], ['webp' => 'image/webp'])
+        );
+    }
+
+    public function testAdditionalLazyComplexPictureTag(): void
+    {
+        $imageExtension = new ImageExtension('/lazy', [], ['webp' => 'image/webp']);
+
+        $this->assertSame(
+            '<picture>' .
+            '<source media="(max-width: 1024px)"' .
+                ' srcset="/lazy/sulu-400x400.svg 1024w, /lazy/sulu-170x170.svg 800w, /lazy/sulu-100x100.svg 460w"' .
+                ' data-srcset="/uploads/media/sulu-400x400/01/image.webp?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.webp?v=1-0 800w, /uploads/media/sulu-100x100/01/image.webp?v=1-0 460w"' .
+                ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
+                ' type="image/webp">' .
+            '<source media="(max-width: 1024px)"' .
+                ' srcset="/lazy/sulu-400x400.svg 1024w, /lazy/sulu-170x170.svg 800w, /lazy/sulu-100x100.svg 460w"' .
+                ' data-srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"' .
+                ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">' .
+            '<source media="(max-width: 650px)"' .
+                ' srcset="/lazy/sulu-400x400.svg 1024w, /lazy/sulu-170x170.svg 800w, /lazy/sulu-100x100.svg 460w"' .
+                ' data-srcset="/uploads/media/sulu-400x400/01/image.webp?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.webp?v=1-0 800w, /uploads/media/sulu-100x100/01/image.webp?v=1-0 460w"' .
+                ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
+                ' type="image/webp">' .
+            '<source media="(max-width: 650px)"' .
+                ' srcset="/lazy/sulu-400x400.svg 1024w, /lazy/sulu-170x170.svg 800w, /lazy/sulu-100x100.svg 460w"' .
+                ' data-srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"' .
+                ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">' .
+            '<source srcset="/lazy/sulu-400x400.svg"' .
+                ' data-srcset="/uploads/media/sulu-400x400/01/image.webp?v=1-0"' .
+                ' type="image/webp">' .
+            '<img alt="Title"' .
+                ' title="Description"' .
+                ' src="/lazy/sulu-400x400.svg"' .
+                ' data-src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
+                ' class="image-class lazyload">' .
+            '</picture>',
+            $imageExtension->getLazyImage(
+                $this->image,
+                [
+                    'src' => 'sulu-400x400',
+                    'class' => 'image-class',
+                ],
+                [
+                    '(max-width: 1024px)' => [
+                        'srcset' => 'sulu-400x400 1024w, sulu-170x170 800w, sulu-100x100 460w',
+                        'sizes' => '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
+                    ],
+                    '(max-width: 650px)' => [
+                        'srcset' => 'sulu-400x400 1024w, sulu-170x170 800w, sulu-100x100 460w',
+                        'sizes' => '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
+                    ],
+                ]
+            )
         );
     }
 }
