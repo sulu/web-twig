@@ -186,14 +186,14 @@ services:
 
 ##### 7. Webp Support
 
-If your server supports converting image to webp you can automatically enable the webp output for all images
-the following way:
+If your server supports converting images to webp you can automatically enable webp
+output for the image twig functions per default the following way:
 
 ```yaml
 services:
     Sulu\Twig\Extensions\ImageExtension:
         arguments:
-            $additionalTypes:
+            $defaultAdditionalTypes:
                 webp: 'image/webp'
 ```
 

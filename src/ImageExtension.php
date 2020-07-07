@@ -67,19 +67,19 @@ class ImageExtension extends AbstractExtension
 
     /**
      * @param string[] $defaultAttributes
-     * @param string[] $additionalTypes
+     * @param string[] $defaultAdditionalTypes
      */
     public function __construct(
         ?string $placeholderPath = null,
         array $defaultAttributes = [],
-        array $additionalTypes = []
+        array $defaultAdditionalTypes = []
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
         }
 
         $this->defaultAttributes = $defaultAttributes;
-        $this->defaultAdditionalTypes = $additionalTypes;
+        $this->defaultAdditionalTypes = $defaultAdditionalTypes;
     }
 
     /**
