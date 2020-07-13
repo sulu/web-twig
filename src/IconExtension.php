@@ -32,7 +32,7 @@ class IconExtension extends AbstractExtension
     /**
      * @param string|mixed[] $iconSets
      */
-    public function __construct($iconSets)
+    public function __construct($iconSets = self::ICON_SET_TYPE_FONT)
     {
         if (\is_string($iconSets)) {
             $iconSets = [

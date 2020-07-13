@@ -8,13 +8,27 @@ The twig extension need to be registered as [symfony service](http://symfony.com
 
 ```yaml
 services:
+    Sulu\Twig\Extensions\IconExtension: ~
+```
+
+Or a more complex configuration example:
+
+```yaml
+services:
     Sulu\Twig\Extensions\IconExtension:
         arguments:
             $iconSets:
+                # icon font:
                 default:
-                    type: 'font' # or 'svg'
-                    # for svg also a path to symbol-defs file is needed:
-                    # path: '/website/fonts/icomoon-sulu/symbol-defs.svg'
+                    type: 'font'
+                    # the following options are optional but need to match your icomoon export settings:
+                    # className: 'icon'
+                    # classPrefix: 'icon-'
+                    # classSuffix: ''
+                # svg icons:
+                other:
+                    type: 'svg'
+                    path: '/website/fonts/icomoon-sulu/symbol-defs.svg'
 
                     # the following options are optional but need to match your icomoon export settings:
                     # className: 'icon' 
@@ -29,6 +43,7 @@ services:
 ```yaml
 services:
     Sulu\Twig\Extensions\IconExtension:
+        # the following configuration is default
         arguments:
             $iconSets:
                 default:
