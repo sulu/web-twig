@@ -44,3 +44,7 @@ The [web url extension](docs/url.md) gives you a simple and efficient way to get
 The [web editor extension](docs/editor.md) gives you a simple way to add classes on html provided by a text editor.
 
 [More](docs/editor.md)
+
+### 7. Icon
+
+The [icon extension](docs/icon.md) gives you a simple way to render icomoon icons.
