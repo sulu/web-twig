@@ -34,6 +34,8 @@ services:
                     # className: 'icon' 
                     # classPrefix: 'icon-' 
                     # classSuffix: ''
+            $defaultAttributes:
+                role: 'none'
 ```
 
 ## Usage
@@ -133,4 +135,36 @@ As you see above the format for the classes is the following:
 
 ```
 {additionaClass} {className} {classPrefix}{icon}{classSuffix}
+```
+
+### Add additional attributes
+
+Not only a class can be passed you can also add any other attributes:
+
+```twig
+<!-- Icon Font -->
+{{ get_icon('test', { role: 'none'}) }}
+
+<!-- SVG Icons -->
+{{ get_icon('test', { role: 'none'}, 'other') }}
+```
+
+This will output:
+
+```html
+<!-- Icon Font -->
+<span role="none" class="icon icon-test"></span>
+
+<!-- SVG Icons -->
+<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>
+```
+
+You can also configure default attributes in the service registration the following way:
+
+```yaml
+services:
+    Sulu\Twig\Extensions\IconExtension:
+        arguments:
+            $defaultAttributes:
+                role: 'none'
 ```

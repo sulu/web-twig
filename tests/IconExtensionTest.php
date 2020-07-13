@@ -41,6 +41,36 @@ class IconExtensionTest extends TestCase
         $iconExtension->getIcon('test', null, 'other');
     }
 
+    public function testIconFontDefaultAttributes(): void
+    {
+        $iconExtension = new IconExtension('font', ['role' => 'none']);
+
+        $this->assertSame(
+            '<span role="none" class="icon icon-test"></span>',
+            $iconExtension->getIcon('test')
+        );
+    }
+
+    public function testIconFontRemoveDefaultAttributes(): void
+    {
+        $iconExtension = new IconExtension('font', ['role' => 'none']);
+
+        $this->assertSame(
+            '<span class="icon icon-test"></span>',
+            $iconExtension->getIcon('test', ['role' => null])
+        );
+    }
+
+    public function testIconFontAttributes(): void
+    {
+        $iconExtension = new IconExtension('font');
+
+        $this->assertSame(
+            '<span role="none" class="icon icon-test"></span>',
+            $iconExtension->getIcon('test', ['role' => 'none'])
+        );
+    }
+
     public function testIconFontCustomSettings(): void
     {
         $iconExtension = new IconExtension([
@@ -55,6 +85,20 @@ class IconExtensionTest extends TestCase
         $this->assertSame(
             '<span class="add-class my-icon my-icon-test-new"></span>',
             $iconExtension->getIcon('test', 'add-class', 'other')
+        );
+    }
+
+    public function testIconFontOtherGroup(): void
+    {
+        $iconExtension = new IconExtension([
+            'other' => [
+                'type' => 'font',
+            ],
+        ]);
+
+        $this->assertSame(
+            '<span class="icon icon-test"></span>',
+            $iconExtension->getIcon('test', null, 'other')
         );
     }
 
@@ -73,6 +117,61 @@ class IconExtensionTest extends TestCase
         );
     }
 
+    public function testSvgIconAttributes(): void
+    {
+        $iconExtension = new IconExtension([
+            'default' => [
+                'type' => 'svg',
+                'path' => '/path/to/symbol-defs.svg',
+            ],
+        ]);
+
+        $this->assertSame(
+            '<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            $iconExtension->getIcon('test', ['role' => 'none'])
+        );
+    }
+
+    public function testSvgIconDefaultAttributes(): void
+    {
+        $iconExtension = new IconExtension(
+            [
+                'default' => [
+                    'type' => 'svg',
+                    'path' => '/path/to/symbol-defs.svg',
+                ],
+            ],
+            [
+                'role' => 'none',
+            ]
+        );
+
+        $this->assertSame(
+            '<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            $iconExtension->getIcon('test')
+        );
+    }
+
+    public function testSvgIconRemoveDefaultAttributes(): void
+    {
+        $iconExtension = new IconExtension(
+            [
+                'default' => [
+                    'type' => 'svg',
+                    'path' => '/path/to/symbol-defs.svg',
+                ],
+            ],
+            [
+                'role' => 'none',
+            ]
+        );
+
+        $this->assertSame(
+            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            $iconExtension->getIcon('test', ['role' => null])
+        );
+    }
+
     public function testSvgIconCustomSettings(): void
     {
         $iconExtension = new IconExtension([
@@ -88,6 +187,21 @@ class IconExtensionTest extends TestCase
         $this->assertSame(
             '<svg class="add-class my-icon my-icon-test-new"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
             $iconExtension->getIcon('test', 'add-class', 'other')
+        );
+    }
+
+    public function testSvgIconOtherGroup(): void
+    {
+        $iconExtension = new IconExtension([
+            'other' => [
+                'type' => 'svg',
+                'path' => '/path/to/symbol-defs.svg',
+            ],
+        ]);
+
+        $this->assertSame(
+            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            $iconExtension->getIcon('test', null, 'other')
         );
     }
 }

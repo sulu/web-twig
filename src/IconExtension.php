@@ -30,10 +30,18 @@ class IconExtension extends AbstractExtension
     private $iconSets = [];
 
     /**
-     * @param string|mixed[] $iconSets
+     * @var array<string, string|null>
      */
-    public function __construct($iconSets = self::ICON_SET_TYPE_FONT)
+    private $defaultAttributes = [];
+
+    /**
+     * @param string|mixed[] $iconSets
+     * @param array<string, string|null> $defaultAttributes
+     */
+    public function __construct($iconSets = self::ICON_SET_TYPE_FONT, array $defaultAttributes = [])
     {
+        $this->defaultAttributes = $defaultAttributes;
+
         if (\is_string($iconSets)) {
             $iconSets = [
                 'default' => $iconSets,
@@ -80,18 +88,26 @@ class IconExtension extends AbstractExtension
      * Get the an icomoon icon based on the configuration.
      *
      * @param string $icon
-     * @param string $className
+     * @param string|array<string, string|null>|null $attributes
      * @param string $iconSetName
      *
      * @return string
      */
-    public function getIcon(string $icon, ?string $className = '', string $iconSetName = 'default'): string
+    public function getIcon(string $icon, $attributes = [], string $iconSetName = 'default'): string
     {
         $iconSet = $this->getIconSet($iconSetName);
 
-        $className = trim(sprintf(
+        if (!\is_array($attributes)) {
+            $attributes = [
+                'class' => $attributes,
+            ];
+        }
+
+        $attributes = array_merge($this->defaultAttributes, $attributes);
+
+        $attributes['class'] = trim(sprintf(
             '%s %s %s%s%s',
-            $className ?: '',
+            $attributes['class'] ?? '',
             $iconSet['className'],
             $iconSet['classPrefix'],
             $icon,
@@ -99,12 +115,12 @@ class IconExtension extends AbstractExtension
         ));
 
         if (self::ICON_SET_TYPE_FONT === $iconSet['type']) {
-            return sprintf('<span class="%s"></span>', $className);
+            return sprintf('<span%s></span>', $this->renderAttributes($attributes));
         }
 
         return sprintf(
-            '<svg class="%s"><use xlink:href="%s#%s"></use></svg>',
-            $className,
+            '<svg%s><use xlink:href="%s#%s"></use></svg>',
+            $this->renderAttributes($attributes),
             $iconSet['path'],
             $icon
         );
@@ -124,5 +140,23 @@ class IconExtension extends AbstractExtension
         }
 
         return $this->iconSets[$name];
+    }
+
+    /**
+     * @param array<string, string|null> $attributes
+     */
+    private function renderAttributes(array $attributes): string
+    {
+        $output = '';
+
+        foreach ($attributes as $key => $value) {
+            if (null === $value) {
+                continue;
+            }
+
+            $output .= sprintf(' %s="%s"', $key, htmlentities($value));
+        }
+
+        return $output;
     }
 }
