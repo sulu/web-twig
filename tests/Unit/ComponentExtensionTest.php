@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Twig\Extensions\Tests;
+namespace Sulu\Twig\Extensions\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Twig\Extensions\ComponentExtension;

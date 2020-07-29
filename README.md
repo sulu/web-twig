@@ -48,3 +48,11 @@ The [web editor extension](docs/editor.md) gives you a simple way to add classes
 ### 7. Icon
 
 The [icon extension](docs/icon.md) gives you a simple way to render icomoon icons.
+
+[More](docs/icon.md)
+
+### 8. Portal
+
+The [portal extension](docs/portal.md) brings react portal feature to twig.
+
+[More](docs/portal.md)
