@@ -1,5 +1,7 @@
 # Web Component Extension
 
+[DEMO](https://github.com/sulu/web-js-twig-demo)
+
 The web component twig extension in connection with [web-js](https://github.com/sulu/web-js) 
 gives you a simple and efficient way to handle your javascript components over twig.
 
@@ -18,36 +20,93 @@ If autoconfigure is not active you need to tag it with [twig.extension](https://
 
 ## Usage
 
-You can get the registered components and service call and call the
-[web-js](https://github.com/sulu/web-js) function which is recommended to be used with it.
+Every component is represented by a DOM element the `prepare_component` function will generate a unique id
+which need to set on the DOM element.
+
+At the bottom of your HTML Document you call the [web-js](https://github.com/sulu/web-js) functions
+to start the components you have prepared before.
+
+With the `component_list` twig function you can also add only specific html when really needed.
 
 ```twig
 {# Registering a component #}
-<div id="{{ register_component('component') }}">
+<div id="{{ prepare_component('component') }}">
     Content
 </div>
 
 {# Registering a component with options #}
-<button id="{{ register_component('modal-button', { text: 'Hello Hikaru Sulu' }) }}">
+<button id="{{ prepare_component('modal-button', { text: 'Hello Hikaru Sulu' }) }}">
     Say Hello
 </button>
-
-{# Call a service function #}
-{% do call_service('service', 'function') %}
-
-{# Call a service function with arguments #}
-{% do call_service('api', 'send', ['Hello']) %}
-
-{# Output Html which is needed once by a specific component #}
-{% if 'component' in get_component_list() %}
-    <script id="component-template" type="text/html">
-        <div>Template</div>
-    </script>
-{% endif %}
 
 {# Start components and run service functions #}
 <script>
     web.startComponents({{ get_components() }});
+</script>
+```
+
+### Calling services
+
+Sometimes you just want to call a `web-js` service function.
+This can be achieved the following way:
+
+```twig
+{# Call a service function #}
+{% do prepare_service('service', 'function') %}
+
+{# Call a service function with arguments #}
+{% do prepare_service('api', 'setApiKey', [MY_API_KEY]) %}
+
+{# Start components and run service functions #}
+<script>
     web.callServices({{ get_services() }});
+</script>
+```
+
+### Force specific id
+
+If you don't want to autogenerate an ID you can give it as an option:
+
+```twig
+<div id="{{ prepare_component('component', { id: 'my-special-id' }) }}">
+    Content
+</div>
+```
+
+### Handling ESI
+
+As ESI are own sub request which does not know about the main request ESI need to be handled special.
+So if you want to use `web-js` components inside ESI you need to add the following to your `base.html.twig`.
+
+```twig
+<head>
+    {# ... #}
+
+    <script>
+        /* this array will be filled with esi components */
+        var components = [];
+    </script>
+</head>
+<body>
+    {# ... #}
+
+    {# Start components and run service functions #}
+    <script>
+        web.startComponents(components.concat({{ get_components() }}));
+    </script>
+</body>
+```
+
+In the ESI Template you need to add the following:
+
+```twig
+{# before first component: #}
+{% do set_component_prefix('unique_prefix') %}
+
+{# ... your twig template with prepare_component calls here #}
+
+{# bottom of your esi template: #}
+<script>
+    components = components.concat({{ get_components() }});
 </script>
 ```
