@@ -31,6 +31,11 @@ class ImageExtensionTest extends TestCase
     /**
      * @var mixed[]
      */
+    private $minimalImage;
+
+    /**
+     * @var mixed[]
+     */
     private $svgImage;
 
     public function setUp(): void
@@ -40,6 +45,19 @@ class ImageExtensionTest extends TestCase
             'title' => 'Title',
             'description' => 'Description',
             'mimeType' => 'image/jpeg',
+            'thumbnails' => [
+                'sulu-100x100' => '/uploads/media/sulu-100x100/01/image.jpg?v=1-0',
+                'sulu-100x100.webp' => '/uploads/media/sulu-100x100/01/image.webp?v=1-0',
+                'sulu-100x100@2x' => '/uploads/media/sulu-100x100@2x/01/image.jpg?v=1-0',
+                'sulu-100x100@2x.webp' => '/uploads/media/sulu-100x100@2x/01/image.webp?v=1-0',
+                'sulu-170x170' => '/uploads/media/sulu-170x170/01/image.jpg?v=1-0',
+                'sulu-170x170.webp' => '/uploads/media/sulu-170x170/01/image.webp?v=1-0',
+                'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.jpg?v=1-0',
+                'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
+            ],
+        ];
+
+        $this->minimalImage = [
             'thumbnails' => [
                 'sulu-100x100' => '/uploads/media/sulu-100x100/01/image.jpg?v=1-0',
                 'sulu-100x100.webp' => '/uploads/media/sulu-100x100/01/image.webp?v=1-0',
@@ -132,6 +150,29 @@ class ImageExtensionTest extends TestCase
         );
     }
 
+    public function testPictureTagMinimalImage(): void
+    {
+        $this->assertSame(
+            '<picture>' .
+            '<source media="(max-width: 1024px)"' .
+            ' srcset="/uploads/media/sulu-170x170/01/image.jpg?v=1-0">' .
+            '<source media="(max-width: 650px)"' .
+            ' srcset="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">' .
+            '<img alt="image"' .
+            ' title="image"' .
+            ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">' .
+            '</picture>',
+            $this->imageExtension->getImage(
+                $this->minimalImage,
+                'sulu-400x400',
+                [
+                    '(max-width: 1024px)' => 'sulu-170x170',
+                    '(max-width: 650px)' => 'sulu-100x100',
+                ]
+            )
+        );
+    }
+
     public function testComplexPictureTag(): void
     {
         $this->assertSame(
@@ -196,6 +237,31 @@ class ImageExtensionTest extends TestCase
                     'id' => 'image-id',
                     'class' => 'image-class',
                     'alt' => 'Logo',
+                ]
+            )
+        );
+    }
+
+    public function testLazyComplexImageTagMinimalImage(): void
+    {
+        $this->assertSame(
+            '<img alt="image"' .
+            ' title="image"' .
+            ' src="/lazy/sulu-400x400.svg"' .
+            ' data-src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
+            ' srcset="/lazy/sulu-400x400.svg 1024w, /lazy/sulu-170x170.svg 800w, /lazy/sulu-100x100.svg 460w"' .
+            ' data-srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"' .
+            ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
+            ' id="image-id"' .
+            ' class="image-class lazyload">',
+            $this->imageExtension->getLazyImage(
+                $this->minimalImage,
+                [
+                    'src' => 'sulu-400x400',
+                    'srcset' => 'sulu-400x400 1024w, sulu-170x170 800w, sulu-100x100 460w',
+                    'sizes' => '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
+                    'id' => 'image-id',
+                    'class' => 'image-class',
                 ]
             )
         );

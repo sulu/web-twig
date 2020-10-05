@@ -230,10 +230,18 @@ class ImageExtension extends AbstractExtension
         }
 
         // Get title from object to use as alt attribute.
-        $alt = $propertyAccessor->getValue($media, 'title');
+        if ($propertyAccessor->isReadable($media, 'title')) {
+            $alt = $propertyAccessor->getValue($media, 'title');
+        } else {
+            // Get filename from thumbnail and use that.
+            $alt = pathinfo(reset($thumbnails))['filename'] ?? '';
+        }
 
         // Get description from object to use as title attribute else fallback to alt attribute.
-        $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
+        $title = $alt;
+        if ($propertyAccessor->isReadable($media, 'description')) {
+            $title = $propertyAccessor->getValue($media, 'description') ?: $alt;
+        }
 
         /** @var array<string, string|null> $attributes */
         $attributes = array_merge(['alt' => $alt, 'title' => $title], $attributes);
