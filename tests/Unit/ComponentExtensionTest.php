@@ -23,7 +23,7 @@ class ComponentExtensionTest extends TestCase
      */
     private $componentExtension;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->componentExtension = new ComponentExtension();
     }

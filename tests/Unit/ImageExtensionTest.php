@@ -38,7 +38,7 @@ class ImageExtensionTest extends TestCase
      */
     private $svgImage;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [

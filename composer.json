@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.1 || ^8.0",
         "twig/twig": "^1.34 || ^2.4 || ^3.0"
     },
     "require-dev": {
@@ -18,7 +18,7 @@
         "jangregor/phpstan-prophecy": "^0.8",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-phpunit": "^0.12",
-        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0 || ^7.1",
+        "phpunit/phpunit": "^5.0 || ^6.0 || ^7.0 || ^7.1 || ^8.5",
         "symfony/intl": "^2.8 || ^3.0 || ^4.0 || ^5.0",
         "symfony/property-access": "^2.8 || ^3.0 || ^4.0 || ^5.0",
         "thecodingmachine/phpstan-strict-rules": "^0.12"

@@ -23,7 +23,7 @@ class EditorExtensionTest extends TestCase
      */
     private $editorExtension;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->editorExtension = new EditorExtension();
     }
