@@ -23,7 +23,7 @@ class PortalExtensionTest extends TestCase
      */
     private $portalExtension;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->portalExtension = new PortalExtension();
     }
