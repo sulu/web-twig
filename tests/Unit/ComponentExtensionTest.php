@@ -28,9 +28,9 @@ class ComponentExtensionTest extends TestCase
         $this->componentExtension = new ComponentExtension();
     }
 
-    public function testRegisterComponent(): void
+    public function testPrepareComponent(): void
     {
-        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
 
         $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
@@ -46,9 +46,10 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterMultipleComponent(): void
+    public function testPrepareMultipleComponent(): void
     {
-        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
+        // test deprecated registerComponent function
         $this->assertSame('test-2', $this->componentExtension->registerComponent('test'));
 
         $components = $this->componentExtension->getComponents();
@@ -70,11 +71,11 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterPrefix(): void
+    public function testPreparePrefix(): void
     {
         $this->componentExtension->setComponentPrefix('partial-');
-        $this->assertSame('partial-test-1', $this->componentExtension->registerComponent('test'));
-        $this->assertSame('partial-test-2', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('partial-test-1', $this->componentExtension->prepareComponent('test'));
+        $this->assertSame('partial-test-2', $this->componentExtension->prepareComponent('test'));
 
         $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
@@ -95,9 +96,9 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterCustomIdComponent(): void
+    public function testPrepareCustomIdComponent(): void
     {
-        $this->assertSame('custom', $this->componentExtension->registerComponent('test', ['id' => 'custom']));
+        $this->assertSame('custom', $this->componentExtension->prepareComponent('test', ['id' => 'custom']));
         $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
         $this->assertSame(
@@ -112,9 +113,9 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterOptionComponent(): void
+    public function testPrepareOptionComponent(): void
     {
-        $this->assertSame('test-1', $this->componentExtension->registerComponent('test', ['option1' => 'value1', 'option2' => 'value2']));
+        $this->assertSame('test-1', $this->componentExtension->prepareComponent('test', ['option1' => 'value1', 'option2' => 'value2']));
 
         $components = $this->componentExtension->getComponents();
         $this->assertNotFalse($components);
@@ -133,9 +134,9 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterComponentArray(): void
+    public function testPrepareComponentArray(): void
     {
-        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
 
         /** @var array<int, array{name: string, id: string, options: mixed}> $components */
         $components = $this->componentExtension->getComponents(false);
@@ -154,9 +155,9 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterComponentClear(): void
+    public function testPrepareComponentClear(): void
     {
-        $this->assertSame('test-1', $this->componentExtension->registerComponent('test'));
+        $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
 
         // Get components without clearing them.
         $components = $this->componentExtension->getComponents(true, false);
@@ -192,10 +193,10 @@ class ComponentExtensionTest extends TestCase
 
     public function testComponentList(): void
     {
-        $this->componentExtension->registerComponent('test');
-        $this->componentExtension->registerComponent('test');
-        $this->componentExtension->registerComponent('test2');
-        $this->componentExtension->registerComponent('test3');
+        $this->componentExtension->prepareComponent('test');
+        $this->componentExtension->prepareComponent('test');
+        $this->componentExtension->prepareComponent('test2');
+        $this->componentExtension->prepareComponent('test3');
 
         $componentList = $this->componentExtension->getComponentList();
 
@@ -204,9 +205,9 @@ class ComponentExtensionTest extends TestCase
         $this->assertSame(['test', 'test2', 'test3'], $componentList);
     }
 
-    public function testCallService(): void
+    public function testPrepareService(): void
     {
-        $this->componentExtension->callService('service', 'function', ['key' => 'value']);
+        $this->componentExtension->prepareService('service', 'function', ['key' => 'value']);
 
         $this->assertSame(
             json_encode([
@@ -222,11 +223,12 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testGetServices(): void
+    public function testPrepareServices(): void
     {
-        $this->componentExtension->callService('service', 'function', ['key' => 'value']);
-        $this->componentExtension->callService('service2', 'function', ['key' => 'value']);
-        $this->componentExtension->callService('service2', 'function', ['key' => 'value']);
+        $this->componentExtension->prepareService('service', 'function', ['key' => 'value']);
+        $this->componentExtension->prepareService('service2', 'function', ['key' => 'value']);
+        $this->componentExtension->prepareService('service2', 'function', ['key' => 'value']);
+        // test deprecated service call
         $this->componentExtension->callService('service3', 'function', ['key' => 'value']);
 
         $servicesList = $this->componentExtension->getServiceList();

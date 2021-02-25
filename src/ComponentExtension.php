@@ -47,10 +47,12 @@ class ComponentExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('register_component', [$this, 'registerComponent']),
+            new TwigFunction('register_component', [$this, 'registerComponent'], ['deprecated' => true]),
+            new TwigFunction('prepare_component', [$this, 'prepareComponent']),
             new TwigFunction('get_components', [$this, 'getComponents'], ['is_safe' => ['html']]),
             new TwigFunction('get_component_list', [$this, 'getComponentList'], ['is_safe' => ['html']]),
             new TwigFunction('call_service', [$this, 'callService']),
+            new TwigFunction('prepare_service', [$this, 'prepareService'], ['deprecated' => true]),
             new TwigFunction('get_services', [$this, 'getServices'], ['is_safe' => ['html']]),
             new TwigFunction('get_service_list', [$this, 'getServiceList'], ['is_safe' => ['html']]),
             new TwigFunction('set_component_prefix', [$this, 'setComponentPrefix']),
@@ -58,7 +60,7 @@ class ComponentExtension extends AbstractExtension
     }
 
     /**
-     * Register a new component and get a unique id.
+     * Prepare a new component and get a unique id.
      *
      * @param string $name
      * @param mixed[]|null $options
@@ -67,6 +69,25 @@ class ComponentExtension extends AbstractExtension
      * @return string
      */
     public function registerComponent(string $name, ?array $options = null, ?string $prefix = ''): string
+    {
+        @trigger_error(
+            __METHOD__ . ' is deprecated and will be removed in sulu/web-twig 3.0 use "prepareComponent" instead.',
+            \E_USER_DEPRECATED
+        );
+
+        return $this->prepareComponent($name, $options, $prefix);
+    }
+
+    /**
+     * Prepare a new component and get a unique id.
+     *
+     * @param string $name
+     * @param mixed[]|null $options
+     * @param string $prefix
+     *
+     * @return string
+     */
+    public function prepareComponent(string $name, ?array $options = null, ?string $prefix = ''): string
     {
         if (!isset($this->instanceCounter[$name])) {
             $this->instanceCounter[$name] = 0;
@@ -137,13 +158,30 @@ class ComponentExtension extends AbstractExtension
     }
 
     /**
-     * Call a service function.
+     * Prepare a service call.
      *
      * @param string $name
      * @param string $function
      * @param mixed[] $parameters
      */
     public function callService(string $name, string $function, array $parameters = []): void
+    {
+        @trigger_error(
+            __METHOD__ . ' is deprecated and will be removed in sulu/web-twig 3.0 use "prepareService" instead.',
+            \E_USER_DEPRECATED
+        );
+
+        $this->prepareService($name, $function, $parameters);
+    }
+
+    /**
+     * Prepare a service call.
+     *
+     * @param string $name
+     * @param string $function
+     * @param mixed[] $parameters
+     */
+    public function prepareService(string $name, string $function, array $parameters = []): void
     {
         $this->services[] = [
             'name' => $name,
