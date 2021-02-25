@@ -72,7 +72,7 @@ class ComponentExtension extends AbstractExtension
     {
         @trigger_error(
             __METHOD__ . ' is deprecated and will be removed in sulu/web-twig 3.0 use "prepareComponent" instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         return $this->prepareComponent($name, $options, $prefix);
@@ -168,7 +168,7 @@ class ComponentExtension extends AbstractExtension
     {
         @trigger_error(
             __METHOD__ . ' is deprecated and will be removed in sulu/web-twig 3.0 use "prepareService" instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         $this->prepareService($name, $function, $parameters);
