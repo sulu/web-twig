@@ -28,7 +28,7 @@ class ComponentExtensionTest extends TestCase
         $this->componentExtension = new ComponentExtension();
     }
 
-    public function testRegisterComponent(): void
+    public function testPrepareComponent(): void
     {
         $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
 
@@ -46,7 +46,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterMultipleComponent(): void
+    public function testPrepareMultipleComponent(): void
     {
         $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
         // this deprecated registerComponent function
@@ -71,7 +71,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterPrefix(): void
+    public function testPreparePrefix(): void
     {
         $this->componentExtension->setComponentPrefix('partial-');
         $this->assertSame('partial-test-1', $this->componentExtension->prepareComponent('test'));
@@ -96,7 +96,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterCustomIdComponent(): void
+    public function testPrepareCustomIdComponent(): void
     {
         $this->assertSame('custom', $this->componentExtension->prepareComponent('test', ['id' => 'custom']));
         $components = $this->componentExtension->getComponents();
@@ -113,7 +113,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterOptionComponent(): void
+    public function testPrepareOptionComponent(): void
     {
         $this->assertSame('test-1', $this->componentExtension->prepareComponent('test', ['option1' => 'value1', 'option2' => 'value2']));
 
@@ -134,7 +134,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterComponentArray(): void
+    public function testPrepareComponentArray(): void
     {
         $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
 
@@ -155,7 +155,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRegisterComponentClear(): void
+    public function testPrepareComponentClear(): void
     {
         $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
 
@@ -205,7 +205,7 @@ class ComponentExtensionTest extends TestCase
         $this->assertSame(['test', 'test2', 'test3'], $componentList);
     }
 
-    public function testCallService(): void
+    public function testPrepareService(): void
     {
         $this->componentExtension->prepareService('service', 'function', ['key' => 'value']);
 
@@ -223,7 +223,7 @@ class ComponentExtensionTest extends TestCase
         );
     }
 
-    public function testGetServices(): void
+    public function testPrepareServices(): void
     {
         $this->componentExtension->prepareService('service', 'function', ['key' => 'value']);
         $this->componentExtension->prepareService('service2', 'function', ['key' => 'value']);
