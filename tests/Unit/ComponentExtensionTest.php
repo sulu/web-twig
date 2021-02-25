@@ -49,7 +49,7 @@ class ComponentExtensionTest extends TestCase
     public function testPrepareMultipleComponent(): void
     {
         $this->assertSame('test-1', $this->componentExtension->prepareComponent('test'));
-        // this deprecated registerComponent function
+        // test deprecated registerComponent function
         $this->assertSame('test-2', $this->componentExtension->registerComponent('test'));
 
         $components = $this->componentExtension->getComponents();
