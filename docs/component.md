@@ -38,6 +38,13 @@ With the `component_list` twig function you can also add only specific html when
     Say Hello
 </button>
 
+{# Output html that is only needed if a specific component was prepared #}	
+{% if 'component' in get_component_list() %}	
+    <script id="component-template" type="text/html">	
+        <div>Template</div>	
+    </script>	
+{% endif %}
+
 {# Start components and run service functions #}
 <script>
     web.startComponents({{ get_components() }});
