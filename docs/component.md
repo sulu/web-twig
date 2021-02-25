@@ -81,8 +81,8 @@ If you don't want to autogenerate an ID you can give it as an option:
 
 ### Handling ESI
 
-As ESI are own sub request which does not know about the main request ESI need to be handled special.
-So if you want to use `web-js` components inside ESI you need to add the following to your `base.html.twig`.
+An ESI request is a separate sub request that does not know anything about the main request. To prevent conflicts, components need to be handled differently inside of ESI requests.
+If you want to use a `web-js` component inside of a ESI request, you need to add the following to your `base.html.twig`:
 
 ```twig
 <head>
