@@ -20,8 +20,8 @@ If autoconfigure is not active you need to tag it with [twig.extension](https://
 
 ## Usage
 
-Every component is represented by a DOM element the `prepare_component` function will generate a unique id
-which need to set on the DOM element.
+Every component is assigned to a DOM element. The `prepare_component` function will generate a unique id
+which needs to be set to the DOM element.
 
 At the bottom of your HTML Document you call the [web-js](https://github.com/sulu/web-js) functions
 to start the components you have prepared before.
