@@ -68,7 +68,12 @@ class ImageExtension extends AbstractExtension
     /**
      * @var bool
      */
-    private $guessAspectRatio = false;
+    private $aspectRatio = false;
+
+    /**
+     * @var mixed[]|null
+     */
+    private $imageFormatConfiguration = null;
 
     /**
      * @param string[] $defaultAttributes
@@ -78,7 +83,8 @@ class ImageExtension extends AbstractExtension
         ?string $placeholderPath = null,
         array $defaultAttributes = [],
         array $defaultAdditionalTypes = [],
-        bool $guessAspectRatio = false,
+        bool $aspectRatio = false,
+        array $imageFormatConfiguration = null,
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
@@ -86,7 +92,8 @@ class ImageExtension extends AbstractExtension
 
         $this->defaultAttributes = $defaultAttributes;
         $this->defaultAdditionalTypes = $defaultAdditionalTypes;
-        $this->guessAspectRatio = $guessAspectRatio;
+        $this->aspectRatio = $aspectRatio;
+        $this->imageFormatConfiguration = $imageFormatConfiguration;
     }
 
     /**
@@ -200,7 +207,7 @@ class ImageExtension extends AbstractExtension
             $attributes
         );
 
-        if ($this->guessAspectRatio && isset($attributes['src']) && !isset($attributes['width']) && !isset($attributes['height'])) {
+        if ($this->aspectRatio && isset($attributes['src']) && !isset($attributes['width']) && !isset($attributes['height'])) {
             list($width, $height) = $this->guessAspectRatio($media, $attributes);
 
             $attributes['width'] = ((string) $width) ?: null;
@@ -434,16 +441,28 @@ class ImageExtension extends AbstractExtension
     {
         $src = $attributes['src'] ?? '';
 
-        /*
-         * This will extract the format dimension in all common formats.
-         * @see ImageExtensionTest::testGuessAspectRatio
-         */
-        preg_match('/(\d+)?x(\d+)?(-inset)?(@)?(\d)?(x)?/', $src, $matches);
+        if ($this->imageFormatConfiguration) {
+            $scale = $this->imageFormatConfiguration[$src]['scale']['retina'] ? 2 : 1;
+            $isInset = \in_array($this->imageFormatConfiguration[$src]['scale']['mode'], [
+                1,
+                'inset',
+            ]);
+            $x = $this->imageFormatConfiguration[$src]['scale']['x'];
+            $y = $this->imageFormatConfiguration[$src]['scale']['y'];
+            $width = $x ? (int) round($x * $scale) : null;
+            $height = $y ? (int) round($y * $scale) : null;
+        } else {
+            /*
+             * This will extract the format dimension in all common formats.
+             * @see ImageExtensionTest::testGuessAspectRatio
+             */
+            preg_match('/(\d+)?x(\d+)?(-inset)?(@)?(\d)?(x)?/', $src, $matches);
 
-        $scale = !empty($matches[5]) ? (float) $matches[5] : 1;
-        $width = !empty($matches[1]) ? (int) round($matches[1] * $scale) : null;
-        $height = !empty($matches[2]) ? (int) round($matches[2] * $scale) : null;
-        $isInset = !empty($matches[3]);
+            $scale = !empty($matches[5]) ? (float) $matches[5] : 1;
+            $width = !empty($matches[1]) ? (int) round($matches[1] * $scale) : null;
+            $height = !empty($matches[2]) ? (int) round($matches[2] * $scale) : null;
+            $isInset = !empty($matches[3]);
+        }
 
         // fixed formats can directly be returned
         if ($width && $height && !$isInset) {

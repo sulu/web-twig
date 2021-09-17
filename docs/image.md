@@ -15,6 +15,19 @@ services:
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
 
+**Recommended Configuration**
+
+```yaml
+Sulu\Twig\Extensions\ImageExtension:
+    arguments:
+        $defaultAttributes:
+            loading: 'lazy'
+        $defaultAdditionalTypes:
+            webp: 'image/webp'
+        $aspectRatio: true
+        $imageFormatConfiguration: '%sulu_media.image.formats''
+```
+
 ## Usage
 
 #### Get an image
@@ -242,7 +255,8 @@ This feature can be activated the following way:
 services:
     Sulu\Twig\Extensions\ImageExtension:
         arguments:
-            $guessAspectRatio: true
+            $aspectRatio: true
+            $imageFormatConfiguration: '%sulu_media.image.formats%' # optional but recommended
 ```
 
 So if we have an original image of 1920x1080 and have a image format called 100x:
@@ -257,5 +271,6 @@ Will add automatically the width and height attributes to the imgage tag:
 <img alt="Title" title="Description" src="/uploads/media/100x/01/image.jpg?v=1-0" width="'100" height="56">
 ```
 
-This only works when writing image formats in specific format 100x, x100, 100x100, 100x100-inset, 100x@2x, ...
-for all other cases this option not be activated.
+The is recommend `sulu_media.image.formats` but is optional. Without it will try to
+guess the format by the given format key so it will then only work with format keys
+like 100x, x100, 100x@2x, 100x100-inset and similars.
