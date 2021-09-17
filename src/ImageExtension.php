@@ -66,13 +66,40 @@ class ImageExtension extends AbstractExtension
     ];
 
     /**
+     * @var bool
+     */
+    private $aspectRatio = false;
+
+    /**
+     * @var array<string, array{
+     *     scale: array{
+     *         x: int|null,
+     *         y: int|null,
+     *         mode: int,
+     *         retina: bool,
+     *     },
+     * }>|null
+     */
+    private $imageFormatConfiguration = null;
+
+    /**
      * @param string[] $defaultAttributes
      * @param string[] $defaultAdditionalTypes
+     * @param array<string, array{
+     *     scale: array{
+     *         x: int|null,
+     *         y: int|null,
+     *         mode: int,
+     *         retina: bool,
+     *     },
+     * }>|null $imageFormatConfiguration
      */
     public function __construct(
         ?string $placeholderPath = null,
         array $defaultAttributes = [],
-        array $defaultAdditionalTypes = []
+        array $defaultAdditionalTypes = [],
+        bool $aspectRatio = false,
+        array $imageFormatConfiguration = null,
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
@@ -80,6 +107,8 @@ class ImageExtension extends AbstractExtension
 
         $this->defaultAttributes = $defaultAttributes;
         $this->defaultAdditionalTypes = $defaultAdditionalTypes;
+        $this->aspectRatio = $aspectRatio;
+        $this->imageFormatConfiguration = $imageFormatConfiguration;
     }
 
     /**
@@ -192,6 +221,13 @@ class ImageExtension extends AbstractExtension
             $this->defaultAttributes,
             $attributes
         );
+
+        if ($this->aspectRatio && isset($attributes['src']) && !isset($attributes['width']) && !isset($attributes['height'])) {
+            list($width, $height) = $this->guessAspectRatio($media, $attributes);
+
+            $attributes['width'] = ((string) $width) ?: null;
+            $attributes['height'] = ((string) $height) ?: null;
+        }
 
         // The default additional types and additional types are merged together and not replaced
         /** @var string[] $additionalTypes */
@@ -405,6 +441,83 @@ class ImageExtension extends AbstractExtension
         }
 
         return $this->placeholders;
+    }
+
+    /**
+     * @param mixed $media
+     * @param array<string, string|null> $attributes
+     *
+     * @return array{
+     *     0: int|null,
+     *     1: int|null,
+     * }
+     */
+    private function guessAspectRatio($media, array $attributes): array
+    {
+        $src = $attributes['src'] ?? '';
+
+        if ($this->imageFormatConfiguration) {
+            $scale = $this->imageFormatConfiguration[$src]['scale']['retina'] ? 2 : 1;
+            $isInset = \in_array($this->imageFormatConfiguration[$src]['scale']['mode'], [
+                1,
+                'inset',
+            ], true);
+            $x = $this->imageFormatConfiguration[$src]['scale']['x'];
+            $y = $this->imageFormatConfiguration[$src]['scale']['y'];
+            $width = $x ? (int) round($x * $scale) : null;
+            $height = $y ? (int) round($y * $scale) : null;
+        } else {
+            /*
+             * This will extract the format dimension in all common formats.
+             * @see ImageExtensionTest::testGuessAspectRatio
+             */
+            preg_match('/(\d+)?x(\d+)?(-inset)?(@)?(\d)?(x)?/', $src, $matches);
+
+            $scale = !empty($matches[5]) ? (float) $matches[5] : 1;
+            $width = !empty($matches[1]) ? (int) round($matches[1] * $scale) : null;
+            $height = !empty($matches[2]) ? (int) round($matches[2] * $scale) : null;
+            $isInset = !empty($matches[3]);
+        }
+
+        // fixed formats can directly be returned
+        if ($width && $height && !$isInset) {
+            return [$width, $height];
+        }
+
+        $properties = $this->getPropertyAccessor()->getValue($media, 'properties');
+        $originalWidth = $properties['width'] ?? null;
+        $originalHeight = $properties['height'] ?? null;
+
+        if (!$originalWidth || !$originalHeight) {
+            return [null, null];
+        }
+
+        if ($isInset && $width && $height) {
+            // calculate inset width and height e.g. 200x50-inset, 100x100-inset
+            $insetWidth = $width;
+            $insetHeight = $height;
+            if ($originalWidth > $width) {
+                $insetHeight = $originalHeight / $originalWidth * $width;
+            }
+
+            if (round($insetHeight) > $height) {
+                $insetHeight = $height;
+                $insetWidth = $originalWidth / $originalHeight * $height;
+            }
+
+            return [(int) round($insetWidth), (int) round($insetHeight)];
+        }
+
+        // calculate the not given dimension parameter
+        if (!$width) {
+            $width = $originalWidth / $originalHeight * $height;
+        }
+
+        if (!$height) {
+            $height = $originalHeight / $originalWidth * $width;
+        }
+
+        return [(int) round($width), (int) round($height)];
     }
 
     /**

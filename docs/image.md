@@ -15,6 +15,19 @@ services:
 
 If autoconfigure is not active you need to tag it with [twig.extension](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
 
+**Recommended Configuration**
+
+```yaml
+Sulu\Twig\Extensions\ImageExtension:
+    arguments:
+        $defaultAttributes:
+            loading: 'lazy'
+        $defaultAdditionalTypes:
+            webp: 'image/webp'
+        $aspectRatio: true
+        $imageFormatConfiguration: '%sulu_media.image.formats%'
+```
+
 ## Usage
 
 #### Get an image
@@ -227,3 +240,37 @@ You can also only activate it for a specific call:
     '(max-width: 650px)': 'sulu-100x100',
 }, { webp: 'image/webp' }) }}
 ```
+
+##### 8. Set width and height attribute automatically
+
+Since Sulu 2.3 the original image width and height are saved as properties.
+This allows to guess the width and height of a image format and set the respective HTML attributes.
+
+Setting the width and height attribute allows modern browsers to avoid layer shifts
+and therefore the page will not jump when images are loaded.
+
+This feature can be activated the following way:
+
+```yaml
+services:
+    Sulu\Twig\Extensions\ImageExtension:
+        arguments:
+            $aspectRatio: true
+            $imageFormatConfiguration: '%sulu_media.image.formats%' # optional but recommended
+```
+
+For example, if the original image has a resolution of 1920x1080 and the image format is called 100x:
+
+```twig
+{{ get_image(headerImage, '100x') }}
+```
+
+The feature will automatically add a width and height attribute to the rendered image tag:
+
+```twig
+<img alt="Title" title="Description" src="/uploads/media/100x/01/image.jpg?v=1-0" width="'100" height="56">
+```
+
+The `$imageFormatConfiguration` parameter is optional. If it is not set, the extension
+tries to guess the dimensions by the given format key. This will only work for format keys
+in the format of 100x, x100, 100x@2x and 100x100-inset.

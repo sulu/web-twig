@@ -19,11 +19,6 @@ use Sulu\Twig\Extensions\ImageExtension;
 class ImageExtensionTest extends TestCase
 {
     /**
-     * @var ImageExtension
-     */
-    private $imageExtension;
-
-    /**
      * @var mixed[]
      */
     private $image;
@@ -40,7 +35,6 @@ class ImageExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->imageExtension = new ImageExtension('/lazy');
         $this->image = [
             'title' => 'Title',
             'description' => 'Description',
@@ -54,6 +48,12 @@ class ImageExtensionTest extends TestCase
                 'sulu-170x170.webp' => '/uploads/media/sulu-170x170/01/image.webp?v=1-0',
                 'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.jpg?v=1-0',
                 'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
+                'sulu-260x' => '/uploads/media/sulu-400x400/01/image.jpg?v=1-0',
+                'sulu-260x.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
+            ],
+            'properties' => [
+                'width' => 1920,
+                'height' => 1080,
             ],
         ];
 
@@ -84,27 +84,37 @@ class ImageExtensionTest extends TestCase
                 'sulu-400x400' => '/uploads/media/sulu-400x400/01/image.svg?v=1-0',
                 'sulu-400x400.webp' => '/uploads/media/sulu-400x400/01/image.webp?v=1-0',
             ],
+            'properties' => [
+                'width' => 1920,
+                'height' => 1080,
+            ],
         ];
     }
 
     public function testImageTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
-            $this->imageExtension->getImage($this->image, 'sulu-100x100')
+            $imageExtension->getImage($this->image, 'sulu-100x100')
         );
     }
 
     public function testImageTagObject(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
-            $this->imageExtension->getImage((object) $this->image, 'sulu-100x100')
+            $imageExtension->getImage((object) $this->image, 'sulu-100x100')
         );
     }
 
     public function testComplexImageTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<img alt="Logo"' .
             ' title="Description"' .
@@ -113,7 +123,7 @@ class ImageExtensionTest extends TestCase
             ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
             ' id="image-id"' .
             ' class="image-class">',
-            $this->imageExtension->getImage(
+            $imageExtension->getImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -129,6 +139,8 @@ class ImageExtensionTest extends TestCase
 
     public function testPictureTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<picture>' .
             '<source media="(max-width: 1024px)"' .
@@ -139,7 +151,7 @@ class ImageExtensionTest extends TestCase
                 ' title="Description"' .
                 ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">' .
             '</picture>',
-            $this->imageExtension->getImage(
+            $imageExtension->getImage(
                 $this->image,
                 'sulu-400x400',
                 [
@@ -152,6 +164,8 @@ class ImageExtensionTest extends TestCase
 
     public function testPictureTagMinimalImage(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<picture>' .
             '<source media="(max-width: 1024px)"' .
@@ -162,7 +176,7 @@ class ImageExtensionTest extends TestCase
             ' title="image"' .
             ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0">' .
             '</picture>',
-            $this->imageExtension->getImage(
+            $imageExtension->getImage(
                 $this->minimalImage,
                 'sulu-400x400',
                 [
@@ -175,6 +189,8 @@ class ImageExtensionTest extends TestCase
 
     public function testComplexPictureTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<picture>' .
             '<source media="(max-width: 1024px)"' .
@@ -188,7 +204,7 @@ class ImageExtensionTest extends TestCase
                 ' src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
                 ' class="image-class">' .
             '</picture>',
-            $this->imageExtension->getImage(
+            $imageExtension->getImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -210,14 +226,18 @@ class ImageExtensionTest extends TestCase
 
     public function testLazyImageTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<img alt="Title" title="Description" src="/lazy/sulu-100x100.svg" data-src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0" class="lazyload">',
-            $this->imageExtension->getLazyImage($this->image, 'sulu-100x100')
+            $imageExtension->getLazyImage($this->image, 'sulu-100x100')
         );
     }
 
     public function testLazyComplexImageTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<img alt="Logo"' .
             ' title="Description"' .
@@ -228,7 +248,7 @@ class ImageExtensionTest extends TestCase
             ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
             ' id="image-id"' .
             ' class="image-class lazyload">',
-            $this->imageExtension->getLazyImage(
+            $imageExtension->getLazyImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -244,6 +264,8 @@ class ImageExtensionTest extends TestCase
 
     public function testLazyComplexImageTagMinimalImage(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<img alt="image"' .
             ' title="image"' .
@@ -254,7 +276,7 @@ class ImageExtensionTest extends TestCase
             ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
             ' id="image-id"' .
             ' class="image-class lazyload">',
-            $this->imageExtension->getLazyImage(
+            $imageExtension->getLazyImage(
                 $this->minimalImage,
                 [
                     'src' => 'sulu-400x400',
@@ -269,6 +291,8 @@ class ImageExtensionTest extends TestCase
 
     public function testLazyPictureTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<picture>' .
             '<source media="(max-width: 1024px)"' .
@@ -283,7 +307,7 @@ class ImageExtensionTest extends TestCase
             ' data-src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
             ' class="lazyload">' .
             '</picture>',
-            $this->imageExtension->getLazyImage(
+            $imageExtension->getLazyImage(
                 $this->image,
                 'sulu-400x400',
                 [
@@ -296,6 +320,8 @@ class ImageExtensionTest extends TestCase
 
     public function testLazyComplexPictureTag(): void
     {
+        $imageExtension = new ImageExtension('/lazy');
+
         $this->assertSame(
             '<picture>' .
             '<source media="(max-width: 1024px)"' .
@@ -312,7 +338,7 @@ class ImageExtensionTest extends TestCase
             ' data-src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"' .
             ' class="image-class lazyload">' .
             '</picture>',
-            $this->imageExtension->getLazyImage(
+            $imageExtension->getLazyImage(
                 $this->image,
                 [
                     'src' => 'sulu-400x400',
@@ -334,14 +360,16 @@ class ImageExtensionTest extends TestCase
 
     public function testHasLazyImage(): void
     {
-        $this->assertFalse($this->imageExtension->hasLazyImage());
-        $this->imageExtension->getImage($this->image, 'sulu-400x400');
-        $this->assertFalse($this->imageExtension->hasLazyImage());
-        $this->imageExtension->getLazyImage($this->image, 'sulu-400x400');
-        $this->assertTrue($this->imageExtension->hasLazyImage());
-        $this->imageExtension->getLazyImage($this->image, 'sulu-400x400');
-        $this->imageExtension->getImage($this->image, 'sulu-400x400');
-        $this->assertTrue($this->imageExtension->hasLazyImage());
+        $imageExtension = new ImageExtension('/lazy');
+
+        $this->assertFalse($imageExtension->hasLazyImage());
+        $imageExtension->getImage($this->image, 'sulu-400x400');
+        $this->assertFalse($imageExtension->hasLazyImage());
+        $imageExtension->getLazyImage($this->image, 'sulu-400x400');
+        $this->assertTrue($imageExtension->hasLazyImage());
+        $imageExtension->getLazyImage($this->image, 'sulu-400x400');
+        $imageExtension->getImage($this->image, 'sulu-400x400');
+        $this->assertTrue($imageExtension->hasLazyImage());
     }
 
     public function testDefaultAttributes(): void
@@ -488,5 +516,106 @@ class ImageExtensionTest extends TestCase
                 ]
             )
         );
+    }
+
+    /**
+     * @dataProvider aspectRatioDataProvider
+     */
+    public function testAspectRatio(string $format, string $expectedWidth, string $expectedHeight): void
+    {
+        $imageExtension = new ImageExtension(null, [], [], true);
+
+        $image = array_replace_recursive(
+            $this->image,
+            [
+                'thumbnails' => [
+                    $format => '/uploads/media/' . $format . '/01/image.jpg?v=1-0',
+                    $format . '.webp' => '/uploads/media/' . $format . '/01/image.webp?v=1-0',
+                ],
+                'properties' => [
+                    'width' => 1920,
+                    'height' => 1080,
+                ],
+            ],
+        );
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" src="/uploads/media/' . $format . '/01/image.jpg?v=1-0" width="' . $expectedWidth . '" height="' . $expectedHeight . '">',
+            $imageExtension->getImage($image, $format)
+        );
+    }
+
+    /**
+     * @dataProvider aspectRatioDataProvider
+     */
+    public function testAspectRatioWithConfiguration(string $format, string $expectedWidth, string $expectedHeight): void
+    {
+        preg_match('/(\d+)?x(\d+)?(-inset)?(@)?(\d)?(x)?/', $format, $matches);
+
+        $scale = !empty($matches[5]) ? (float) $matches[5] : 1;
+        $x = !empty($matches[1]) ? (int) $matches[1] : null;
+        $y = !empty($matches[2]) ? (int) $matches[2] : null;
+        $isInset = !empty($matches[3]);
+
+        $imageExtension = new ImageExtension(null, [], [], true, [
+            $format => [
+                'scale' => [
+                    'x' => $x,
+                    'y' => $y,
+                    'mode' => $isInset ? 1 : 2,
+                    'retina' => 1 !== $scale,
+                ],
+            ],
+        ]);
+
+        $image = array_replace_recursive(
+            $this->image,
+            [
+                'thumbnails' => [
+                    $format => '/uploads/media/' . $format . '/01/image.jpg?v=1-0',
+                    $format . '.webp' => '/uploads/media/' . $format . '/01/image.webp?v=1-0',
+                ],
+                'properties' => [
+                    'width' => 1920,
+                    'height' => 1080,
+                ],
+            ],
+        );
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" src="/uploads/media/' . $format . '/01/image.jpg?v=1-0" width="' . $expectedWidth . '" height="' . $expectedHeight . '">',
+            $imageExtension->getImage($image, $format)
+        );
+    }
+
+    /**
+     * @return \Generator<array{string, string, string}>
+     */
+    public function aspectRatioDataProvider(): \Generator
+    {
+        yield ['100x', '100', '56'];
+        yield ['x100', '178', '100'];
+        yield ['100x100', '100', '100'];
+        yield ['200x50', '200', '50'];
+        yield ['100x@2x', '200', '113'];
+        yield ['x100@2x', '356', '200'];
+        yield ['100x100@2x', '200', '200'];
+        yield ['200x50@2x', '400', '100'];
+        yield ['100x-inset', '100', '56'];
+        yield ['x100-inset', '178', '100'];
+        yield ['100x100-inset', '100', '56'];
+        yield ['200x50-inset', '89', '50'];
+        yield ['100x-inset@2x', '200', '113'];
+        yield ['x100-inset@2x', '356', '200'];
+        yield ['100x100-inset@2x', '200', '113'];
+        yield ['sulu-100x', '100', '56'];
+        yield ['sulu-x100', '178', '100'];
+        yield ['sulu-100x100', '100', '100'];
+        yield ['sulu-100x-inset', '100', '56'];
+        yield ['sulu-x100-inset', '178', '100'];
+        yield ['sulu-100x100-inset', '100', '56'];
+        yield ['sulu-100x-inset@2x', '200', '113'];
+        yield ['sulu-x100-inset@2x', '356', '200'];
+        yield ['sulu-100x100-inset2x', '200', '113'];
     }
 }
