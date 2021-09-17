@@ -66,13 +66,19 @@ class ImageExtension extends AbstractExtension
     ];
 
     /**
+     * @var bool
+     */
+    private $guessRatio = false;
+
+    /**
      * @param string[] $defaultAttributes
      * @param string[] $defaultAdditionalTypes
      */
     public function __construct(
         ?string $placeholderPath = null,
         array $defaultAttributes = [],
-        array $defaultAdditionalTypes = []
+        array $defaultAdditionalTypes = [],
+        bool $guessRatio = false,
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
@@ -80,6 +86,7 @@ class ImageExtension extends AbstractExtension
 
         $this->defaultAttributes = $defaultAttributes;
         $this->defaultAdditionalTypes = $defaultAdditionalTypes;
+        $this->guessRatio = $guessRatio;
     }
 
     /**
@@ -192,6 +199,13 @@ class ImageExtension extends AbstractExtension
             $this->defaultAttributes,
             $attributes
         );
+
+        if ($this->guessRatio && isset($attributes['src']) && !isset($attributes['width']) && !isset($attributes['height'])) {
+            list($width, $height) = $this->guessWidthHeight($media, $attributes);
+
+            $attributes['width'] = ((string) $width) ?: null;
+            $attributes['height'] = ((string) $height) ?: null;
+        }
 
         // The default additional types and additional types are merged together and not replaced
         /** @var string[] $additionalTypes */
@@ -405,6 +419,71 @@ class ImageExtension extends AbstractExtension
         }
 
         return $this->placeholders;
+    }
+
+    /**
+     * @param mixed $media
+     * @param array<string, string|null>|string $attributes
+     *
+     * @return array{
+     *     0: int|null,
+     *     1: int|null,
+     * }
+     */
+    private function guessWidthHeight($media, array $attributes): array
+    {
+        $src = $attributes['src'] ?? '';
+
+        $dimensions = explode(
+            'x',
+            explode(
+                '-',
+                explode('@', ltrim($src, 'sulu-'), 2)[0],
+                2
+            )[0],
+            2
+        );
+
+        $width = !empty($dimensions[0]) ? (int) $dimensions[0] : null;
+        $height = !empty($dimensions[1]) ? (int) $dimensions[1] : null;
+        $isInset = false !== mb_strpos($src, '-inset');
+
+        if ($width && $height && !$isInset) {
+            return [$width, $height];
+        }
+
+        $properties = $this->getPropertyAccessor()->getValue($media, 'properties');
+        $originalWidth = $properties['width'] ?? null;
+        $originalHeight = $properties['height'] ?? null;
+
+        if (!$originalWidth || !$originalHeight) {
+            return [null, null];
+        }
+
+        if ($isInset && $width && $height) {
+            // calculdate inset dimensions when no height is set
+            $insetWidth = $width;
+            if ($width && $originalWidth > $width) {
+                $insetHeight = $originalHeight / $originalWidth * $width;
+            }
+
+            if ($height && round($insetHeight) > $height) {
+                $insetHeight = $height;
+                $insetWidth = $originalWidth / $originalHeight * $height;
+            }
+
+            return [(int) round($insetWidth), (int) round($insetHeight)];
+        }
+
+        if (!$width && is_numeric($height)) {
+            $width = $originalWidth / $originalHeight * $height;
+        }
+
+        if (!$height && is_numeric($width)) {
+            $height = $originalHeight / $originalWidth * $width;
+        }
+
+        return [(int) round($width), (int) round($height)];
     }
 
     /**
