@@ -423,7 +423,7 @@ class ImageExtension extends AbstractExtension
 
     /**
      * @param mixed $media
-     * @param array<string, string|null>|string $attributes
+     * @param array<string, string|null> $attributes
      *
      * @return array{
      *     0: int|null,
@@ -461,11 +461,12 @@ class ImageExtension extends AbstractExtension
         if ($isInset && $width && $height) {
             // calculate inset width and height e.g. 200x50-inset, 100x100-inset
             $insetWidth = $width;
-            if ($width && $originalWidth > $width) {
+            $insetHeight = $height;
+            if ($originalWidth > $width) {
                 $insetHeight = $originalHeight / $originalWidth * $width;
             }
 
-            if ($height && round($insetHeight) > $height) {
+            if (round($insetHeight) > $height) {
                 $insetHeight = $height;
                 $insetWidth = $originalWidth / $originalHeight * $height;
             }
@@ -474,11 +475,11 @@ class ImageExtension extends AbstractExtension
         }
 
         // calculate the not given dimension parameter
-        if (!$width && is_numeric($height)) {
+        if (!$width) {
             $width = $originalWidth / $originalHeight * $height;
         }
 
-        if (!$height && is_numeric($width)) {
+        if (!$height) {
             $height = $originalHeight / $originalWidth * $width;
         }
 

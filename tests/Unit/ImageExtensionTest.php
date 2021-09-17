@@ -501,7 +501,7 @@ class ImageExtensionTest extends TestCase
     }
 
     /**
-     * @dataProvider guessRatioDataProvider
+     * @dataProvider guessAspectRatioDataProvider
      */
     public function testGuessAspectRatio(string $format, string $expectedWidth, string $expectedHeight): void
     {
@@ -514,6 +514,10 @@ class ImageExtensionTest extends TestCase
                     $format => '/uploads/media/' . $format . '/01/image.jpg?v=1-0',
                     $format . '.webp' => '/uploads/media/' . $format . '/01/image.webp?v=1-0',
                 ],
+                'properties' => [
+                    'width' => 1920,
+                    'height' => 1080,
+                ],
             ],
         );
 
@@ -523,7 +527,10 @@ class ImageExtensionTest extends TestCase
         );
     }
 
-    public function guessRatioDataProvider(): \Generator
+    /**
+     * @return \Generator<array{string, string, string}>
+     */
+    public function guessAspectRatioDataProvider(): \Generator
     {
         yield ['100x', '100', '56'];
         yield ['x100', '178', '100'];
