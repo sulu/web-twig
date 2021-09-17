@@ -25,7 +25,7 @@ Sulu\Twig\Extensions\ImageExtension:
         $defaultAdditionalTypes:
             webp: 'image/webp'
         $aspectRatio: true
-        $imageFormatConfiguration: '%sulu_media.image.formats''
+        $imageFormatConfiguration: '%sulu_media.image.formats%'
 ```
 
 ## Usage
@@ -272,5 +272,5 @@ The feature will automatically add a width and height attribute to the rendered 
 ```
 
 The `$imageFormatConfiguration` parameter is optional. Without it will try to
-guess the format by the given format key so it will then only work with format keys
+guess the format by the given format key. It will then only work with format keys
 like 100x, x100, 100x@2x, 100x100-inset and similars.

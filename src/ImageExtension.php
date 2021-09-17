@@ -71,13 +71,28 @@ class ImageExtension extends AbstractExtension
     private $aspectRatio = false;
 
     /**
-     * @var mixed[]|null
+     * @var array<string, array{
+     *     scale: array{
+     *         x: int|null,
+     *         y: int|null,
+     *         mode: int,
+     *         retina: bool,
+     *     },
+     * }>|null
      */
     private $imageFormatConfiguration = null;
 
     /**
      * @param string[] $defaultAttributes
      * @param string[] $defaultAdditionalTypes
+     * @param array<string, array{
+     *     scale: array{
+     *         x: int|null,
+     *         y: int|null,
+     *         mode: int,
+     *         retina: bool,
+     *     },
+     * }>|null $imageFormatConfiguration
      */
     public function __construct(
         ?string $placeholderPath = null,
@@ -446,7 +461,7 @@ class ImageExtension extends AbstractExtension
             $isInset = \in_array($this->imageFormatConfiguration[$src]['scale']['mode'], [
                 1,
                 'inset',
-            ]);
+            ], true);
             $x = $this->imageFormatConfiguration[$src]['scale']['x'];
             $y = $this->imageFormatConfiguration[$src]['scale']['y'];
             $width = $x ? (int) round($x * $scale) : null;
