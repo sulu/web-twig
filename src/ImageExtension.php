@@ -68,7 +68,7 @@ class ImageExtension extends AbstractExtension
     /**
      * @var bool
      */
-    private $guessRatio = false;
+    private $guessAspectRatio = false;
 
     /**
      * @param string[] $defaultAttributes
@@ -78,7 +78,7 @@ class ImageExtension extends AbstractExtension
         ?string $placeholderPath = null,
         array $defaultAttributes = [],
         array $defaultAdditionalTypes = [],
-        bool $guessRatio = false,
+        bool $guessAspectRatio = false,
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
@@ -86,7 +86,7 @@ class ImageExtension extends AbstractExtension
 
         $this->defaultAttributes = $defaultAttributes;
         $this->defaultAdditionalTypes = $defaultAdditionalTypes;
-        $this->guessRatio = $guessRatio;
+        $this->guessAspectRatio = $guessAspectRatio;
     }
 
     /**
@@ -200,8 +200,8 @@ class ImageExtension extends AbstractExtension
             $attributes
         );
 
-        if ($this->guessRatio && isset($attributes['src']) && !isset($attributes['width']) && !isset($attributes['height'])) {
-            list($width, $height) = $this->guessWidthHeight($media, $attributes);
+        if ($this->guessAspectRatio && isset($attributes['src']) && !isset($attributes['width']) && !isset($attributes['height'])) {
+            list($width, $height) = $this->guessAspectRatio($media, $attributes);
 
             $attributes['width'] = ((string) $width) ?: null;
             $attributes['height'] = ((string) $height) ?: null;
@@ -430,24 +430,22 @@ class ImageExtension extends AbstractExtension
      *     1: int|null,
      * }
      */
-    private function guessWidthHeight($media, array $attributes): array
+    private function guessAspectRatio($media, array $attributes): array
     {
         $src = $attributes['src'] ?? '';
 
-        $dimensions = explode(
-            'x',
-            explode(
-                '-',
-                explode('@', ltrim($src, 'sulu-'), 2)[0],
-                2
-            )[0],
-            2
-        );
+        /*
+         * This will extract the format dimension in all common formats.
+         * @see ImageExtensionTest::testGuessAspectRatio
+         */
+        preg_match('/(\d+)?x(\d+)?(-inset)?(@)?(\d)?(x)?/', $src, $matches);
 
-        $width = !empty($dimensions[0]) ? (int) $dimensions[0] : null;
-        $height = !empty($dimensions[1]) ? (int) $dimensions[1] : null;
-        $isInset = false !== mb_strpos($src, '-inset');
+        $scale = !empty($matches[5]) ? (float) $matches[5] : 1;
+        $width = !empty($matches[1]) ? (int) round($matches[1] * $scale) : null;
+        $height = !empty($matches[2]) ? (int) round($matches[2] * $scale) : null;
+        $isInset = !empty($matches[3]);
 
+        // fixed formats can directly be returned
         if ($width && $height && !$isInset) {
             return [$width, $height];
         }
@@ -461,7 +459,7 @@ class ImageExtension extends AbstractExtension
         }
 
         if ($isInset && $width && $height) {
-            // calculdate inset dimensions when no height is set
+            // calculate inset width and height e.g. 200x50-inset, 100x100-inset
             $insetWidth = $width;
             if ($width && $originalWidth > $width) {
                 $insetHeight = $originalHeight / $originalWidth * $width;
@@ -475,6 +473,7 @@ class ImageExtension extends AbstractExtension
             return [(int) round($insetWidth), (int) round($insetHeight)];
         }
 
+        // calculate the not given dimension parameter
         if (!$width && is_numeric($height)) {
             $width = $originalWidth / $originalHeight * $height;
         }

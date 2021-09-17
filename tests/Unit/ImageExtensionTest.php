@@ -500,7 +500,10 @@ class ImageExtensionTest extends TestCase
         );
     }
 
-    public function testGuessRatioWidthAndHeight(): void
+    /**
+     * @dataProvider guessRatioDataProvider
+     */
+    public function testGuessAspectRatio(string $format, string $expectedWidth, string $expectedHeight): void
     {
         $imageExtension = new ImageExtension(null, [], [], true);
 
@@ -508,141 +511,43 @@ class ImageExtensionTest extends TestCase
             $this->image,
             [
                 'thumbnails' => [
-                    '100x100' => '/uploads/media/100x100/01/image.jpg?v=1-0',
-                    '100x100.webp' => '/uploads/media/100x100/01/image.webp?v=1-0',
+                    $format => '/uploads/media/' . $format . '/01/image.jpg?v=1-0',
+                    $format . '.webp' => '/uploads/media/' . $format . '/01/image.webp?v=1-0',
                 ],
             ],
         );
 
         $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/100x100/01/image.jpg?v=1-0" width="100" height="100">',
-            $imageExtension->getImage($image, '100x100')
+            '<img alt="Title" title="Description" src="/uploads/media/' . $format . '/01/image.jpg?v=1-0" width="' . $expectedWidth . '" height="' . $expectedHeight . '">',
+            $imageExtension->getImage($image, $format)
         );
     }
 
-    public function testGuessRatioOnlyWidth(): void
+    public function guessRatioDataProvider(): \Generator
     {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['100x'] = '/uploads/media/100x/01/image.jpg?v=1-0';
-        $image['thumbnails']['100x.webp'] = '/uploads/media/100x/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/100x/01/image.jpg?v=1-0" width="100" height="56">',
-            $imageExtension->getImage($image, '100x')
-        );
-    }
-
-    public function testGuessRatioOnlyHeight(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['x100'] = '/uploads/media/x100/01/image.jpg?v=1-0';
-        $image['thumbnails']['x100.webp'] = '/uploads/media/x100/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/x100/01/image.jpg?v=1-0" width="178" height="100">',
-            $imageExtension->getImage($image, 'x100')
-        );
-    }
-
-    public function testGuessRatioOnlyWidthWithAt2(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['100x@2x'] = '/uploads/media/100x@2x/01/image.jpg?v=1-0';
-        $image['thumbnails']['100x@2x.webp'] = '/uploads/media/100x@2x/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/100x@2x/01/image.jpg?v=1-0" width="100" height="56">',
-            $imageExtension->getImage($image, '100x@2x')
-        );
-    }
-
-    public function testGuessRatioOnlyWidthWithInset(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['100x-inset'] = '/uploads/media/100x-inset/01/image.jpg?v=1-0';
-        $image['thumbnails']['100x-inset.webp'] = '/uploads/media/100x-inset/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/100x-inset/01/image.jpg?v=1-0" width="100" height="56">',
-            $imageExtension->getImage($image, '100x-inset')
-        );
-    }
-
-    public function testGuessRatioOnlyHeightWithInset(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['x100-inset'] = '/uploads/media/x100-inset/01/image.jpg?v=1-0';
-        $image['thumbnails']['x100-inset.webp'] = '/uploads/media/x100-inset/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/x100-inset/01/image.jpg?v=1-0" width="178" height="100">',
-            $imageExtension->getImage($image, 'x100-inset')
-        );
-    }
-
-    public function testGuessRatioWidthAndHeightWithInset(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['100x100-inset'] = '/uploads/media/100x100-inset/01/image.jpg?v=1-0';
-        $image['thumbnails']['100x100-inset.webp'] = '/uploads/media/100x100-inset/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/100x100-inset/01/image.jpg?v=1-0" width="100" height="56">',
-            $imageExtension->getImage($image, '100x100-inset')
-        );
-    }
-
-    public function testGuessRatioWidthAndHeightWithInsetQuader(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['200x50-inset'] = '/uploads/media/200x50-inset/01/image.jpg?v=1-0';
-        $image['thumbnails']['200x50-inset.webp'] = '/uploads/media/200x50-inset/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/200x50-inset/01/image.jpg?v=1-0" width="89" height="50">',
-            $imageExtension->getImage($image, '200x50-inset')
-        );
-    }
-
-    public function testGuessRatioOnlyWidthWithPrefix(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['sulu-100x'] = '/uploads/media/sulu-100x/01/image.jpg?v=1-0';
-        $image['thumbnails']['sulu-100x.webp'] = '/uploads/media/sulu-100x/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/sulu-100x/01/image.jpg?v=1-0" width="100" height="56">',
-            $imageExtension->getImage($image, 'sulu-100x')
-        );
-    }
-
-    public function testGuessRatioOnlyWidthWithPrefixAt2AndInset(): void
-    {
-        $imageExtension = new ImageExtension(null, [], [], true);
-
-        $image = $this->image;
-        $image['thumbnails']['sulu-100x@2x-inset'] = '/uploads/media/sulu-100x@2x-inset/01/image.jpg?v=1-0';
-        $image['thumbnails']['sulu-100x@2x-inset.webp'] = '/uploads/media/sulu-100x@2x-inset/01/image.webp?v=1-0';
-
-        $this->assertSame(
-            '<img alt="Title" title="Description" src="/uploads/media/sulu-100x@2x-inset/01/image.jpg?v=1-0" width="100" height="56">',
-            $imageExtension->getImage($image, 'sulu-100x@2x-inset')
-        );
+        yield ['100x', '100', '56'];
+        yield ['x100', '178', '100'];
+        yield ['100x100', '100', '100'];
+        yield ['200x50', '200', '50'];
+        yield ['100x@2x', '200', '113'];
+        yield ['x100@2x', '356', '200'];
+        yield ['100x100@2x', '200', '200'];
+        yield ['200x50@2x', '400', '100'];
+        yield ['100x-inset', '100', '56'];
+        yield ['x100-inset', '178', '100'];
+        yield ['100x100-inset', '100', '56'];
+        yield ['200x50-inset', '89', '50'];
+        yield ['100x-inset@2x', '200', '113'];
+        yield ['x100-inset@2x', '356', '200'];
+        yield ['100x100-inset@2x', '200', '113'];
+        yield ['sulu-100x', '100', '56'];
+        yield ['sulu-x100', '178', '100'];
+        yield ['sulu-100x100', '100', '100'];
+        yield ['sulu-100x-inset', '100', '56'];
+        yield ['sulu-x100-inset', '178', '100'];
+        yield ['sulu-100x100-inset', '100', '56'];
+        yield ['sulu-100x-inset@2x', '200', '113'];
+        yield ['sulu-x100-inset@2x', '356', '200'];
+        yield ['sulu-100x100-inset2x', '200', '113'];
     }
 }

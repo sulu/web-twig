@@ -227,3 +227,35 @@ You can also only activate it for a specific call:
     '(max-width: 650px)': 'sulu-100x100',
 }, { webp: 'image/webp' }) }}
 ```
+
+##### 8. Set width and height attribute automatically
+
+Since Sulu 2.3 the original image width and height are save as properties.
+This allows us the guess the width and height dimension of a given image format.
+
+With setting the width and height attribute modern browsers avoid a layer shifts
+and the page will not jump when images are loaded.
+
+This feature can be activated the following way:
+
+```yaml
+services:
+    Sulu\Twig\Extensions\ImageExtension:
+        arguments:
+            $guessAspectRatio: true
+```
+
+So if we have an original image of 1920x1080 and have a image format called 100x:
+
+```twig
+{{ get_image(headerImage, '100x') }}
+```
+
+Will add automatically the width and height attributes to the imgage tag:
+
+```twig
+<img alt="Title" title="Description" src="/uploads/media/100x/01/image.jpg?v=1-0" width="'100" height="56">
+```
+
+This only works when writing image formats in specific format 100x, x100, 100x100, 100x100-inset, 100x@2x, ...
+for all other cases this option not be activated.
