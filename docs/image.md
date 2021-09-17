@@ -271,6 +271,6 @@ The feature will automatically add a width and height attribute to the rendered 
 <img alt="Title" title="Description" src="/uploads/media/100x/01/image.jpg?v=1-0" width="'100" height="56">
 ```
 
-The `$imageFormatConfiguration` parameter is optional. Without it will try to
-guess the format by the given format key. It will then only work with format keys
-like 100x, x100, 100x@2x, 100x100-inset and similars.
+The `$imageFormatConfiguration` parameter is optional. If it is not set, the extension
+tries to guess the dimensions by the given format key. This will only work for format keys
+in the format of 100x, x100, 100x@2x and 100x100-inset.
