@@ -243,11 +243,11 @@ You can also only activate it for a specific call:
 
 ##### 8. Set width and height attribute automatically
 
-Since Sulu 2.3 the original image width and height are save as properties.
-This allows us the guess the width and height dimension of a given image format.
+Since Sulu 2.3 the original image width and height are saved as properties.
+This allows to guess the width and height of a image format and set the respective HTML attributes.
 
-With setting the width and height attribute modern browsers avoid a layer shifts
-and the page will not jump when images are loaded.
+Setting the width and height attribute allows modern browsers to avoid layer shifts
+and therefore the page will not jump when images are loaded.
 
 This feature can be activated the following way:
 
@@ -259,18 +259,18 @@ services:
             $imageFormatConfiguration: '%sulu_media.image.formats%' # optional but recommended
 ```
 
-So if we have an original image of 1920x1080 and have a image format called 100x:
+For example, if the original image has a resolution of 1920x1080 and the image format is called 100x:
 
 ```twig
 {{ get_image(headerImage, '100x') }}
 ```
 
-Will add automatically the width and height attributes to the imgage tag:
+The feature will automatically add a width and height attribute to the rendered image tag:
 
 ```twig
 <img alt="Title" title="Description" src="/uploads/media/100x/01/image.jpg?v=1-0" width="'100" height="56">
 ```
 
-The is recommend `sulu_media.image.formats` but is optional. Without it will try to
+The `$imageFormatConfiguration` parameter is optional. Without it will try to
 guess the format by the given format key so it will then only work with format keys
 like 100x, x100, 100x@2x, 100x100-inset and similars.
