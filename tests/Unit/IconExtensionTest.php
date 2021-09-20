@@ -112,7 +112,7 @@ class IconExtensionTest extends TestCase
         ]);
 
         $this->assertSame(
-            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
             $iconExtension->getIcon('test')
         );
     }
@@ -127,7 +127,7 @@ class IconExtensionTest extends TestCase
         ]);
 
         $this->assertSame(
-            '<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            '<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
             $iconExtension->getIcon('test', ['role' => 'none'])
         );
     }
@@ -147,7 +147,7 @@ class IconExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            '<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            '<svg role="none" class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
             $iconExtension->getIcon('test')
         );
     }
@@ -167,7 +167,7 @@ class IconExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
             $iconExtension->getIcon('test', ['role' => null])
         );
     }
@@ -185,7 +185,7 @@ class IconExtensionTest extends TestCase
         ]);
 
         $this->assertSame(
-            '<svg class="add-class my-icon my-icon-test-new"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            '<svg class="add-class my-icon my-icon-test-new"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
             $iconExtension->getIcon('test', 'add-class', 'other')
         );
     }
@@ -200,7 +200,7 @@ class IconExtensionTest extends TestCase
         ]);
 
         $this->assertSame(
-            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#test"></use></svg>',
+            '<svg class="icon icon-test"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
             $iconExtension->getIcon('test', null, 'other')
         );
     }
