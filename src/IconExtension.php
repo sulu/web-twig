@@ -122,7 +122,7 @@ class IconExtension extends AbstractExtension
             '<svg%s><use xlink:href="%s#%s"></use></svg>',
             $this->renderAttributes($attributes),
             $iconSet['path'],
-            $iconSet['classPrefix'] . $icon
+            $iconSet['classPrefix'] . $icon . $iconSet['classSuffix']
         );
     }
 

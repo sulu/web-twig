@@ -185,7 +185,7 @@ class IconExtensionTest extends TestCase
         ]);
 
         $this->assertSame(
-            '<svg class="add-class my-icon my-icon-test-new"><use xlink:href="/path/to/symbol-defs.svg#icon-test"></use></svg>',
+            '<svg class="add-class my-icon my-icon-test-new"><use xlink:href="/path/to/symbol-defs.svg#my-icon-test-new"></use></svg>',
             $iconExtension->getIcon('test', 'add-class', 'other')
         );
     }
