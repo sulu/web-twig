@@ -49,10 +49,26 @@ jobs:
               with:
                   dependency-versions: ${{ matrix.dependency-versions }}
 
-            - name: Lint code
-              run: composer lint
-              env: ${{ matrix.env }}
-
             - name: Execute test cases
               run: composer test
               env: ${{ matrix.env }}
+
+    php-lint:
+        name: "PHP Lint"
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  tools: composer
+
+            - name: Install composer dependencies
+              uses: ramsey/composer-install@v1
+
+            - name: Lint code
+              run: composer lint
