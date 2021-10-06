@@ -536,7 +536,7 @@ class ImageExtensionTest extends TestCase
                     'width' => 1920,
                     'height' => 1080,
                 ],
-            ],
+            ]
         );
 
         $this->assertSame(
@@ -579,7 +579,7 @@ class ImageExtensionTest extends TestCase
                     'width' => 1920,
                     'height' => 1080,
                 ],
-            ],
+            ]
         );
 
         $this->assertSame(
