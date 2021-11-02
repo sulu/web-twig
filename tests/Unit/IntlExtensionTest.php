@@ -15,6 +15,7 @@ namespace Sulu\Twig\Extensions\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Twig\Extensions\IntlExtension;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Languages;
 
 class IntlExtensionTest extends TestCase
@@ -57,6 +58,10 @@ class IntlExtensionTest extends TestCase
 
     public function testAlpha3Country(): void
     {
+        if (!class_exists(Countries::class)) {
+            $this->markTestSkipped('Alpha3 requires atleast Symfony 4.4');
+        }
+
         $this->assertSame(
             'Germany',
             $this->intlExtension->getAlpha3Country('deu', 'en')
@@ -83,6 +88,10 @@ class IntlExtensionTest extends TestCase
 
     public function testAlpha3Countries(): void
     {
+        if (!class_exists(Countries::class)) {
+            $this->markTestSkipped('Alpha3 requires atleast Symfony 4.4');
+        }
+
         $this->assertContains(
             'Germany',
             $this->intlExtension->getAlpha3Countries('en')
@@ -115,8 +124,8 @@ class IntlExtensionTest extends TestCase
         }
 
         $this->assertSame(
-            'Austrian German',
-            $this->intlExtension->getLanguage('en', 'GB', 'en')
+            'Deutsch',
+            $this->intlExtension->getLanguage('de', 'DE', 'de')
         );
 
         $this->assertSame(
@@ -127,6 +136,10 @@ class IntlExtensionTest extends TestCase
 
     public function testAlpha3Language(): void
     {
+        if (!class_exists(Languages::class)) {
+            $this->markTestSkipped('Alpha3 requires atleast Symfony 4.4');
+        }
+
         $this->assertSame(
             'German',
             $this->intlExtension->getAlpha3Language('deu', 'en')
@@ -171,6 +184,10 @@ class IntlExtensionTest extends TestCase
 
     public function testAlpha3Languages(): void
     {
+        if (!class_exists(Languages::class)) {
+            $this->markTestSkipped('Alpha3 requires atleast Symfony 4.4');
+        }
+
         $this->assertContains(
             'German',
             $this->intlExtension->getAlpha3Languages('en')
