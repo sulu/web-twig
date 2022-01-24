@@ -382,6 +382,38 @@ class ImageExtensionTest extends TestCase
         );
     }
 
+    public function testRemoveDefaultAttributes(): void
+    {
+        $imageExtension = new ImageExtension(null, ['loading' => 'lazy']);
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
+            $imageExtension->getImage(
+                $this->image,
+                [
+                    'src' => 'sulu-100x100',
+                    'loading' => null,
+                ]
+            )
+        );
+    }
+
+    public function testReplaceLoadingAuto(): void
+    {
+        $imageExtension = new ImageExtension(null, ['loading' => 'lazy']);
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0">',
+            $imageExtension->getImage(
+                $this->image,
+                [
+                    'src' => 'sulu-100x100',
+                    'loading' => 'auto',
+                ]
+            )
+        );
+    }
+
     public function testDefaultAttributesUnset(): void
     {
         $imageExtension = new ImageExtension(null, ['loading' => 'lazy']);

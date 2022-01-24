@@ -378,6 +378,8 @@ class ImageExtension extends AbstractExtension
 
                 // Replace thumbnail format in srcset.
                 $value = $this->srcsetThumbnailReplace($value, $thumbnails);
+            } elseif ('loading' === $key && 'auto' === $value) {
+                continue;
             }
 
             $output .= sprintf(' %s="%s"', $key, htmlentities($value));
