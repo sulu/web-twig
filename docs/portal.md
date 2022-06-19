@@ -3,6 +3,9 @@
 The portal twig extension is inspired by [react portals](https://reactjs.org/docs/portals.html) and allow to render content at a different position.
 It should help to solve z-index problems by rendering overlays outside of the other DOM elements.
 
+> **Note**: **Limitation**  
+> The current implemented portals can only be used to render content after the current rendered item. So as example it is currently not possible to portal something from the `body` tag into the `head` tag. This is because twig supports to directly stream rendered code to the output via its [`display`](https://twig.symfony.com/doc/3.x/api.html#rendering-templates) method, so that already outputted content can not be changed.
+
 ## Setup
 
 ### Service Registration
