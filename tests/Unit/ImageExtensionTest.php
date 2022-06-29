@@ -164,7 +164,6 @@ class ImageExtensionTest extends TestCase
 
     public function testComplexWebpPictureTag(): void
     {
-        $imageExtension = new ImageExtension('/lazy');
         $imageExtension = new ImageExtension(null, [], ['webp' => 'image/webp']);
 
         $this->assertSame(
@@ -185,6 +184,34 @@ class ImageExtensionTest extends TestCase
                     'src' => 'sulu-400x400',
                     'srcset' => 'sulu-100x100 460w, sulu-170x170 800w, sulu-400x400 1024w',
                     'sizes' => '(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw',
+                    'id' => 'image-id',
+                    'class' => 'image-class',
+                    'alt' => 'Logo',
+                ]
+            )
+        );
+    }
+
+    public function testComplexWebpPictureTagRetina(): void
+    {
+        $imageExtension = new ImageExtension(null, [], ['webp' => 'image/webp']);
+
+        $this->assertSame(
+            '<picture>' .
+            '<source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0 1x, /uploads/media/sulu-400x400/01/image.webp?v=1-0 2x"' .
+            ' type="image/webp">' .
+            '<img alt="Logo"' .
+            ' title="Description"' .
+            ' src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0"' .
+            ' srcset="/uploads/media/sulu-100x100/01/image.jpg?v=1-0 1x, /uploads/media/sulu-400x400/01/image.jpg?v=1-0 2x"' .
+            ' id="image-id"' .
+            ' class="image-class">' .
+            '</picture>',
+            $imageExtension->getImage(
+                $this->image,
+                [
+                    'src' => 'sulu-100x100',
+                    'srcset' => 'sulu-100x100 1x, sulu-400x400 2x',
                     'id' => 'image-id',
                     'class' => 'image-class',
                     'alt' => 'Logo',
