@@ -244,7 +244,7 @@ class ImageExtension extends AbstractExtension
             foreach ($additionalTypes as $extension => $type) {
                 $srcset = null;
 
-                if (isset($attributes['src']) && (!isset($attributes['srcset']) || false === strpos($attributes['srcset'], $attributes['src'] . ' '))) {
+                if (isset($attributes['src']) && (!isset($attributes['srcset']) || false === mb_strpos($attributes['srcset'], $attributes['src'] . ' '))) {
                     $srcset = $this->addExtension($attributes['src'], $extension);
                 }
 
