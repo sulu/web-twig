@@ -635,6 +635,28 @@ class ImageExtensionTest extends TestCase
         );
     }
 
+    public function testAspectRatioNoProperties(): void
+    {
+        $imageExtension = new ImageExtension(null, [], [], true);
+
+        $image = array_replace_recursive(
+            $this->image,
+            [
+                'thumbnails' => [
+                    '200x100-inset' => '/uploads/media/200x100-inset/01/image.jpg?v=1-0',
+                    '200x100-inset' . '.webp' => '/uploads/media/200x100-inset/01/image.webp?v=1-0',
+                ],
+            ]
+        );
+
+        unset($image['properties']);
+
+        $this->assertSame(
+            '<img alt="Title" title="Description" src="/uploads/media/200x100-inset/01/image.jpg?v=1-0">',
+            $imageExtension->getImage($image, '200x100-inset')
+        );
+    }
+
     /**
      * @dataProvider aspectRatioDataProvider
      */

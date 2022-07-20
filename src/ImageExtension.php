@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Twig\Extensions;
 
+use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Extension\AbstractExtension;
@@ -490,7 +491,12 @@ class ImageExtension extends AbstractExtension
             return [$width, $height];
         }
 
-        $properties = $this->getPropertyAccessor()->getValue($media, 'properties');
+        try {
+            $properties = $this->getPropertyAccessor()->getValue($media, 'properties');
+        } catch (AccessException $e) {
+            $properties = [];
+        }
+
         $originalWidth = $properties['width'] ?? null;
         $originalHeight = $properties['height'] ?? null;
 

@@ -23,6 +23,10 @@
         "symfony/property-access": "^2.8 || ^3.0 || ^4.0 || ^5.0 || ^6.0",
         "thecodingmachine/phpstan-strict-rules": "^0.12"
     },
+    "conflict": {
+        "symfony/intl": ">=7.0",
+        "symfony/property-access": ">=7.0"
+    },
     "suggest": {
         "symfony/property-access": "The ImageExtension requires the symfony/property-access service.",
         "symfony/intl": "The IntlExtension requires the symfony/intl service."
