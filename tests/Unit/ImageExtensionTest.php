@@ -169,6 +169,7 @@ class ImageExtensionTest extends TestCase
         $this->assertSame(
             '<picture>' .
             '<source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0 460w, /uploads/media/sulu-170x170/01/image.webp?v=1-0 800w, /uploads/media/sulu-400x400/01/image.webp?v=1-0 1024w"' .
+            ' sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw"' .
             ' type="image/webp">' .
             '<img alt="Logo"' .
             ' title="Description"' .
