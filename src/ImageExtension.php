@@ -260,6 +260,7 @@ class ImageExtension extends AbstractExtension
                 if ($srcset) {
                     $sources[] = [
                         'srcset' => $srcset,
+                        'sizes' => $attributes['sizes'] ?? null,
                         'type' => $type,
                     ];
                 }
