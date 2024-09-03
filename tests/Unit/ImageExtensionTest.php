@@ -556,6 +556,26 @@ class ImageExtensionTest extends TestCase
         );
     }
 
+    public function testAdditionalTypesWithSrcSetWith1x(): void
+    {
+        $imageExtension = new ImageExtension(null, [], []);
+
+        $this->assertSame(
+            '<picture>' .
+            '<source srcset="/uploads/media/sulu-100x100/01/image.webp?v=1-0 1x, /uploads/media/sulu-100x100@2x/01/image.webp?v=1-0 2x"' .
+            ' type="image/webp">' .
+            '<img alt="Title"' .
+            ' title="Description"' .
+            ' src="/uploads/media/sulu-100x100/01/image.jpg?v=1-0"' .
+            ' srcset="/uploads/media/sulu-100x100/01/image.jpg?v=1-0 1x, /uploads/media/sulu-100x100@2x/01/image.jpg?v=1-0 2x">' .
+            '</picture>',
+            $imageExtension->getImage($this->image, [
+                'src' => 'sulu-100x100',
+                'srcset' => 'sulu-100x100 1x, sulu-100x100@2x 2x',
+            ], [], ['webp' => 'image/webp'])
+        );
+    }
+
     public function testAdditionalLazyComplexPictureTag(): void
     {
         $imageExtension = new ImageExtension('/lazy', [], ['webp' => 'image/webp']);

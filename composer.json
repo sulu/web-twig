@@ -24,8 +24,8 @@
         "thecodingmachine/phpstan-strict-rules": "^0.12"
     },
     "conflict": {
-        "symfony/intl": ">=7.0",
-        "symfony/property-access": ">=7.0"
+        "symfony/intl": ">=8.0",
+        "symfony/property-access": ">=8.0"
     },
     "suggest": {
         "symfony/property-access": "The ImageExtension requires the symfony/property-access service.",
