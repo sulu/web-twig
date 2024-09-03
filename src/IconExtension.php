@@ -21,8 +21,8 @@ use Twig\TwigFunction;
  */
 class IconExtension extends AbstractExtension
 {
-    const ICON_SET_TYPE_SVG = 'svg';
-    const ICON_SET_TYPE_FONT = 'font';
+    public const ICON_SET_TYPE_SVG = 'svg';
+    public const ICON_SET_TYPE_FONT = 'font';
 
     /**
      * @var mixed[]

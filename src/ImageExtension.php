@@ -100,7 +100,7 @@ class ImageExtension extends AbstractExtension
         array $defaultAttributes = [],
         array $defaultAdditionalTypes = [],
         bool $aspectRatio = false,
-        array $imageFormatConfiguration = null
+        ?array $imageFormatConfiguration = null,
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';
@@ -193,7 +193,7 @@ class ImageExtension extends AbstractExtension
         $attributes = [],
         array $sources = [],
         ?array $lazyThumbnails = null,
-        array $additionalTypes = []
+        array $additionalTypes = [],
     ): string {
         // Return an empty string if no one of the needed parameters is set.
         if (empty($media) || empty($attributes)) {

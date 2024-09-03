@@ -1,4 +1,5 @@
 includes:
+    - phpstan-baseline.neon
     - vendor/jangregor/phpstan-prophecy/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
@@ -10,7 +11,7 @@ parameters:
         - src
         - tests
     inferPrivatePropertyTypeFromConstructor: true
-    excludes_analyse:
+    excludePaths:
         - %currentWorkingDirectory%/vendor/*
     ignoreErrors:
         - '#Call to an undefined static method Symfony\\Component\\Intl\\Intl#'

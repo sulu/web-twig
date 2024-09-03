@@ -509,9 +509,9 @@ class ImageExtensionTest extends TestCase
         $imageExtension = new ImageExtension(null, [], ['webp' => 'image/webp']);
 
         $this->assertSame(
-        '<img alt="Title"' .
-            ' title="Description"' .
-            ' src="/uploads/media/sulu-100x100/01/image.svg?v=1-0">',
+            '<img alt="Title"' .
+                ' title="Description"' .
+                ' src="/uploads/media/sulu-100x100/01/image.svg?v=1-0">',
             $imageExtension->getImage($this->svgImage, [
                 'src' => 'sulu-100x100',
             ])
@@ -665,7 +665,7 @@ class ImageExtensionTest extends TestCase
             [
                 'thumbnails' => [
                     '200x100-inset' => '/uploads/media/200x100-inset/01/image.jpg?v=1-0',
-                    '200x100-inset' . '.webp' => '/uploads/media/200x100-inset/01/image.webp?v=1-0',
+                    '200x100-inset.webp' => '/uploads/media/200x100-inset/01/image.webp?v=1-0',
                 ],
             ]
         );
