@@ -130,21 +130,13 @@ This could be:
 ) }}
 ```
 
-Retina example
+Retina example:
 
 ```twig
-<picture>
-    <source media="(max-width: 1024px)"
-            srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
-            sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
-    <source media="(max-width: 650px)"
-            srcset="/uploads/media/sulu-400x400/01/image.jpg?v=1-0 1024w, /uploads/media/sulu-170x170/01/image.jpg?v=1-0 800w, /uploads/media/sulu-100x100/01/image.jpg?v=1-0 460w"
-            sizes="(max-width: 1024px) 100vw, (max-width: 800px) 100vw, 100vw">
-    <img alt="Title"
-         title="Description"
-         src="/uploads/media/sulu-400x400/01/image.jpg?v=1-0"
-         class="image-class">
-</picture>
+<img alt="Title"
+     title="Description"
+     src="/uploads/media/452x452/01/image.jpg?v=1-0"
+     srcset="/uploads/media/452x452/01/image.jpg?v=1-0 1x, /uploads/media/452x452@2x/01/image.jpg?v=1-0 2x">
 ```
 
 This could be:
