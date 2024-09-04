@@ -1,0 +1,151 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot access offset 'className' on mixed\\.$#"
+			count: 2
+			path: src/IconExtension.php
+
+		-
+			message: "#^Cannot access offset 'classPrefix' on mixed\\.$#"
+			count: 2
+			path: src/IconExtension.php
+
+		-
+			message: "#^Cannot access offset 'classSuffix' on mixed\\.$#"
+			count: 2
+			path: src/IconExtension.php
+
+		-
+			message: "#^Cannot access offset 'path' on mixed\\.$#"
+			count: 1
+			path: src/IconExtension.php
+
+		-
+			message: "#^Cannot access offset 'type' on mixed\\.$#"
+			count: 1
+			path: src/IconExtension.php
+
+		-
+			message: "#^Method Sulu\\\\Twig\\\\Extensions\\\\IconExtension\\:\\:getIconSet\\(\\) should return array but returns mixed\\.$#"
+			count: 1
+			path: src/IconExtension.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/IconExtension.php
+
+		-
+			message: "#^Parameter \\#4 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/IconExtension.php
+
+		-
+			message: "#^Parameter \\#6 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/IconExtension.php
+
+		-
+			message: "#^Cannot access offset 'height' on mixed\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Cannot access offset 'media' on mixed\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Cannot access offset 'srcset' on mixed\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Cannot access offset 'type' on mixed\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Cannot access offset 'width' on mixed\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:getMimeType\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Offset 'filename' on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function reset expects array\\|object, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$objectOrArray of method Symfony\\\\Component\\\\PropertyAccess\\\\PropertyAccessor\\:\\:getValue\\(\\) expects array\\|object, mixed given\\.$#"
+			count: 6
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$objectOrArray of method Symfony\\\\Component\\\\PropertyAccess\\\\PropertyAccessor\\:\\:isReadable\\(\\) expects array\\|object, mixed given\\.$#"
+			count: 3
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$path of function pathinfo expects string, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$srcsets of method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:addExtension\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$thumbnails of method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:getLazyThumbnails\\(\\) expects array\\<string, string\\>, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#2 \\$attributes of method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:createTag\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#2 \\$attributes of method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:createTag\\(\\) expects array\\<string, string\\|null\\>, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#3 \\$thumbnails of method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:createTag\\(\\) expects array\\<string\\>, mixed given\\.$#"
+			count: 3
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Parameter \\#5 \\$additionalTypes of method Sulu\\\\Twig\\\\Extensions\\\\ImageExtension\\:\\:createImage\\(\\) expects array\\<string\\>, array given\\.$#"
+			count: 2
+			path: src/ImageExtension.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/PortalExtension.php
+
+		-
+			message: "#^Cannot access an offset on mixed\\.$#"
+			count: 1
+			path: src/PortalExtension.php

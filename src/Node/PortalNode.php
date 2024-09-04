@@ -24,7 +24,7 @@ final class PortalNode extends Node
     /**
      * @param Node<Node> $body
      */
-    public function __construct(string $name, Node $body, int $lineno, string $tag = null)
+    public function __construct(string $name, Node $body, int $lineno, ?string $tag = null)
     {
         parent::__construct(['body' => $body], ['name' => $name], $lineno, $tag);
     }

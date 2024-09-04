@@ -21,18 +21,18 @@ use Twig\TwigFilter;
  */
 class UrlExtension extends AbstractExtension
 {
-    const DEFAULT_SCHEME = 'http';
+    public const DEFAULT_SCHEME = 'http';
 
-    const SCHEME = 'scheme';
-    const USER = 'user';
-    const PASS = 'pass';
-    const HOST = 'host';
-    const PORT = 'port';
-    const PATH = 'path';
-    const QUERY = 'query';
-    const FRAGMENT = 'fragment';
+    public const SCHEME = 'scheme';
+    public const USER = 'user';
+    public const PASS = 'pass';
+    public const HOST = 'host';
+    public const PORT = 'port';
+    public const PATH = 'path';
+    public const QUERY = 'query';
+    public const FRAGMENT = 'fragment';
 
-    const DEFAULT_FLAGS = [
+    public const DEFAULT_FLAGS = [
         self::SCHEME => true,
         self::USER => true,
         self::PASS => true,

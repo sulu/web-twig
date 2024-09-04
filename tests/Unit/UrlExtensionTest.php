@@ -18,7 +18,7 @@ use Sulu\Twig\Extensions\UrlExtension;
 
 class UrlExtensionTest extends TestCase
 {
-    const URL = 'https://john.doe:hidden@example.org:8080/admin?resource=pages&limit=20#1234';
+    private const URL = 'https://john.doe:hidden@example.org:8080/admin?resource=pages&limit=20#1234';
 
     /**
      * @var UrlExtension

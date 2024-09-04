@@ -14,18 +14,18 @@
         "twig/twig": "^1.38 || ^2.7 || ^3.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.11",
-        "jangregor/phpstan-prophecy": "^0.8",
-        "phpstan/phpstan": "^0.12",
-        "phpstan/phpstan-phpunit": "^0.12",
+        "php-cs-fixer/shim": "^3.64",
+        "jangregor/phpstan-prophecy": "^1.0",
+        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^7.5 || ^8.5",
         "symfony/intl": "^2.8 || ^3.0 || ^4.0 || ^5.0 || ^6.0",
-        "symfony/property-access": "^2.8 || ^3.0 || ^4.0 || ^5.0 || ^6.0",
-        "thecodingmachine/phpstan-strict-rules": "^0.12"
+        "symfony/property-access": "^2.8 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
+        "thecodingmachine/phpstan-strict-rules": "^1.0"
     },
     "conflict": {
-        "symfony/intl": ">=7.0",
-        "symfony/property-access": ">=7.0"
+        "symfony/intl": ">=8.0",
+        "symfony/property-access": ">=8.0"
     },
     "suggest": {
         "symfony/property-access": "The ImageExtension requires the symfony/property-access service.",

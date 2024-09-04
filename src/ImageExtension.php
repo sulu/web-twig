@@ -100,7 +100,7 @@ class ImageExtension extends AbstractExtension
         array $defaultAttributes = [],
         array $defaultAdditionalTypes = [],
         bool $aspectRatio = false,
-        array $imageFormatConfiguration = null
+        ?array $imageFormatConfiguration = null
     ) {
         if (null !== $placeholderPath) {
             $this->placeholderPath = rtrim($placeholderPath, '/') . '/';

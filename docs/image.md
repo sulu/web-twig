@@ -130,6 +130,26 @@ This could be:
 ) }}
 ```
 
+Retina example:
+
+```twig
+<img alt="Title"
+     title="Description"
+     src="/uploads/media/452x452/01/image.jpg?v=1-0"
+     srcset="/uploads/media/452x452/01/image.jpg?v=1-0 1x, /uploads/media/452x452@2x/01/image.jpg?v=1-0 2x">
+```
+
+This could be:
+
+```twig
+{{ get_image(image,
+    {
+        src: '452x452',
+        srcset: '452x452 1x, 452x452@2x 2x',
+    }
+) }}
+```
+
 ##### 5. Lazy images
 
 > See also 6. Native lazy loading for a modern implementation.
@@ -195,6 +215,20 @@ services:
         arguments:
             $defaultAttributes:
                 loading: 'lazy'
+```
+
+If you are setting the default to lazy which is recommended you maybe want the
+first image of hero slider be loaded immediately this can be achieved via
+setting `loading` to `null` for the first element:
+
+```twig
+{% for image in images %}
+    {{ get_image(image, {
+        src: '452x452',
+        srcset: '452x452 1x, 452x452@2x 2x',
+        loading: loop.first ? null : 'lazy',
+    }) }}
+{% endfor %}
 ```
 
 ##### 7. Webp Support
